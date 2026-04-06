@@ -1,0 +1,38 @@
+# Arsitrad Configuration
+
+data:
+  sni_corpus: "./data/sni_corpus"
+  regulations: "./data/regulations"
+  processed: "./data/processed/chroma_db"
+
+rag:
+  collection_name: "indonesian_regulations"
+  embedding_model: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+  chunk_size: 512
+  chunk_overlap: 64
+  top_k: 5
+  min_similarity: 0.3
+
+model:
+  gemma_version: "gemma-4-2b-it"
+  gemma_size: "2b"
+  use_quantization: true
+  lora_rank: 64
+  lora_alpha: 128
+  lora_dropout: 0.05
+  batch_size: 4
+  learning_rate: 2e-4
+  num_epochs: 3
+  warmup_steps: 100
+
+ui:
+  title: "Arsitrad — Indonesian Architecture AI Advisor"
+  description: "AI assistant for Indonesian building regulations, disaster damage assessment, settlement upgrading, building permits, and passive cooling design."
+  theme: "default"
+  max_tokens: 1024
+  temperature: 0.3
+
+demo:
+  output_dir: "./demo_output"
+  video_length_seconds: 180
+  include_function_calls: true
