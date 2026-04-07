@@ -1,0 +1,95 @@
+{
+  "module": "permit",
+  "edges": [
+    {
+      "id": "E_PERMIT_01",
+      "source": "NIB",
+      "target": "UU6_2023_Art7_8",
+      "type": "TRIGGERS",
+      "module": "permit",
+      "condition": null,
+      "description": "UU 6/2023 Art 7-8 activates after NIB is obtained — categorizes project risk",
+      "verified": true
+    },
+    {
+      "id": "E_PERMIT_02",
+      "source": "UU6_2023_Art7_8",
+      "target": "KKPR",
+      "type": "SEQUENCES",
+      "module": "permit",
+      "condition": "risk_category != None",
+      "description": "KKPR is the next step after risk categorization — spatial conformity check",
+      "verified": true
+    },
+    {
+      "id": "E_PERMIT_03",
+      "source": "KKPR",
+      "target": "KKPR_FAILURE",
+      "type": "GATES",
+      "module": "permit",
+      "condition": "KKPR_status == FAILED",
+      "description": "KKPR failure terminates the permit path immediately",
+      "verified": true
+    },
+    {
+      "id": "E_PERMIT_04",
+      "source": "KKPR",
+      "target": "ENV_APPROVAL",
+      "type": "SEQUENCES",
+      "module": "permit",
+      "condition": "KKPR_status == PASSED",
+      "description": "Proceed to environmental approval after KKPR passes",
+      "verified": true
+    },
+    {
+      "id": "E_PERMIT_05",
+      "source": "ENV_APPROVAL",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "permit",
+      "condition": "env_approval == APPROVED",
+      "description": "PBG application only proceeds after environmental approval",
+      "verified": true
+    },
+    {
+      "id": "E_PERMIT_06",
+      "source": "PBG",
+      "target": "ACCESSIBILITY_GATE",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "permit",
+      "condition": "building.public_function == True OR building.floor_count > threshold",
+      "description": "Accessibility technical review triggers for public buildings or multi-floor",
+      "verified": true
+    },
+    {
+      "id": "E_PERMIT_07",
+      "source": "PBG",
+      "target": "BIM_GATE",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "permit",
+      "condition": "building.area_m2 > 2000 OR building.floor_count > 2",
+      "description": "BIM requirement triggers for large or multi-floor buildings",
+      "verified": true
+    },
+    {
+      "id": "E_PERMIT_08",
+      "source": "PBG",
+      "target": "SLF",
+      "type": "SEQUENCES",
+      "module": "permit",
+      "condition": "construction_complete == True",
+      "description": "SLF application only after construction is complete — PBG is prerequisite",
+      "verified": true
+    },
+    {
+      "id": "E_PERMIT_09",
+      "source": "PBG",
+      "target": "BID_REASONABLENESS",
+      "type": "REFERENCES",
+      "module": "permit",
+      "condition": null,
+      "description": "PBG review cross-references SMKK/AHSP for cost reasonableness",
+      "verified": true
+    }
+  ]
+}

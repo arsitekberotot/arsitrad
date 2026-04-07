@@ -1,0 +1,12 @@
+{
+  "id": "disaster",
+  "name": "Disaster & Seismic Damage",
+  "nodes_file": "nodes/disaster_nodes.json",
+  "edges_file": "edges/disaster_edges.json",
+  "description": "Structural reasoning: KDS, SRPMK, retrofit thresholds, fire gates",
+  "priority_intersections": [
+    "KDS D/E/F \u2192 SRPMK mandatory (SNI 1726:2019 Ch.7)",
+    "capacity < 100% \u2192 Retrofit Required (SNI 9274:2025)",
+    "height > 24m \u2192 fire lift + TKA (Permen PU 26/2008)"
+  ]
+}

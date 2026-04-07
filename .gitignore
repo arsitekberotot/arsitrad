@@ -13,7 +13,7 @@ build/
 *.egg
 .mypy_cache/
 .pytype/
-.coverage*
+.coverag*
 htmlcov/
 tensorboard/
 wandb/
@@ -31,3 +31,18 @@ data/regulations/*
 .idea/
 .vscode/
 *.log
+
+# Processed data — large regeneratable files (regenerate with embed scripts)
+data/processed/*.npy
+data/processed/*.sqlite3
+data/processed/*.log
+data/processed/embed_*.py
+data/processed/*_checkpoint.json
+data/processed/local_chunks.json
+data/processed/national_chunks.json
+data/processed/embed_output.log
+!data/processed/arsitrad_training.jsonl
+
+# PDFs — too large for GitHub, text versions are in corpus
+**/*.pdf
+data/corpus/**/*.pdf

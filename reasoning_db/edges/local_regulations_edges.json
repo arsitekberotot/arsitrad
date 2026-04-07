@@ -1,0 +1,208 @@
+{
+  "module": "local_regulations",
+  "edges": [
+    {
+      "id": "E_LOCAL_01",
+      "source": "PERDA_JAKARTA_7_2010",
+      "target": "JAKARTA_KDB_GATE",
+      "type": "DEFINES",
+      "module": "local_regulations",
+      "condition": null,
+      "description": "Perda Jakarta 7/2010 defines KDB zone rules",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_02",
+      "source": "JAKARTA_KDB_GATE",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "local_regulations",
+      "condition": "city == jakarta",
+      "description": "Jakarta KDB compliance is part of PBG application",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_03",
+      "source": "JAKARTA_KDH_GATE",
+      "target": "OTTV_LIMIT",
+      "type": "CONTRIBUTES_TO",
+      "module": "local_regulations",
+      "condition": "city == jakarta AND green_area_compliance == True",
+      "description": "Jakarta KDH compliance contributes toward OTTV/thermal performance",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_04",
+      "source": "JAKARTA_HEIGHT_GATE",
+      "target": "FIRE_LIFT_GATE",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "local_regulations",
+      "condition": "city == jakarta AND floors > 8",
+      "description": "Jakarta building >8 floors triggers fire lift requirements (national threshold 24m maps to ~8 floors)",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_05",
+      "source": "PERDA_BANDUNG_5_2010",
+      "target": "BANDUNG_KDB_GATE",
+      "type": "DEFINES",
+      "module": "local_regulations",
+      "condition": null,
+      "description": "Perda Bandung 5/2010 defines tiered KDB",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_06",
+      "source": "BANDUNG_KDB_GATE",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "local_regulations",
+      "condition": "city == bandung",
+      "description": "Bandung KDB compliance is part of PBG",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_07",
+      "source": "BANDUNG_KDH_GATE",
+      "target": "OTTV_LIMIT",
+      "type": "CONTRIBUTES_TO",
+      "module": "local_regulations",
+      "condition": "city == bandung AND KDH_minimum == '10%'",
+      "description": "Bandung KDH min 10%  contributes to urban green targets",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_08",
+      "source": "SURAKARTA_KDB_GATE",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "local_regulations",
+      "condition": "city == surakarta",
+      "description": "Surakarta KDB max 85%  part of PBG check",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_09",
+      "source": "SURAKARTA_KLB_GATE",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "local_regulations",
+      "condition": "city == surakarta",
+      "description": "Surakarta KLB max 360% of KDB  part of PBG floor area check",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_10",
+      "source": "SURAKARTA_KDH_GATE",
+      "target": "OTTV_LIMIT",
+      "type": "CONTRIBUTES_TO",
+      "module": "local_regulations",
+      "condition": "city == surakarta AND KDH_minimum == '10%'",
+      "description": "Surakarta KDH min 10% for green compliance",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_11",
+      "source": "MALANG_KDB_GATE",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "local_regulations",
+      "condition": "city == malang",
+      "description": "Malang density-tiered KDB (40-70%)  part of PBG",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_12",
+      "source": "SEMARANG_KDH_GATE",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "local_regulations",
+      "condition": "city == semarang",
+      "description": "Semarang KDH min 20%  strictest KDH requirement in Central Java",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_13",
+      "source": "HIGH_RISE_8_Lantai_GATE",
+      "target": "FIRE_LIFT_GATE",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "local_regulations",
+      "condition": "floors > 8",
+      "description": ">8 floors in Balikpapan/Pontianak/Padang triggers fire lift check",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_14",
+      "source": "HIGH_RISE_8_Lantai_GATE",
+      "target": "SRPMK_GATE",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "local_regulations",
+      "condition": "floors > 8 AND seismic_zone == high",
+      "description": ">8 floors in high seismic zone triggers SRPMK review",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_15",
+      "source": "MEDAN_KLB_GATE",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "local_regulations",
+      "condition": "city == medan",
+      "description": "Medan KLB max 80%  part of PBG floor area check",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_16",
+      "source": "MEDAN_HEIGHT_GATE",
+      "target": "PBG",
+      "type": "SEQUENCES",
+      "module": "local_regulations",
+      "condition": "city == medan",
+      "description": "Medan max 50 floors  height limit check in PBG",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_17",
+      "source": "MEDAN_HEIGHT_GATE",
+      "target": "FIRE_LIFT_GATE",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "local_regulations",
+      "condition": "city == medan AND floors > 8",
+      "description": "Medan >8 floors also triggers fire lift (national threshold)",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_18",
+      "source": "BANDUNG_KDH_GATE",
+      "target": "ENERGY_SAVINGS_TARGET",
+      "source_module": "local_regulations",
+      "target_module": "cooling",
+      "type": "CROSS_MODULE_BRIDGE",
+      "condition": "city == bandung AND KDH >= 10%",
+      "description": "Bandung 10% KDH contributes toward BGH energy savings target",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_19",
+      "source": "SEMARANG_KDH_GATE",
+      "target": "ENERGY_SAVINGS_TARGET",
+      "source_module": "local_regulations",
+      "target_module": "cooling",
+      "type": "CROSS_MODULE_BRIDGE",
+      "condition": "city == semarang AND KDH >= 20%",
+      "description": "Semarang 20% KDH contributes toward BGH energy savings target",
+      "verified": true
+    },
+    {
+      "id": "E_LOCAL_20",
+      "source": "JAKARTA_HEIGHT_GATE",
+      "target": "KDS_DETERMINATION",
+      "source_module": "local_regulations",
+      "target_module": "disaster",
+      "type": "CROSS_MODULE_BRIDGE",
+      "condition": "city == jakarta AND floors > 3",
+      "description": "Jakarta building >3 floors feeds into seismic KDS determination",
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,431 @@
+{
+  "module": "local_regulations",
+  "description": "City-specific Perda rules  KDB, KDH, KLB, building height thresholds per municipality across Jawa, Kalimantan, Sumatera",
+  "nodes": [
+    {
+      "id": "PERDA_JAKARTA_7_2010",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda DKI Jakarta No. 7 Tahun 2010",
+      "description": "Jakarta building density law  defines KDB, KDH, KLB, building height zones, GSB, and IMB procedures for DKI Jakarta",
+      "attributes": {
+        "region": "dki_jakarta",
+        "island": "jawa",
+        "reg_type": "perda",
+        "year": 2010,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "GSB",
+          "IMB",
+          "ketinggian bangunan"
+        ],
+        "notes": "Zone-based density coefficients; building height linked to road width classification"
+      },
+      "verified": true
+    },
+    {
+      "id": "JAKARTA_KDB_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda DKI Jakarta No. 7 Tahun 2010 Pasal 21",
+      "description": "Jakarta KDB gate  building coverage coefficient enforced per zone. Exceeding KDB = permit reject.",
+      "attributes": {
+        "region": "dki_jakarta",
+        "island": "jawa",
+        "mechanism": "zone_based_KDB",
+        "terminal_reject_if_exceeded": true
+      },
+      "verified": true
+    },
+    {
+      "id": "JAKARTA_KDH_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda DKI Jakarta No. 7 Tahun 2010",
+      "description": "Jakarta KDH (green space) gate  green coefficient must be met per zone",
+      "attributes": {
+        "region": "dki_jakarta",
+        "island": "jawa",
+        "mechanism": "zone_based_KDH"
+      },
+      "verified": true
+    },
+    {
+      "id": "JAKARTA_HEIGHT_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda DKI Jakarta No. 7 Tahun 2010 Pasal 21",
+      "description": "Jakarta building height gate  height limits vary by zone; buildings >8 floors classified as Bangunan Gedung Bertingkat Tinggi (high-rise) requiring additional permits",
+      "attributes": {
+        "region": "dki_jakarta",
+        "island": "jawa",
+        "highrise_threshold": "8_lantai",
+        "additional_permits_for_highrise": true
+      },
+      "verified": true
+    },
+    {
+      "id": "PERDA_BANDUNG_5_2010",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Bandung No. 5 Tahun 2010",
+      "description": "Bandung Perda on building construction  defines KDB, KDH, KLB zone tiers and building requirements",
+      "attributes": {
+        "region": "bandung",
+        "island": "jawa",
+        "reg_type": "perda",
+        "year": 2010,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "Ketinggian bangunan"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "BANDUNG_KDB_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Bandung No. 5 Tahun 2010",
+      "description": "Bandung KDB gate  zone-tiered: tinggi (>60%), sedang (45-60%), rendah (<45%). Exceeding zone KDB = reject.",
+      "attributes": {
+        "region": "bandung",
+        "island": "jawa",
+        "zone_tiers": {
+          "tinggi": ">60%",
+          "sedang": "45-60%",
+          "rendah": "<45%"
+        },
+        "mechanism": "zone_tiered_KDB"
+      },
+      "verified": true
+    },
+    {
+      "id": "BANDUNG_KDH_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Bandung No. 5 Tahun 2010",
+      "description": "Bandung KDH gate  KDH minimal 10% for padat/sangat padat areas",
+      "attributes": {
+        "region": "bandung",
+        "island": "jawa",
+        "KDH_minimum": "10%",
+        "trigger_areas": [
+          "padat",
+          "sangat padat"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "PERDA_SEMARANG_5_2009",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Semarang No. 5 Tahun 2009",
+      "description": "Semarang Perda on buildings  defines KDB, KDH, KLB, GSB, building height classification",
+      "attributes": {
+        "region": "semarang",
+        "island": "jawa",
+        "reg_type": "perda",
+        "year": 2009,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "GSB"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "SEMARANG_KDH_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Semarang No. 5 Tahun 2009",
+      "description": "Semarang KDH gate  minimum 20% green space required",
+      "attributes": {
+        "region": "semarang",
+        "island": "jawa",
+        "KDH_minimum": "20%"
+      },
+      "verified": true
+    },
+    {
+      "id": "PERDA_SURAKARTA_8_2016",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Surakarta No. 8 Tahun 2016",
+      "description": "Surakarta building law  KDB max 85%, KDH min 10%, KLB max 360% dari KDB, height limits",
+      "attributes": {
+        "region": "surakarta",
+        "island": "jawa",
+        "reg_type": "perda",
+        "year": 2016,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "GSB"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "SURAKARTA_KDB_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Surakarta No. 8 Tahun 2016",
+      "description": "Surakarta KDB gate  KDB max 85% of land area free of GSJ",
+      "attributes": {
+        "region": "surakarta",
+        "island": "jawa",
+        "KDB_maximum": "85%"
+      },
+      "verified": true
+    },
+    {
+      "id": "SURAKARTA_KDH_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Surakarta No. 8 Tahun 2016",
+      "description": "Surakarta KDH gate  KDH minimum 10% of free land area",
+      "attributes": {
+        "region": "surakarta",
+        "island": "jawa",
+        "KDH_minimum": "10%"
+      },
+      "verified": true
+    },
+    {
+      "id": "SURAKARTA_KLB_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Surakarta No. 8 Tahun 2016",
+      "description": "Surakarta KLB gate  KLB maximum 360% of KDB",
+      "attributes": {
+        "region": "surakarta",
+        "island": "jawa",
+        "KLB_maximum": "360%_of_KDB"
+      },
+      "verified": true
+    },
+    {
+      "id": "PERDA_MALANG_1_2012",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Malang No. 1 Tahun 2012",
+      "description": "Malang Perda on buildings  KDB zone-based: renggang (40-50%), sedang (50-60%), padat (60-70%+)",
+      "attributes": {
+        "region": "malang",
+        "island": "jawa",
+        "reg_type": "perda",
+        "year": 2012,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "GSB"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "MALANG_KDB_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Malang No. 1 Tahun 2012",
+      "description": "Malang KDB gate  density-based: renggang 40-50%, sedang 50-60%, padat 60-70%+",
+      "attributes": {
+        "region": "malang",
+        "island": "jawa",
+        "zone_tiers": {
+          "renggang": "40-50%",
+          "sedang": "50-60%",
+          "padat": "60-70%"
+        }
+      },
+      "verified": true
+    },
+    {
+      "id": "PERDA_BALIKPAPAN_3_2009",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Balikpapan No. 3 Tahun 2009",
+      "description": "Balikpapan Perda on buildings  KDB, KDH, KLB, GSB, building height zones",
+      "attributes": {
+        "region": "balikpapan",
+        "island": "kalimantan",
+        "reg_type": "perda",
+        "year": 2009,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "GSB"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "BALIKPAPAN_HEIGHT_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Balikpapan No. 3 Tahun 2009",
+      "description": "Balikpapan height gate  buildings >8 floors classified as Bangunan Gedung Bertingkat Tinggi (high-rise)",
+      "attributes": {
+        "region": "balikpapan",
+        "island": "kalimantan",
+        "highrise_threshold": "8_lantai"
+      },
+      "verified": true
+    },
+    {
+      "id": "PERDA_PONTANIAK_10_2011",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Pontianak No. 10 Tahun 2011",
+      "description": "Pontianak Perda on buildings  KDB, KDH, KLB, GSB, height classification; >8 floors = Bangunan Gedung Bertingkat Tinggi",
+      "attributes": {
+        "region": "pontianak",
+        "island": "kalimantan",
+        "reg_type": "perda",
+        "year": 2011,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "GSB"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "PADANG_HEIGHT_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Padang No. 7 Tahun 2015",
+      "description": "Padang height gate  buildings >8 floors classified as Bangunan Gedung Bertingkat Tinggi (high-rise) requiring additional review",
+      "attributes": {
+        "region": "padang",
+        "island": "sumatera",
+        "highrise_threshold": "8_lantai"
+      },
+      "verified": true
+    },
+    {
+      "id": "PERDA_PADANG_7_2015",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Padang No. 7 Tahun 2015",
+      "description": "Padang Perda on buildings  KDB, KDH, KLB, GSB, building height rules",
+      "attributes": {
+        "region": "padang",
+        "island": "sumatera",
+        "reg_type": "perda",
+        "year": 2015,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "GSB"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "PERDA_MEDAN_1_2022",
+      "type": "regulation",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Medan No. 1 Tahun 2022",
+      "description": "Medan RDTR  zone-based KDB/KDH/KLB; max building height 50 lantai; KLB max 80%",
+      "attributes": {
+        "region": "medan",
+        "island": "sumatera",
+        "reg_type": "perda",
+        "year": 2022,
+        "key_terms": [
+          "KDB",
+          "KDH",
+          "KLB",
+          "tinggi bangunan"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "MEDAN_KLB_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Medan No. 1 Tahun 2022",
+      "description": "Medan KLB gate  KLB maximum 80% of land area",
+      "attributes": {
+        "region": "medan",
+        "island": "sumatera",
+        "KLB_maximum": "80%"
+      },
+      "verified": true
+    },
+    {
+      "id": "MEDAN_HEIGHT_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 3,
+      "source": "Perda Kota Medan No. 1 Tahun 2022",
+      "description": "Medan height gate  maximum 50 lantai (floors)",
+      "attributes": {
+        "region": "medan",
+        "island": "sumatera",
+        "height_maximum": "50_lantai"
+      },
+      "verified": true
+    },
+    {
+      "id": "HIGH_RISE_8_Lantai_GATE",
+      "type": "technical_gate",
+      "module": "local_regulations",
+      "tier": 2,
+      "source": "Pattern from: Balikpapan, Pontianak, Padang Perda",
+      "description": "Common pattern: >8 lantai = Bangunan Gedung Bertingkat Tinggi across many Indonesian cities  triggers additional structural/fire requirements",
+      "attributes": {
+        "pattern": "cross_city",
+        "threshold": "8_lantai",
+        "cities": [
+          "balikpapan",
+          "pontianak",
+          "padang"
+        ],
+        "additional_requirements": [
+          "fire_protection",
+          "structural_verification"
+        ]
+      },
+      "verified": true
+    }
+  ]
+}

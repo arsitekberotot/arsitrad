@@ -1,0 +1,155 @@
+{
+  "island": "sulawesi",
+  "edges": [
+    {
+      "id": "E_SULA_Sulawesi_Selatan_01",
+      "source": "PROV_Sulawesi_Selatan",
+      "target": "RDTR_Sulawesi_Selatan",
+      "type": "DEFINES",
+      "island": "sulawesi",
+      "province": "Sulawesi Selatan",
+      "description": "RDTR for Sulawesi Selatan is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Selatan_02",
+      "source": "PROV_Sulawesi_Selatan",
+      "target": "SEISMIC_ZONE_Sulawesi_Selatan",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "sulawesi",
+      "province": "Sulawesi Selatan",
+      "description": "Seismic zone for Sulawesi Selatan activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Selatan_03",
+      "source": "SEISMIC_ZONE_Sulawesi_Selatan",
+      "target": "RISK_Sulawesi_Selatan",
+      "type": "COMBINES_WITH",
+      "island": "sulawesi",
+      "province": "Sulawesi Selatan",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Sulawesi Selatan",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Selatan_04",
+      "source": "PROV_Sulawesi_Selatan",
+      "target": "PERDA_Sulawesi_Selatan",
+      "type": "OVERRIDES",
+      "island": "sulawesi",
+      "province": "Sulawesi Selatan",
+      "description": "Local Perda in Sulawesi Selatan may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Selatan_05",
+      "source": "RDTR_Sulawesi_Selatan",
+      "target": "SEISMIC_ZONE_Sulawesi_Selatan",
+      "type": "REFERENCES",
+      "island": "sulawesi",
+      "province": "Sulawesi Selatan",
+      "description": "RDTR zoning must comply with seismic zone classification for Sulawesi Selatan",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Utara_01",
+      "source": "PROV_Sulawesi_Utara",
+      "target": "RDTR_Sulawesi_Utara",
+      "type": "DEFINES",
+      "island": "sulawesi",
+      "province": "Sulawesi Utara",
+      "description": "RDTR for Sulawesi Utara is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Utara_02",
+      "source": "PROV_Sulawesi_Utara",
+      "target": "SEISMIC_ZONE_Sulawesi_Utara",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "sulawesi",
+      "province": "Sulawesi Utara",
+      "description": "Seismic zone for Sulawesi Utara activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Utara_03",
+      "source": "SEISMIC_ZONE_Sulawesi_Utara",
+      "target": "RISK_Sulawesi_Utara",
+      "type": "COMBINES_WITH",
+      "island": "sulawesi",
+      "province": "Sulawesi Utara",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Sulawesi Utara",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Utara_04",
+      "source": "PROV_Sulawesi_Utara",
+      "target": "PERDA_Sulawesi_Utara",
+      "type": "OVERRIDES",
+      "island": "sulawesi",
+      "province": "Sulawesi Utara",
+      "description": "Local Perda in Sulawesi Utara may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Utara_05",
+      "source": "RDTR_Sulawesi_Utara",
+      "target": "SEISMIC_ZONE_Sulawesi_Utara",
+      "type": "REFERENCES",
+      "island": "sulawesi",
+      "province": "Sulawesi Utara",
+      "description": "RDTR zoning must comply with seismic zone classification for Sulawesi Utara",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Tengah_01",
+      "source": "PROV_Sulawesi_Tengah",
+      "target": "RDTR_Sulawesi_Tengah",
+      "type": "DEFINES",
+      "island": "sulawesi",
+      "province": "Sulawesi Tengah",
+      "description": "RDTR for Sulawesi Tengah is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Tengah_02",
+      "source": "PROV_Sulawesi_Tengah",
+      "target": "SEISMIC_ZONE_Sulawesi_Tengah",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "sulawesi",
+      "province": "Sulawesi Tengah",
+      "description": "Seismic zone for Sulawesi Tengah activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Tengah_03",
+      "source": "SEISMIC_ZONE_Sulawesi_Tengah",
+      "target": "RISK_Sulawesi_Tengah",
+      "type": "COMBINES_WITH",
+      "island": "sulawesi",
+      "province": "Sulawesi Tengah",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Sulawesi Tengah",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Tengah_04",
+      "source": "PROV_Sulawesi_Tengah",
+      "target": "PERDA_Sulawesi_Tengah",
+      "type": "OVERRIDES",
+      "island": "sulawesi",
+      "province": "Sulawesi Tengah",
+      "description": "Local Perda in Sulawesi Tengah may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_SULA_Sulawesi_Tengah_05",
+      "source": "RDTR_Sulawesi_Tengah",
+      "target": "SEISMIC_ZONE_Sulawesi_Tengah",
+      "type": "REFERENCES",
+      "island": "sulawesi",
+      "province": "Sulawesi Tengah",
+      "description": "RDTR zoning must comply with seismic zone classification for Sulawesi Tengah",
+      "verified": false
+    }
+  ]
+}

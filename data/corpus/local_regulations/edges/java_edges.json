@@ -1,0 +1,155 @@
+{
+  "island": "java",
+  "edges": [
+    {
+      "id": "E_JAVA_DKI_Jakarta_01",
+      "source": "PROV_DKI_Jakarta",
+      "target": "RDTR_DKI_Jakarta",
+      "type": "DEFINES",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "RDTR for DKI Jakarta is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_DKI_Jakarta_02",
+      "source": "PROV_DKI_Jakarta",
+      "target": "SEISMIC_ZONE_DKI_Jakarta",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "Seismic zone for DKI Jakarta activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_DKI_Jakarta_03",
+      "source": "SEISMIC_ZONE_DKI_Jakarta",
+      "target": "RISK_DKI_Jakarta",
+      "type": "COMBINES_WITH",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for DKI Jakarta",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_DKI_Jakarta_04",
+      "source": "PROV_DKI_Jakarta",
+      "target": "PERDA_DKI_Jakarta",
+      "type": "OVERRIDES",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "Local Perda in DKI Jakarta may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_DKI_Jakarta_05",
+      "source": "RDTR_DKI_Jakarta",
+      "target": "SEISMIC_ZONE_DKI_Jakarta",
+      "type": "REFERENCES",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "RDTR zoning must comply with seismic zone classification for DKI Jakarta",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Barat_01",
+      "source": "PROV_Jawa_Barat",
+      "target": "RDTR_Jawa_Barat",
+      "type": "DEFINES",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "RDTR for Jawa Barat is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Barat_02",
+      "source": "PROV_Jawa_Barat",
+      "target": "SEISMIC_ZONE_Jawa_Barat",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "Seismic zone for Jawa Barat activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Barat_03",
+      "source": "SEISMIC_ZONE_Jawa_Barat",
+      "target": "RISK_Jawa_Barat",
+      "type": "COMBINES_WITH",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Jawa Barat",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Barat_04",
+      "source": "PROV_Jawa_Barat",
+      "target": "PERDA_Jawa_Barat",
+      "type": "OVERRIDES",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "Local Perda in Jawa Barat may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Barat_05",
+      "source": "RDTR_Jawa_Barat",
+      "target": "SEISMIC_ZONE_Jawa_Barat",
+      "type": "REFERENCES",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "RDTR zoning must comply with seismic zone classification for Jawa Barat",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Timur_01",
+      "source": "PROV_Jawa_Timur",
+      "target": "RDTR_Jawa_Timur",
+      "type": "DEFINES",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "RDTR for Jawa Timur is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Timur_02",
+      "source": "PROV_Jawa_Timur",
+      "target": "SEISMIC_ZONE_Jawa_Timur",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "Seismic zone for Jawa Timur activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Timur_03",
+      "source": "SEISMIC_ZONE_Jawa_Timur",
+      "target": "RISK_Jawa_Timur",
+      "type": "COMBINES_WITH",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Jawa Timur",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Timur_04",
+      "source": "PROV_Jawa_Timur",
+      "target": "PERDA_Jawa_Timur",
+      "type": "OVERRIDES",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "Local Perda in Jawa Timur may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_JAVA_Jawa_Timur_05",
+      "source": "RDTR_Jawa_Timur",
+      "target": "SEISMIC_ZONE_Jawa_Timur",
+      "type": "REFERENCES",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "RDTR zoning must comply with seismic zone classification for Jawa Timur",
+      "verified": false
+    }
+  ]
+}

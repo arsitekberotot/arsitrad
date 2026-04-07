@@ -1,0 +1,12 @@
+{
+  "id": "permit",
+  "name": "PBG / Building Permits",
+  "nodes_file": "nodes/permit_nodes.json",
+  "edges_file": "edges/permit_edges.json",
+  "description": "Risk-based permitting: NIB\u2192KKPR\u2192PBG\u2192SLF sequence",
+  "priority_intersections": [
+    "KKPR failure = immediate termination (PP 28/2025 Art 27)",
+    "Accessibility gates (Permen 14/2017): 1:12 ramp, 90cm door",
+    "BIM gate: area>2000m\u00b2 OR floors>2 \u2192 SIDLACOM clash detection"
+  ]
+}

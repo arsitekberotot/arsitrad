@@ -1,0 +1,110 @@
+{
+  "module": "settlement",
+  "description": "Mass housing, MBR eligibility, spatial planning ratios, PSU standards, and apartment management logic",
+  "nodes": [
+    {
+      "id": "UU1_2011_HOUSING",
+      "type": "regulation",
+      "module": "settlement",
+      "tier": 8,
+      "source": "UU No. 1 Tahun 2011",
+      "description": "Housing and Settlements framework  mandates basic infrastructure (PSU) provision for all housing developments.",
+      "attributes": {
+        "framework": "housing_rights",
+        "infrastructure": "PSU"
+      },
+      "verified": true
+    },
+    {
+      "id": "PSU_STANDARDS",
+      "type": "infrastructure_gate",
+      "module": "settlement",
+      "tier": 8,
+      "source": "UU No. 1 Tahun 2011",
+      "description": "Basic infrastructure standards  roads, water, electricity, sanitation. Mandatory for housing legality.",
+      "attributes": {
+        "components": [
+          "roads",
+          "water",
+          "electricity",
+          "sanitation"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "MBR_ELIGIBILITY",
+      "type": "eligibility_gate",
+      "module": "settlement",
+      "tier": 8,
+      "source": "Permen PKP No. 5 Tahun 2025",
+      "description": "Low-Income Communities (Masyarakat Berpenghasilan Rendah) eligibility gate. Income limits vary by regional zone. AI must filter user profiles against local income thresholds.",
+      "attributes": {
+        "criteria": "regional_income_zone",
+        "eligible_outputs": [
+          "subsidy",
+          "tax_incentive",
+          "subsidized_loan"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "MBR_SUBSIDY_PATH",
+      "type": "procedure_path",
+      "module": "settlement",
+      "tier": 8,
+      "source": "Permen PKP No. 5 Tahun 2025",
+      "description": "Proceed down subsidy path if MBR eligibility gate is passed.",
+      "attributes": {
+        "outcome": "subsidy_eligible"
+      },
+      "verified": true
+    },
+    {
+      "id": "SPATIAL_RATIO_GATE",
+      "type": "spatial_gate",
+      "module": "settlement",
+      "tier": 8,
+      "source": "SNI 03-1733-2004",
+      "description": "Spatial planning ratios for public facilities. E.g., 1 playground per 250 residents.",
+      "attributes": {
+        "playground_ratio": "1 per 250 residents",
+        "facility_types": [
+          "playground",
+          "park",
+          "common_area"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "PPPSRS_LOGIC",
+      "type": "management_logic",
+      "module": "settlement",
+      "tier": 8,
+      "source": "Permen PKP No. 4 Tahun 2025",
+      "description": "Owners-Tenants Association (PPPSRS) management logic for high-rise apartments. Governance structure and transition from developer management.",
+      "attributes": {
+        "apartment_type": "highrise",
+        "governance": "PPPSRS"
+      },
+      "verified": true
+    },
+    {
+      "id": "RETROFIT_SUBSIDY_CROSS",
+      "type": "cross_module_node",
+      "module": "settlement",
+      "tier": 8,
+      "source": "Cross-module intersection",
+      "description": "Bridge node: if a building requires retrofit (from disaster module) AND owner qualifies as MBR, subsidy path may apply.",
+      "attributes": {
+        "modules": [
+          "disaster",
+          "settlement"
+        ]
+      },
+      "verified": true
+    }
+  ]
+}

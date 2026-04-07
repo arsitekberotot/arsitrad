@@ -1,0 +1,278 @@
+{
+  "island": "sumatra",
+  "nodes": [
+    {
+      "id": "PROV_Sumatera_Utara",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "Medan gateway — Banda Aceh-Medan seismically active zone, Sumatran fault",
+      "source": "RDTR Medan 2012-2032",
+      "attributes": {
+        "seismic_zone": "KDS D-E (high — near Sumatran fault)",
+        "disaster_risks": [
+          "earthquake",
+          "tsunami",
+          "flood"
+        ],
+        "special_rules": [
+          "sumatran_fault_proximity",
+          "aceh_retrofit_mandate"
+        ],
+        "rdtr": "RDTR Medan 2012-2032",
+        "local_perda": [
+          "Perda Medan 14/2011"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Sumatera_Utara",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "Regional Spatial Plan for Sumatera Utara",
+      "source": "RDTR Medan 2012-2032",
+      "attributes": {
+        "plan_name": "RDTR Medan 2012-2032",
+        "applies_to": "Sumatera Utara",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Sumatera_Utara",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "Seismic hazard classification for Sumatera Utara",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS D-E (high — near Sumatran fault)",
+        "hazard_level": "high",
+        "primary_fault": "Sumatran Fault / Sunda megathrust"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Sumatera_Utara",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "Multi-hazard risk profile for Sumatera Utara",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "earthquake",
+          "tsunami",
+          "flood"
+        ],
+        "highest_priority": "earthquake"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Sumatera_Utara",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "Local Perda for Sumatera Utara",
+      "source": "Perda Medan 14/2011",
+      "attributes": {
+        "perda_list": [
+          "Perda Medan 14/2011"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    },
+    {
+      "id": "PROV_Sumatera_Selatan",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "Palembang — Musi River floodplain, peat soil foundation challenges",
+      "source": "RDTR Palembang 2012-2032",
+      "attributes": {
+        "seismic_zone": "KDS B-C (moderate)",
+        "disaster_risks": [
+          "flood",
+          "landslide",
+          "earthquake"
+        ],
+        "special_rules": [
+          "musi_river_setback",
+          "peat_soil_foundation"
+        ],
+        "rdtr": "RDTR Palembang 2012-2032",
+        "local_perda": [
+          "Perda Palembang 16/2012"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Sumatera_Selatan",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "Regional Spatial Plan for Sumatera Selatan",
+      "source": "RDTR Palembang 2012-2032",
+      "attributes": {
+        "plan_name": "RDTR Palembang 2012-2032",
+        "applies_to": "Sumatera Selatan",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Sumatera_Selatan",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "Seismic hazard classification for Sumatera Selatan",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS B-C (moderate)",
+        "hazard_level": "high",
+        "primary_fault": "Sumatran Fault / Sunda megathrust"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Sumatera_Selatan",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "Multi-hazard risk profile for Sumatera Selatan",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "flood",
+          "landslide",
+          "earthquake"
+        ],
+        "highest_priority": "flood"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Sumatera_Selatan",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "Local Perda for Sumatera Selatan",
+      "source": "Perda Palembang 16/2012",
+      "attributes": {
+        "perda_list": [
+          "Perda Palembang 16/2012"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    },
+    {
+      "id": "PROV_Lampung",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "Java Sunda Strait crossing — gateway to Java, earthquake/tsunami exposure",
+      "source": "RDTR Bandar Lampung 2011-2031",
+      "attributes": {
+        "seismic_zone": "KDS C-D (moderate-high — Sunda megathrust)",
+        "disaster_risks": [
+          "tsunami",
+          "earthquake",
+          "coastal_flood"
+        ],
+        "special_rules": [
+          "sunda_strait_proximity",
+          "coastal_flood"
+        ],
+        "rdtr": "RDTR Bandar Lampung 2011-2031",
+        "local_perda": [
+          "Perda Lampung 10/2008"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Lampung",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "Regional Spatial Plan for Lampung",
+      "source": "RDTR Bandar Lampung 2011-2031",
+      "attributes": {
+        "plan_name": "RDTR Bandar Lampung 2011-2031",
+        "applies_to": "Lampung",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Lampung",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "Seismic hazard classification for Lampung",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS C-D (moderate-high — Sunda megathrust)",
+        "hazard_level": "high",
+        "primary_fault": "Sumatran Fault / Sunda megathrust"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Lampung",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "Multi-hazard risk profile for Lampung",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "tsunami",
+          "earthquake",
+          "coastal_flood"
+        ],
+        "highest_priority": "tsunami"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Lampung",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "Local Perda for Lampung",
+      "source": "Perda Lampung 10/2008",
+      "attributes": {
+        "perda_list": [
+          "Perda Lampung 10/2008"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    }
+  ]
+}

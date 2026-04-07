@@ -1,0 +1,65 @@
+{
+  "module": "disaster",
+  "edges": [
+    {
+      "id": "E_DISASTER_01",
+      "source": "SNI1726_CH4",
+      "target": "KDS_DETERMINATION",
+      "type": "DEFINES",
+      "module": "disaster",
+      "condition": null,
+      "description": "KDS categories from SNI 1726 feed into KDS determination logic",
+      "verified": true
+    },
+    {
+      "id": "E_DISASTER_02",
+      "source": "KDS_DETERMINATION",
+      "target": "SRPMK_GATE",
+      "type": "GATES",
+      "module": "disaster",
+      "condition": "KDS in [D, E, F]",
+      "description": "KDS D/E/F triggers mandatory SRPMK ductile detailing requirement",
+      "verified": true
+    },
+    {
+      "id": "E_DISASTER_03",
+      "source": "SNI1727_LOAD",
+      "target": "COLLAPSE_PREVENTION",
+      "type": "COMBINES_WITH",
+      "module": "disaster",
+      "condition": "seismic_event == True",
+      "description": "Load combinations from SNI 1727 are checked against collapse prevention principle",
+      "verified": true
+    },
+    {
+      "id": "E_DISASTER_04",
+      "source": "RETROFIT_GATE",
+      "target": "SRPMK_GATE",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "disaster",
+      "condition": "capacity < 100%_required AND KDS in [D,E,F]",
+      "description": "Existing building with insufficient capacity in KDS D/E/F zone must retrofit with SRPMK",
+      "verified": true
+    },
+    {
+      "id": "E_DISASTER_05",
+      "source": "FIRE_LIFT_GATE",
+      "target": "COLLAPSE_PREVENTION",
+      "type": "ADDS_REQUIREMENT",
+      "module": "disaster",
+      "condition": "building_height_m > 24",
+      "description": "Buildings > 24m have additional fire structural requirements layered on top of seismic design",
+      "verified": true
+    },
+    {
+      "id": "E_DISASTER_06",
+      "source": "KDS_DETERMINATION",
+      "target": "RETROFIT_GATE",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "disaster",
+      "condition": "building.is_existing == True",
+      "description": "Existing buildings undergoing assessment must check retrofit gate based on their KDS",
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "settlement",
+  "name": "Settlements & Urban Housing",
+  "nodes_file": "nodes/settlement_nodes.json",
+  "edges_file": "edges/settlement_edges.json",
+  "description": "MBR eligibility, PSU standards, spatial ratios, PPPSRS",
+  "priority_intersections": [
+    "MBR income < regional threshold \u2192 subsidy path (Permen PKP 5/2025)",
+    "1 playground per 250 residents (SNI 03-1733-2004)",
+    "Retrofit required + MBR eligible \u2192 retrofit subsidy (cross-module)"
+  ]
+}

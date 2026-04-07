@@ -1,0 +1,75 @@
+{
+  "module": "cooling",
+  "edges": [
+    {
+      "id": "E_COOLING_01",
+      "source": "HEAT_GAIN_LOGIC",
+      "target": "OTTV_LIMIT",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "cooling",
+      "condition": "WWR > threshold",
+      "description": "High WWR increases heat gain ? triggers OTTV check against BGH limits",
+      "verified": true
+    },
+    {
+      "id": "E_COOLING_02",
+      "source": "OTTV_LIMIT",
+      "target": "LOW_E_GLASS_GATE",
+      "type": "GATES",
+      "module": "cooling",
+      "condition": "OTTV > OTTV_limit",
+      "description": "OTTV exceeded ? recommend Low-E glass as primary intervention",
+      "verified": true
+    },
+    {
+      "id": "E_COOLING_03",
+      "source": "SNI6390_IKE",
+      "target": "AUTOMATED_HVAC_GATE",
+      "type": "GATES",
+      "module": "cooling",
+      "condition": "IKE > IKE_limit",
+      "description": "IKE exceeds standard limit ? automated HVAC with occupancy sensors recommended",
+      "verified": true
+    },
+    {
+      "id": "E_COOLING_04",
+      "source": "LOW_E_GLASS_GATE",
+      "target": "ENERGY_SAVINGS_TARGET",
+      "type": "CONTRIBUTES_TO",
+      "module": "cooling",
+      "condition": null,
+      "description": "Low-E glass intervention contributes toward the 25% energy savings target",
+      "verified": true
+    },
+    {
+      "id": "E_COOLING_05",
+      "source": "AUTOMATED_HVAC_GATE",
+      "target": "ENERGY_SAVINGS_TARGET",
+      "type": "CONTRIBUTES_TO",
+      "module": "cooling",
+      "condition": null,
+      "description": "Automated HVAC contributes toward the 25% energy savings target",
+      "verified": true
+    },
+    {
+      "id": "E_COOLING_06",
+      "source": "SNI6572_VENT",
+      "target": "SNI6390_IKE",
+      "type": "SEQUENCES",
+      "module": "cooling",
+      "condition": null,
+      "description": "Ventilation standard (6572) must be met before IKE energy intensity is evaluated",
+      "verified": true
+    },
+    {
+      "id": "E_COOLING_07",
+      "source": "OTTV_LIMIT",
+      "target": "WATER_SAVINGS_TARGET",
+      "type": "COEXISTS_WITH",
+      "module": "cooling",
+      "condition": "BGH_certification == True",
+      "description": "BGH certification requires both OTTV compliance AND 10% water savings simultaneously",
+      "verified": true
+    }
+  ]
+}

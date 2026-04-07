@@ -1,0 +1,280 @@
+{
+  "island": "papua",
+  "nodes": [
+    {
+      "id": "PROV_Papua",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua",
+      "description": "Special autonomy region — massive infrastructure push, Freeport/AMS access zone",
+      "source": "RDTR Kabupaten Mimika (Timika)",
+      "attributes": {
+        "seismic_zone": "KDS D-E (very high — Papua thrust fault)",
+        "disaster_risks": [
+          "earthquake",
+          "landslide",
+          "flood"
+        ],
+        "special_rules": [
+          "special_autonomy_rules",
+          "forestry_exclusion_zone",
+          "freeport_proximity"
+        ],
+        "rdtr": "RDTR Kabupaten Mimika (Timika)",
+        "local_perda": [
+          "Perda Papua 14/2008 (special autonomy)"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Papua",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua",
+      "description": "Regional Spatial Plan for Papua",
+      "source": "RDTR Kabupaten Mimika (Timika)",
+      "attributes": {
+        "plan_name": "RDTR Kabupaten Mimika (Timika)",
+        "applies_to": "Papua",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Papua",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua",
+      "description": "Seismic hazard classification for Papua",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS D-E (very high — Papua thrust fault)",
+        "hazard_level": "high",
+        "primary_fault": "Papua Thrust Fault / Yapen Fault"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Papua",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua",
+      "description": "Multi-hazard risk profile for Papua",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "earthquake",
+          "landslide",
+          "flood"
+        ],
+        "highest_priority": "earthquake"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Papua",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua",
+      "description": "Local Perda for Papua",
+      "source": "Perda Papua 14/2008 (special autonomy)",
+      "attributes": {
+        "perda_list": [
+          "Perda Papua 14/2008 (special autonomy)"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    },
+    {
+      "id": "PROV_Papua_Barat",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Barat",
+      "description": "Bird's Head peninsula — mining/petroleum operations, Sorong port hub",
+      "source": "RDTR Sorong 2014-2034",
+      "attributes": {
+        "seismic_zone": "KDS C-D (moderate-high)",
+        "disaster_risks": [
+          "earthquake",
+          "tsunami",
+          "coastal_erosion"
+        ],
+        "special_rules": [
+          "marine_proximity",
+          "mining_setback",
+          "coral_reef_buffer"
+        ],
+        "rdtr": "RDTR Sorong 2014-2034",
+        "local_perda": [
+          "Perda Papua Barat 6/2012"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Papua_Barat",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Barat",
+      "description": "Regional Spatial Plan for Papua Barat",
+      "source": "RDTR Sorong 2014-2034",
+      "attributes": {
+        "plan_name": "RDTR Sorong 2014-2034",
+        "applies_to": "Papua Barat",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Papua_Barat",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Barat",
+      "description": "Seismic hazard classification for Papua Barat",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS C-D (moderate-high)",
+        "hazard_level": "high",
+        "primary_fault": "Papua Thrust Fault / Yapen Fault"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Papua_Barat",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Barat",
+      "description": "Multi-hazard risk profile for Papua Barat",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "earthquake",
+          "tsunami",
+          "coastal_erosion"
+        ],
+        "highest_priority": "earthquake"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Papua_Barat",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Barat",
+      "description": "Local Perda for Papua Barat",
+      "source": "Perda Papua Barat 6/2012",
+      "attributes": {
+        "perda_list": [
+          "Perda Papua Barat 6/2012"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    },
+    {
+      "id": "PROV_Papua_Tengah",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Tengah",
+      "description": "Central highlands — road infrastructure focus, mine access roads, remote logistics",
+      "source": "RDTR Nabire (central coast)",
+      "attributes": {
+        "seismic_zone": "KDS D-E (high — central highlands fault)",
+        "disaster_risks": [
+          "landslide",
+          "earthquake",
+          "flood"
+        ],
+        "special_rules": [
+          "remote_area_standards",
+          "mine_access_road"
+        ],
+        "rdtr": "RDTR Nabire (central coast)",
+        "local_perda": [
+          "Perda Papua Tengah 1/2023"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Papua_Tengah",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Tengah",
+      "description": "Regional Spatial Plan for Papua Tengah",
+      "source": "RDTR Nabire (central coast)",
+      "attributes": {
+        "plan_name": "RDTR Nabire (central coast)",
+        "applies_to": "Papua Tengah",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Papua_Tengah",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Tengah",
+      "description": "Seismic hazard classification for Papua Tengah",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS D-E (high — central highlands fault)",
+        "hazard_level": "high",
+        "primary_fault": "Papua Thrust Fault / Yapen Fault"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Papua_Tengah",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Tengah",
+      "description": "Multi-hazard risk profile for Papua Tengah",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "landslide",
+          "earthquake",
+          "flood"
+        ],
+        "highest_priority": "landslide"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Papua_Tengah",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "papua",
+      "province": "Papua Tengah",
+      "description": "Local Perda for Papua Tengah",
+      "source": "Perda Papua Tengah 1/2023",
+      "attributes": {
+        "perda_list": [
+          "Perda Papua Tengah 1/2023"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    }
+  ]
+}

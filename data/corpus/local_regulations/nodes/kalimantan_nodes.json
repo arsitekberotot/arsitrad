@@ -1,0 +1,277 @@
+{
+  "island": "kalimantan",
+  "nodes": [
+    {
+      "id": "PROV_Kalimantan_Timur",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "Samarinda/Balikpapan — resource extraction hub, IKN influence zone, Kutai Basin",
+      "source": "RDTR Samarinda 2012-2032",
+      "attributes": {
+        "seismic_zone": "KDS A-B (low — but active faults in hinterland)",
+        "disaster_risks": [
+          "flood",
+          "forest_fire",
+          "landslide"
+        ],
+        "special_rules": [
+          "forestry_conversion",
+          "coal_surface_mining",
+          "IKN_proximity"
+        ],
+        "rdtr": "RDTR Samarinda 2012-2032",
+        "local_perda": [
+          "Perda Kalimantan Timur 10/2013"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Kalimantan_Timur",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "Regional Spatial Plan for Kalimantan Timur",
+      "source": "RDTR Samarinda 2012-2032",
+      "attributes": {
+        "plan_name": "RDTR Samarinda 2012-2032",
+        "applies_to": "Kalimantan Timur",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Kalimantan_Timur",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "Seismic hazard classification for Kalimantan Timur",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS A-B (low — but active faults in hinterland)",
+        "hazard_level": "high",
+        "primary_fault": "Kutai Basin / local faults (low activity)"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Kalimantan_Timur",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "Multi-hazard risk profile for Kalimantan Timur",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "flood",
+          "forest_fire",
+          "landslide"
+        ],
+        "highest_priority": "flood"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Kalimantan_Timur",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "Local Perda for Kalimantan Timur",
+      "source": "Perda Kalimantan Timur 10/2013",
+      "attributes": {
+        "perda_list": [
+          "Perda Kalimantan Timur 10/2013"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    },
+    {
+      "id": "PROV_Kalimantan_Selatan",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "Banjarmasin — major coal province, Barito River floodplain, peat soil",
+      "source": "RDTR Banjarmasin 2011-2031",
+      "attributes": {
+        "seismic_zone": "KDS A (low)",
+        "disaster_risks": [
+          "flood",
+          "coal_fire",
+          "drought"
+        ],
+        "special_rules": [
+          "coal_mining_setback",
+          "river_flood_zone"
+        ],
+        "rdtr": "RDTR Banjarmasin 2011-2031",
+        "local_perda": [
+          "Perda Kalsul 9/2013"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Kalimantan_Selatan",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "Regional Spatial Plan for Kalimantan Selatan",
+      "source": "RDTR Banjarmasin 2011-2031",
+      "attributes": {
+        "plan_name": "RDTR Banjarmasin 2011-2031",
+        "applies_to": "Kalimantan Selatan",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Kalimantan_Selatan",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "Seismic hazard classification for Kalimantan Selatan",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS A (low)",
+        "hazard_level": "high",
+        "primary_fault": "Kutai Basin / local faults (low activity)"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Kalimantan_Selatan",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "Multi-hazard risk profile for Kalimantan Selatan",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "flood",
+          "coal_fire",
+          "drought"
+        ],
+        "highest_priority": "flood"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Kalimantan_Selatan",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "Local Perda for Kalimantan Selatan",
+      "source": "Perda Kalsul 9/2013",
+      "attributes": {
+        "perda_list": [
+          "Perda Kalsul 9/2013"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    },
+    {
+      "id": "PROV_Kalimantan_Barat",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "Pontianak — Kapuas River floodplain, equatorial climate, agricultural zone",
+      "source": "RDTR Pontianak 2012-2032",
+      "attributes": {
+        "seismic_zone": "KDS A (low)",
+        "disaster_risks": [
+          "flood",
+          "fire"
+        ],
+        "special_rules": [
+          "river_setback_kapuas",
+          "agricultural_zone"
+        ],
+        "rdtr": "RDTR Pontianak 2012-2032",
+        "local_perda": [
+          "Perda Kalimantan Barat 8/2012"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Kalimantan_Barat",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "Regional Spatial Plan for Kalimantan Barat",
+      "source": "RDTR Pontianak 2012-2032",
+      "attributes": {
+        "plan_name": "RDTR Pontianak 2012-2032",
+        "applies_to": "Kalimantan Barat",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Kalimantan_Barat",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "Seismic hazard classification for Kalimantan Barat",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS A (low)",
+        "hazard_level": "high",
+        "primary_fault": "Kutai Basin / local faults (low activity)"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Kalimantan_Barat",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "Multi-hazard risk profile for Kalimantan Barat",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "flood",
+          "fire"
+        ],
+        "highest_priority": "flood"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Kalimantan_Barat",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "Local Perda for Kalimantan Barat",
+      "source": "Perda Kalimantan Barat 8/2012",
+      "attributes": {
+        "perda_list": [
+          "Perda Kalimantan Barat 8/2012"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    }
+  ]
+}

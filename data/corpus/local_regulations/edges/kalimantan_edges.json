@@ -1,0 +1,155 @@
+{
+  "island": "kalimantan",
+  "edges": [
+    {
+      "id": "E_KALI_Kalimantan_Timur_01",
+      "source": "PROV_Kalimantan_Timur",
+      "target": "RDTR_Kalimantan_Timur",
+      "type": "DEFINES",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "RDTR for Kalimantan Timur is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Timur_02",
+      "source": "PROV_Kalimantan_Timur",
+      "target": "SEISMIC_ZONE_Kalimantan_Timur",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "Seismic zone for Kalimantan Timur activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Timur_03",
+      "source": "SEISMIC_ZONE_Kalimantan_Timur",
+      "target": "RISK_Kalimantan_Timur",
+      "type": "COMBINES_WITH",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Kalimantan Timur",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Timur_04",
+      "source": "PROV_Kalimantan_Timur",
+      "target": "PERDA_Kalimantan_Timur",
+      "type": "OVERRIDES",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "Local Perda in Kalimantan Timur may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Timur_05",
+      "source": "RDTR_Kalimantan_Timur",
+      "target": "SEISMIC_ZONE_Kalimantan_Timur",
+      "type": "REFERENCES",
+      "island": "kalimantan",
+      "province": "Kalimantan Timur",
+      "description": "RDTR zoning must comply with seismic zone classification for Kalimantan Timur",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Selatan_01",
+      "source": "PROV_Kalimantan_Selatan",
+      "target": "RDTR_Kalimantan_Selatan",
+      "type": "DEFINES",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "RDTR for Kalimantan Selatan is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Selatan_02",
+      "source": "PROV_Kalimantan_Selatan",
+      "target": "SEISMIC_ZONE_Kalimantan_Selatan",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "Seismic zone for Kalimantan Selatan activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Selatan_03",
+      "source": "SEISMIC_ZONE_Kalimantan_Selatan",
+      "target": "RISK_Kalimantan_Selatan",
+      "type": "COMBINES_WITH",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Kalimantan Selatan",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Selatan_04",
+      "source": "PROV_Kalimantan_Selatan",
+      "target": "PERDA_Kalimantan_Selatan",
+      "type": "OVERRIDES",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "Local Perda in Kalimantan Selatan may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Selatan_05",
+      "source": "RDTR_Kalimantan_Selatan",
+      "target": "SEISMIC_ZONE_Kalimantan_Selatan",
+      "type": "REFERENCES",
+      "island": "kalimantan",
+      "province": "Kalimantan Selatan",
+      "description": "RDTR zoning must comply with seismic zone classification for Kalimantan Selatan",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Barat_01",
+      "source": "PROV_Kalimantan_Barat",
+      "target": "RDTR_Kalimantan_Barat",
+      "type": "DEFINES",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "RDTR for Kalimantan Barat is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Barat_02",
+      "source": "PROV_Kalimantan_Barat",
+      "target": "SEISMIC_ZONE_Kalimantan_Barat",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "Seismic zone for Kalimantan Barat activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Barat_03",
+      "source": "SEISMIC_ZONE_Kalimantan_Barat",
+      "target": "RISK_Kalimantan_Barat",
+      "type": "COMBINES_WITH",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Kalimantan Barat",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Barat_04",
+      "source": "PROV_Kalimantan_Barat",
+      "target": "PERDA_Kalimantan_Barat",
+      "type": "OVERRIDES",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "Local Perda in Kalimantan Barat may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_KALI_Kalimantan_Barat_05",
+      "source": "RDTR_Kalimantan_Barat",
+      "target": "SEISMIC_ZONE_Kalimantan_Barat",
+      "type": "REFERENCES",
+      "island": "kalimantan",
+      "province": "Kalimantan Barat",
+      "description": "RDTR zoning must comply with seismic zone classification for Kalimantan Barat",
+      "verified": false
+    }
+  ]
+}

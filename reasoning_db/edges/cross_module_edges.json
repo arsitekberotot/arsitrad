@@ -1,0 +1,55 @@
+{
+  "module": "cross_module",
+  "edges": [
+    {
+      "id": "E_CROSS_01",
+      "source": "PBG",
+      "target": "BIM_GATE",
+      "source_module": "permit",
+      "target_module": "permit",
+      "type": "TRIGGERS",
+      "description": "PBG design validation triggers BIM clash detection for large buildings",
+      "verified": true
+    },
+    {
+      "id": "E_CROSS_02",
+      "source": "RETROFIT_GATE",
+      "target": "MBR_ELIGIBILITY",
+      "source_module": "disaster",
+      "target_module": "settlement",
+      "type": "CROSS_MODULE_BRIDGE",
+      "description": "Retrofit required + MBR eligible ? retrofit subsidy path (key intersection)",
+      "verified": true
+    },
+    {
+      "id": "E_CROSS_03",
+      "source": "SLF",
+      "target": "FIRE_LIFT_GATE",
+      "source_module": "permit",
+      "target_module": "disaster",
+      "type": "CROSS_MODULE_BRIDGE",
+      "description": "SLF occupancy certification checks fire lift requirements for buildings >24m",
+      "verified": true
+    },
+    {
+      "id": "E_CROSS_04",
+      "source": "OTTV_LIMIT",
+      "target": "ENERGY_SAVINGS_TARGET",
+      "source_module": "cooling",
+      "target_module": "cooling",
+      "type": "CONTRIBUTES_TO",
+      "description": "OTTV compliance and energy savings target coexist in BGH certification",
+      "verified": true
+    },
+    {
+      "id": "E_CROSS_05",
+      "source": "ACCESSIBILITY_GATE",
+      "target": "PPPSRS_LOGIC",
+      "source_module": "permit",
+      "target_module": "settlement",
+      "type": "CROSS_MODULE_BRIDGE",
+      "description": "Apartment accessibility requirements must be handed over to PPPSRS management",
+      "verified": true
+    }
+  ]
+}

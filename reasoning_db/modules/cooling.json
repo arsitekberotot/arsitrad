@@ -1,0 +1,11 @@
+{
+  "id": "cooling",
+  "name": "Cooling & HVAC",
+  "nodes_file": "nodes/cooling_nodes.json",
+  "edges_file": "edges/cooling_edges.json",
+  "description": "Thermal comfort: OTTV, WWR logic, IKE, BGH targets",
+  "priority_intersections": [
+    "WWR high \u2192 heat gain \u2192 OTTV check \u2192 Low-E glass OR automated HVAC",
+    "BGH compliance requires 25% energy + 10% water savings simultaneously"
+  ]
+}

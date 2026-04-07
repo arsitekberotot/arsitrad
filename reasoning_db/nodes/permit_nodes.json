@@ -1,0 +1,152 @@
+{
+  "module": "permit",
+  "description": "PBG/SLF risk-based permitting  tracks NIB?KKPR?PBG?SLF sequence with conditional gates",
+  "nodes": [
+    {
+      "id": "NIB",
+      "type": "procedure_start",
+      "module": "permit",
+      "tier": 1,
+      "source": null,
+      "description": "Nomor Induk Berusaha  Business Identification Number. Entry point for all permit paths.",
+      "attributes": {
+        "role": "entry_point"
+      },
+      "verified": true
+    },
+    {
+      "id": "UU6_2023_Art7_8",
+      "type": "regulation",
+      "module": "permit",
+      "tier": 1,
+      "source": "UU No. 6 Tahun 2023 Pasal 7 & 8",
+      "description": "Risk-Based Licensing mandate. Categorizes projects: Low, Medium-Low, Medium-High, High risk.",
+      "attributes": {
+        "risk_categories": [
+          "Low",
+          "Medium_Low",
+          "Medium_High",
+          "High"
+        ],
+        "low_risk_requirement": "NIB only",
+        "high_risk_requirement": "NIB + AMDAL + Government-verified standards"
+      },
+      "verified": true
+    },
+    {
+      "id": "KKPR",
+      "type": "spatial_check",
+      "module": "permit",
+      "tier": 3,
+      "source": "PP No. 28 Tahun 2025 Pasal 27",
+      "description": "Kesesuaian Kegiatan Pemanfaatan Ruang  Spatial Conformity Approval. Must cross-reference coordinates with RDTR Digital within OSS RBA system.",
+      "attributes": {
+        "cross_refs": [
+          "RDTR_Digital",
+          "OSS_RBA"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "KKPR_FAILURE",
+      "type": "terminal_reject",
+      "module": "permit",
+      "tier": 1,
+      "source": "PP No. 28 Tahun 2025 Pasal 27",
+      "description": "If KKPR fails, the entire permit path terminates immediately. No appeal process within this logic.",
+      "attributes": {
+        "outcome": "permit_terminates"
+      },
+      "verified": true
+    },
+    {
+      "id": "ENV_APPROVAL",
+      "type": "conditional_gate",
+      "module": "permit",
+      "tier": 1,
+      "source": "PP No. 28 Tahun 2025 Pasal 27",
+      "description": "Environmental approval gate  required for Medium-High and High risk projects.",
+      "attributes": {
+        "triggers": [
+          "Medium_High",
+          "High"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "PBG",
+      "type": "procedural_gate",
+      "module": "permit",
+      "tier": 1,
+      "source": "PP No. 16 Tahun 2021 Pasal 253",
+      "description": "Persetujuan Bangunan Gedung  Building Approval. Prerequisite for construction start. Validates design compliance.",
+      "attributes": {
+        "phase": "construction",
+        "gate_type": "design_validation"
+      },
+      "verified": true
+    },
+    {
+      "id": "SLF",
+      "type": "procedural_gate",
+      "module": "permit",
+      "tier": 1,
+      "source": "PP No. 16 Tahun 2021 Pasal 283",
+      "description": "Sertifikat Layak Fungsi  Fitness Certificate. Prerequisite for occupancy. Validates as-built compliance.",
+      "attributes": {
+        "phase": "occupancy",
+        "gate_type": "as_built_validation"
+      },
+      "verified": true
+    },
+    {
+      "id": "ACCESSIBILITY_GATE",
+      "type": "technical_gate",
+      "module": "permit",
+      "tier": 1,
+      "source": "Permen PUPR No. 14/PRT/M/2017",
+      "description": "Mandatory universal design gates: 1:12 ramp ratio, 90cm minimum door width. Triggers for buildings over certain floor counts or public function.",
+      "attributes": {
+        "ramp_ratio": "1:12",
+        "door_width_min_cm": 90,
+        "triggers": [
+          "floor_count_exceeded",
+          "public_function"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "BIM_GATE",
+      "type": "lifecycle_gate",
+      "module": "permit",
+      "tier": 4,
+      "source": "SIDLACOM cycle",
+      "description": "BIM mandatory for BGN projects > 2000m² floor area OR > 2 floors. Enables clash detection and digital twin management.",
+      "attributes": {
+        "area_threshold_m2": 2000,
+        "floor_threshold": 2,
+        "capabilities": [
+          "clash_detection",
+          "digital_twin"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "BID_REASONABLENESS",
+      "type": "cost_gate",
+      "module": "permit",
+      "tier": 6,
+      "source": "Permen PUPR No. 10/2021 (SMKK) + AHSP 2026",
+      "description": "Safety is a non-negotiable direct cost component, not overhead. Uses SMKK and AHSP 2026 coefficients to detect unreasonably low bids.",
+      "attributes": {
+        "tool": "AHSP 2026",
+        "regulation": "SMKK"
+      },
+      "verified": true
+    }
+  ]
+}

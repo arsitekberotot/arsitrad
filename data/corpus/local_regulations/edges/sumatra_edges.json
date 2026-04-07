@@ -1,0 +1,155 @@
+{
+  "island": "sumatra",
+  "edges": [
+    {
+      "id": "E_SUMA_Sumatera_Utara_01",
+      "source": "PROV_Sumatera_Utara",
+      "target": "RDTR_Sumatera_Utara",
+      "type": "DEFINES",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "RDTR for Sumatera Utara is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Utara_02",
+      "source": "PROV_Sumatera_Utara",
+      "target": "SEISMIC_ZONE_Sumatera_Utara",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "Seismic zone for Sumatera Utara activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Utara_03",
+      "source": "SEISMIC_ZONE_Sumatera_Utara",
+      "target": "RISK_Sumatera_Utara",
+      "type": "COMBINES_WITH",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Sumatera Utara",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Utara_04",
+      "source": "PROV_Sumatera_Utara",
+      "target": "PERDA_Sumatera_Utara",
+      "type": "OVERRIDES",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "Local Perda in Sumatera Utara may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Utara_05",
+      "source": "RDTR_Sumatera_Utara",
+      "target": "SEISMIC_ZONE_Sumatera_Utara",
+      "type": "REFERENCES",
+      "island": "sumatra",
+      "province": "Sumatera Utara",
+      "description": "RDTR zoning must comply with seismic zone classification for Sumatera Utara",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Selatan_01",
+      "source": "PROV_Sumatera_Selatan",
+      "target": "RDTR_Sumatera_Selatan",
+      "type": "DEFINES",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "RDTR for Sumatera Selatan is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Selatan_02",
+      "source": "PROV_Sumatera_Selatan",
+      "target": "SEISMIC_ZONE_Sumatera_Selatan",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "Seismic zone for Sumatera Selatan activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Selatan_03",
+      "source": "SEISMIC_ZONE_Sumatera_Selatan",
+      "target": "RISK_Sumatera_Selatan",
+      "type": "COMBINES_WITH",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Sumatera Selatan",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Selatan_04",
+      "source": "PROV_Sumatera_Selatan",
+      "target": "PERDA_Sumatera_Selatan",
+      "type": "OVERRIDES",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "Local Perda in Sumatera Selatan may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Sumatera_Selatan_05",
+      "source": "RDTR_Sumatera_Selatan",
+      "target": "SEISMIC_ZONE_Sumatera_Selatan",
+      "type": "REFERENCES",
+      "island": "sumatra",
+      "province": "Sumatera Selatan",
+      "description": "RDTR zoning must comply with seismic zone classification for Sumatera Selatan",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Lampung_01",
+      "source": "PROV_Lampung",
+      "target": "RDTR_Lampung",
+      "type": "DEFINES",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "RDTR for Lampung is defined under provincial framework",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Lampung_02",
+      "source": "PROV_Lampung",
+      "target": "SEISMIC_ZONE_Lampung",
+      "type": "CONDITIONAL_TRIGGERS",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "Seismic zone for Lampung activates KDS requirements per SNI 1726",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Lampung_03",
+      "source": "SEISMIC_ZONE_Lampung",
+      "target": "RISK_Lampung",
+      "type": "COMBINES_WITH",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "Seismic hazard interacts with multi-hazard risk profile for Lampung",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Lampung_04",
+      "source": "PROV_Lampung",
+      "target": "PERDA_Lampung",
+      "type": "OVERRIDES",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "Local Perda in Lampung may override or supplement national standards",
+      "verified": false
+    },
+    {
+      "id": "E_SUMA_Lampung_05",
+      "source": "RDTR_Lampung",
+      "target": "SEISMIC_ZONE_Lampung",
+      "type": "REFERENCES",
+      "island": "sumatra",
+      "province": "Lampung",
+      "description": "RDTR zoning must comply with seismic zone classification for Lampung",
+      "verified": false
+    }
+  ]
+}

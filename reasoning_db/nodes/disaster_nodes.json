@@ -1,0 +1,112 @@
+{
+  "module": "disaster",
+  "description": "Structural reasoning for earthquake and disaster events — KDS categorization, SRPMK gates, retrofit thresholds, fire requirements",
+  "nodes": [
+    {
+      "id": "SNI1726_CH4",
+      "type": "regulation",
+      "module": "disaster",
+      "tier": 2,
+      "source": "SNI 1726:2019 Pasal 4",
+      "description": "Risk category classification for seismic design — Kategori Desain Seismik (KDS) A through F.",
+      "attributes": {
+        "kds_categories": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "KDS_DETERMINATION",
+      "type": "physics_rule",
+      "module": "disaster",
+      "tier": 2,
+      "source": "SNI 1726:2019",
+      "description": "Logic node: determine KDS based on building risk category, occupancy, and seismic zone. Maps to specific ductility requirements.",
+      "attributes": {
+        "principle": "Life_Safety"
+      },
+      "verified": true
+    },
+    {
+      "id": "SRPMK_GATE",
+      "type": "structural_gate",
+      "module": "disaster",
+      "tier": 2,
+      "source": "SNI 1726:2019 Pasal 7",
+      "description": "Special Moment Resisting Frame (SRPMK) mandatory for KDS D, E, F. Ductile detailing required.",
+      "attributes": {
+        "mandatory_for_kds": [
+          "D",
+          "E",
+          "F"
+        ],
+        "requirement": "ductile_detailing_SRPMK"
+      },
+      "verified": true
+    },
+    {
+      "id": "SNI1727_LOAD",
+      "type": "physics_rule",
+      "module": "disaster",
+      "tier": 2,
+      "source": "SNI 1727:2020 Pasal 2",
+      "description": "Load combination formulas for gravity and seismic analysis.",
+      "attributes": {
+        "combinations": {
+          "gravity": "1.2D + 1.6L",
+          "seismic": "1.2D + 1.0E + 1.0L"
+        }
+      },
+      "verified": true
+    },
+    {
+      "id": "RETROFIT_GATE",
+      "type": "retrofit_gate",
+      "module": "disaster",
+      "tier": 2,
+      "source": "SNI 9274:2025",
+      "description": "Retrofitting Gate — if existing capacity is < 100% of current code requirements, retrofit is mandatory. Based on ACI CODE-369.",
+      "attributes": {
+        "capacity_threshold_pct": 100,
+        "standard_reference": "ACI CODE-369",
+        "trigger": "capacity < 100%_required"
+      },
+      "verified": true
+    },
+    {
+      "id": "FIRE_LIFT_GATE",
+      "type": "fire_gate",
+      "module": "disaster",
+      "tier": 2,
+      "source": "Permen PU No. 26/PRT/M/2008",
+      "description": "Buildings over 24 meters require fire lift access and structural elements with specific Tingkat Ketahanan Api (TKA).",
+      "attributes": {
+        "height_threshold_m": 24,
+        "requirements": [
+          "fire_lift",
+          "TKA_specific"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "COLLAPSE_PREVENTION",
+      "type": "design_principle",
+      "module": "disaster",
+      "tier": 2,
+      "source": "SNI 1726:2019",
+      "description": "Life Safety principle — structures designed not to collapse during major quakes. Controlled damage acceptable but collapse unacceptable.",
+      "attributes": {
+        "principle": "Life_Safety",
+        "collapse_prevention": true
+      },
+      "verified": true
+    }
+  ]
+}

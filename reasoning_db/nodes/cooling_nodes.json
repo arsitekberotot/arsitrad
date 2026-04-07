@@ -1,0 +1,116 @@
+{
+  "module": "cooling",
+  "description": "Passive cooling and HVAC energy efficiency for tropical Indonesian climate — OTTV limits, WWR logic, IKE thresholds",
+  "nodes": [
+    {
+      "id": "SNI6572_VENT",
+      "type": "regulation",
+      "module": "cooling",
+      "tier": 7,
+      "source": "SNI 6572:2024",
+      "description": "Multi-part standard for ventilation systems — covers non-residential, residential, and healthcare facilities.",
+      "attributes": {
+        "parts": [
+          "non_residential",
+          "residential",
+          "healthcare"
+        ]
+      },
+      "verified": true
+    },
+    {
+      "id": "SNI6390_IKE",
+      "type": "regulation",
+      "module": "cooling",
+      "tier": 7,
+      "source": "SNI 6390:2020",
+      "description": "Sets Intensity Konsumsi Energi (IKE) limits — energy consumption intensity for air conditioning systems.",
+      "attributes": {
+        "metric": "IKE_kWh_per_m2_per_year"
+      },
+      "verified": true
+    },
+    {
+      "id": "OTTV_LIMIT",
+      "type": "thermal_gate",
+      "module": "cooling",
+      "tier": 5,
+      "source": "Permen PUPR No. 21/2021 (BGH)",
+      "description": "Overall Thermal Transfer Value limits — mandatory for green building certification. Part of BGH mandate.",
+      "attributes": {
+        "target": "BGH_compliant",
+        "metric": "OTTV_W_m2"
+      },
+      "verified": true
+    },
+    {
+      "id": "HEAT_GAIN_LOGIC",
+      "type": "physics_rule",
+      "module": "cooling",
+      "tier": 7,
+      "source": "Thermal physics",
+      "description": "Heat Gain Logic — if Window-to-Wall Ratio (WWR) is high, heat gain increases. AI must calculate thermal impact before recommending interventions.",
+      "attributes": {
+        "input_params": [
+          "WWR",
+          "glass_SHGC",
+          "wall_U_value",
+          "orientation"
+        ],
+        "output": "heat_gain_W_m2"
+      },
+      "verified": true
+    },
+    {
+      "id": "LOW_E_GLASS_GATE",
+      "type": "intervention_gate",
+      "module": "cooling",
+      "tier": 7,
+      "source": "Permen PUPR No. 21/2021 (BGH)",
+      "description": "High-performance glass (Low-E) recommended when OTTV exceeds limits due to high WWR.",
+      "attributes": {
+        "trigger": "OTTV_exceeded_from_high_WWR"
+      },
+      "verified": true
+    },
+    {
+      "id": "AUTOMATED_HVAC_GATE",
+      "type": "intervention_gate",
+      "module": "cooling",
+      "tier": 7,
+      "source": "SNI 6390:2020",
+      "description": "Automated HVAC sensors for demand-controlled ventilation — triggers when occupancy-variable cooling is needed to meet IKE limits.",
+      "attributes": {
+        "trigger": "IKE_exceeded",
+        "solution": "occupancy_based_control"
+      },
+      "verified": true
+    },
+    {
+      "id": "ENERGY_SAVINGS_TARGET",
+      "type": "performance_target",
+      "module": "cooling",
+      "tier": 5,
+      "source": "Permen PUPR No. 21/2021 (BGH)",
+      "description": "Mandatory 25% energy savings target for BGH-certified buildings.",
+      "attributes": {
+        "target_pct": 25,
+        "category": "energy"
+      },
+      "verified": true
+    },
+    {
+      "id": "WATER_SAVINGS_TARGET",
+      "type": "performance_target",
+      "module": "cooling",
+      "tier": 5,
+      "source": "Permen PUPR No. 21/2021 (BGH)",
+      "description": "Mandatory 10% water savings target for BGH-certified buildings.",
+      "attributes": {
+        "target_pct": 10,
+        "category": "water"
+      },
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "module": "settlement",
+  "edges": [
+    {
+      "id": "E_SETTLE_01",
+      "source": "MBR_ELIGIBILITY",
+      "target": "MBR_SUBSIDY_PATH",
+      "type": "GATES",
+      "module": "settlement",
+      "condition": "income < regional_threshold",
+      "description": "MBR-eligible applicants proceed to subsidy path",
+      "verified": true
+    },
+    {
+      "id": "E_SETTLE_02",
+      "source": "UU1_2011_HOUSING",
+      "target": "PSU_STANDARDS",
+      "type": "DEFINES",
+      "module": "settlement",
+      "condition": null,
+      "description": "UU 1/2011 defines the PSU infrastructure mandate",
+      "verified": true
+    },
+    {
+      "id": "E_SETTLE_03",
+      "source": "SPATIAL_RATIO_GATE",
+      "target": "PSU_STANDARDS",
+      "type": "CONTRIBUTES_TO",
+      "module": "settlement",
+      "condition": null,
+      "description": "Spatial ratios for public facilities are part of PSU infrastructure requirements",
+      "verified": true
+    },
+    {
+      "id": "E_SETTLE_04",
+      "source": "MBR_SUBSIDY_PATH",
+      "target": "SPATIAL_RATIO_GATE",
+      "type": "PROCEDURAL_NEXT",
+      "module": "settlement",
+      "condition": "site_planning_required == True",
+      "description": "MBR-subsidized housing must still meet spatial ratio requirements",
+      "verified": true
+    },
+    {
+      "id": "E_SETTLE_05",
+      "source": "RETROFIT_SUBSIDY_CROSS",
+      "target": "MBR_SUBSIDY_PATH",
+      "type": "CONDITIONAL_TRIGGERS",
+      "module": "settlement",
+      "condition": "disaster.retrofit_required == True AND MBR_eligible == True",
+      "description": "Retrofit needs + MBR status = subsidy eligibility for retrofit",
+      "verified": true
+    },
+    {
+      "id": "E_SETTLE_06",
+      "source": "PPPSRS_LOGIC",
+      "target": "PSU_STANDARDS",
+      "type": "PROCEDURAL_NEXT",
+      "module": "settlement",
+      "condition": "building.type == apartment AND floors > threshold",
+      "description": "Apartment management (PPPSRS) must ensure PSU standards are met before handover",
+      "verified": true
+    }
+  ]
+}

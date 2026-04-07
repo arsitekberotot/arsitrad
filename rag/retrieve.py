@@ -11,7 +11,7 @@ class RegulationRetriever:
     def __init__(
         self,
         model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
-        persist_dir: str = "./data/processed",
+        persist_dir: str = "/home/admin/hermes/projects/arsitrad/data/processed/chroma_db",
         collection_name: str = "indonesian_regulations"
     ):
         self.model = SentenceTransformer(model_name)
@@ -24,32 +24,43 @@ class RegulationRetriever:
         top_k: int = 5,
         min_similarity: float = 0.3
     ) -> List[Dict]:
-        """Retrieve most relevant regulation chunks for a query."""
-        query_embedding = self.model.encode([query]).tolist()
-        
+        """Retrieve most relevant regulation chunks for a query.
+
+        ChromaDB stores raw (non-unit-normalized) embeddings.
+        We normalize the query vector to compute proper cosine similarity.
+        """
+        import numpy as np
+        raw_emb = self.model.encode([query])[0]
+        q_norm = raw_emb / np.linalg.norm(raw_emb)
+
+        # Query with the normalized embedding
         results = self.collection.query(
-            query_embeddings=query_embedding,
-            n_results=top_k
+            query_embeddings=[q_norm.tolist()],
+            n_results=top_k,
+            include=["documents", "metadatas", "embeddings"],
         )
-        
+
         outputs = []
-        for i, (doc, metadata, distance) in enumerate(zip(
+        for doc, metadata, emb in zip(
             results["documents"][0],
             results["metadatas"][0],
-            results["distances"][0]
-        )):
-            similarity = 1 - distance
-            if similarity >= min_similarity:
+            results["embeddings"][0],
+        ):
+            if emb is None:
+                continue
+            stored = np.array(emb)
+            # Cosine similarity = dot of unit-normalized vectors
+            cos_sim = float(np.dot(q_norm, stored) / (np.linalg.norm(stored) + 1e-8))
+            if cos_sim >= min_similarity:
                 outputs.append({
                     "text": doc,
                     "source": metadata.get("source", "unknown"),
                     "page": metadata.get("page", "N/A"),
-                    "chunk_id": metadata.get("chunk_id", i),
-                    "similarity": round(similarity, 4),
-                    "type": metadata.get("type", "regulation")
+                    "chunk_id": metadata.get("chunk_id", 0),
+                    "similarity": round(cos_sim, 4),
+                    "type": metadata.get("type", "regulation"),
                 })
-        
-        # Sort by similarity
+
         outputs.sort(key=lambda x: x["similarity"], reverse=True)
         return outputs
     

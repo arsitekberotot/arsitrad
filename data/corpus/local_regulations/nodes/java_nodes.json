@@ -1,0 +1,279 @@
+{
+  "island": "java",
+  "nodes": [
+    {
+      "id": "PROV_DKI_Jakarta",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "Special Capital Region — highest building complexity, national capital",
+      "source": "RDTR DKI Jakarta 2030",
+      "attributes": {
+        "seismic_zone": "KDS B-C (moderate)",
+        "disaster_risks": [
+          "flood",
+          "earthquake"
+        ],
+        "special_rules": [
+          "minimum_lot_size_32m2",
+          "building_height_zoning",
+          "TPA_requirement"
+        ],
+        "rdtr": "RDTR DKI Jakarta 2030",
+        "local_perda": [
+          "Perda DKI 1/2014 Bangunan Gedung",
+          "Perda 7/2010 RW"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_DKI_Jakarta",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "Regional Spatial Plan for DKI Jakarta",
+      "source": "RDTR DKI Jakarta 2030",
+      "attributes": {
+        "plan_name": "RDTR DKI Jakarta 2030",
+        "applies_to": "DKI Jakarta",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_DKI_Jakarta",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "Seismic hazard classification for DKI Jakarta",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS B-C (moderate)",
+        "hazard_level": "high",
+        "primary_fault": "East Java Fault / Sunda megathrust"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_DKI_Jakarta",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "Multi-hazard risk profile for DKI Jakarta",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "flood",
+          "earthquake"
+        ],
+        "highest_priority": "flood"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_DKI_Jakarta",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "DKI Jakarta",
+      "description": "Local Perda for DKI Jakarta",
+      "source": "Perda DKI 1/2014 Bangunan Gedung, Perda 7/2010 RW",
+      "attributes": {
+        "perda_list": [
+          "Perda DKI 1/2014 Bangunan Gedung",
+          "Perda 7/2010 RW"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    },
+    {
+      "id": "PROV_Jawa_Barat",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "Largest population province — high housing demand, Bandung basin seismic risk",
+      "source": "RDTR Kab Bandung 2022",
+      "attributes": {
+        "seismic_zone": "KDS C-D (moderate-high)",
+        "disaster_risks": [
+          "earthquake",
+          "volcanic",
+          "flood"
+        ],
+        "special_rules": [
+          "bandung_basin_zoning",
+          "mining_buffer"
+        ],
+        "rdtr": "RDTR Kab Bandung 2022",
+        "local_perda": [
+          "Perda Jawa Barat 7/2010"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Jawa_Barat",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "Regional Spatial Plan for Jawa Barat",
+      "source": "RDTR Kab Bandung 2022",
+      "attributes": {
+        "plan_name": "RDTR Kab Bandung 2022",
+        "applies_to": "Jawa Barat",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Jawa_Barat",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "Seismic hazard classification for Jawa Barat",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS C-D (moderate-high)",
+        "hazard_level": "high",
+        "primary_fault": "East Java Fault / Sunda megathrust"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Jawa_Barat",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "Multi-hazard risk profile for Jawa Barat",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "earthquake",
+          "volcanic",
+          "flood"
+        ],
+        "highest_priority": "earthquake"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Jawa_Barat",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Barat",
+      "description": "Local Perda for Jawa Barat",
+      "source": "Perda Jawa Barat 7/2010",
+      "attributes": {
+        "perda_list": [
+          "Perda Jawa Barat 7/2010"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    },
+    {
+      "id": "PROV_Jawa_Timur",
+      "type": "province_node",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "Second largest city Surabaya — industrial corridor, East Java fault system",
+      "source": "RDTR Surabaya 2014-2030",
+      "attributes": {
+        "seismic_zone": "KDS B-C (moderate)",
+        "disaster_risks": [
+          "earthquake",
+          "flood",
+          "drought"
+        ],
+        "special_rules": [
+          "industrial_setback",
+          "surabaya_dock_proximity"
+        ],
+        "rdtr": "RDTR Surabaya 2014-2030",
+        "local_perda": [
+          "Perda Surabaya 3/2009 Bangunan"
+        ]
+      },
+      "verified": false
+    },
+    {
+      "id": "RDTR_Jawa_Timur",
+      "type": "spatial_plan",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "Regional Spatial Plan for Jawa Timur",
+      "source": "RDTR Surabaya 2014-2030",
+      "attributes": {
+        "plan_name": "RDTR Surabaya 2014-2030",
+        "applies_to": "Jawa Timur",
+        "regulatory_weight": "binding_for_PBG_KKPR"
+      },
+      "verified": false
+    },
+    {
+      "id": "SEISMIC_ZONE_Jawa_Timur",
+      "type": "hazard_zone",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "Seismic hazard classification for Jawa Timur",
+      "source": "BNPB + SNI 1726:2019 seismic source model",
+      "attributes": {
+        "kds_range": "KDS B-C (moderate)",
+        "hazard_level": "high",
+        "primary_fault": "East Java Fault / Sunda megathrust"
+      },
+      "verified": false
+    },
+    {
+      "id": "RISK_Jawa_Timur",
+      "type": "risk_profile",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "Multi-hazard risk profile for Jawa Timur",
+      "source": "BNPB Risk Map",
+      "attributes": {
+        "hazards": [
+          "earthquake",
+          "flood",
+          "drought"
+        ],
+        "highest_priority": "earthquake"
+      },
+      "verified": false
+    },
+    {
+      "id": "PERDA_Jawa_Timur",
+      "type": "local_regulation_node",
+      "module": "local_regulation",
+      "island": "java",
+      "province": "Jawa Timur",
+      "description": "Local Perda for Jawa Timur",
+      "source": "Perda Surabaya 3/2009 Bangunan",
+      "attributes": {
+        "perda_list": [
+          "Perda Surabaya 3/2009 Bangunan"
+        ],
+        "overrides_national": true,
+        "scope": "municipal_building_standards"
+      },
+      "verified": false
+    }
+  ]
+}

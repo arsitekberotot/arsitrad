@@ -1,0 +1,69 @@
+{
+  "module": "local_cross_island",
+  "edges": [
+    {
+      "id": "E_CROSSISLAND_01",
+      "source": "SEISMIC_ZONE_Sulawesi_Utara",
+      "target": "RETROFIT_GATE",
+      "type": "CROSS_MODULE_BRIDGE",
+      "description": "Sulawesi Utara (KDS D-E) connects to disaster module RETROFIT_GATE — very high seismic zone triggers mandatory structural evaluation",
+      "verified": false
+    },
+    {
+      "id": "E_CROSSISLAND_02",
+      "source": "SEISMIC_ZONE_Sumatra_Utara",
+      "target": "RETROFIT_GATE",
+      "type": "CROSS_MODULE_BRIDGE",
+      "description": "Sumatera Utara (KDS D-E) near Sumatran fault — high seismic triggers retrofit evaluation",
+      "verified": false
+    },
+    {
+      "id": "E_CROSSISLAND_03",
+      "source": "SEISMIC_ZONE_Papua",
+      "target": "RETROFIT_GATE",
+      "type": "CROSS_MODULE_BRIDGE",
+      "description": "Papua (KDS D-E) very high seismic — Papua thrust fault requires retrofit evaluation",
+      "verified": false
+    },
+    {
+      "id": "E_CROSSISLAND_04",
+      "source": "SEISMIC_ZONE_Sulawesi_Tengah",
+      "target": "FIRE_LIFT_GATE",
+      "type": "CROSS_MODULE_BRIDGE",
+      "description": "Sulawesi Tengah post-2018 disaster — seismic+liquefaction requires special structural + fire engineering",
+      "verified": false
+    },
+    {
+      "id": "E_CROSSISLAND_05",
+      "source": "RDTR_DKI_Jakarta",
+      "target": "PBG",
+      "type": "CONDITIONAL_TRIGGERS",
+      "description": "DKI Jakarta RDTR must be referenced during PBG application — highest complexity zone",
+      "verified": false
+    },
+    {
+      "id": "E_CROSSISLAND_06",
+      "source": "RISK_Kalimantan_Timur",
+      "target": "ENERGY_SAVINGS_TARGET",
+      "type": "CROSS_MODULE_BRIDGE",
+      "description": "Kalimantan Timur near IKN — new construction may have BGH/green building incentives",
+      "verified": false
+    },
+    {
+      "id": "E_CROSSISLAND_07",
+      "source": "PERDA_Sulawesi_Tengah",
+      "target": "SRPMK_GATE",
+      "type": "OVERRIDES",
+      "description": "Sulawesi Tengah post-disaster Perda may mandate stricter seismic than SNI 1726 minimum",
+      "verified": false
+    },
+    {
+      "id": "E_CROSSISLAND_08",
+      "source": "RISK_Lampung",
+      "target": "PBG",
+      "type": "CONDITIONAL_TRIGGERS",
+      "description": "Lampung tsunami risk — coastal buildings must reference tsunami resilience in PBG application",
+      "verified": false
+    }
+  ]
+}
