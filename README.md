@@ -4,8 +4,6 @@
 
 **Tech Stack:** Gemma 4 (fine-tuned), RAG pipeline, function calling, Gradio UI, Docker (offline-capable)
 
-**Reference:** Pasal.id won Anthropic's hackathon proving Indonesian law + AI works. We extend this into architecture-specific domains with advisory capabilities.
-
 ## Project Structure
 
 ```
