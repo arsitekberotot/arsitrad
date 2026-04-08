@@ -49,7 +49,9 @@ Arsitrad solves this by grounding every answer in **real Indonesian regulations*
 
 ### 1. Download LoRA Adapters
 
-The fine-tuned LoRA adapters (~200MB) are available on the [Releases page](https://github.com/arsitekberotot/arsitrad/releases).
+**👉 [Download arsitrad_finetuned_adapters.zip (747 MB)](https://github.com/arsitekberotot/arsitrad/releases/download/v1.0.0/arsitrad_finetuned_adapters.zip)**
+
+The fine-tuned LoRA adapters (~747MB).
 
 ### 2. Load with Base Model
 
