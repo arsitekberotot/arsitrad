@@ -23,7 +23,6 @@ wandb/
 *.gguf
 checkpoints/
 fine_tuned_model/
-data/processed/chroma_db/
 data/sni_corpus/*.pdf
 data/regulations/*
 !.gitkeep
@@ -33,13 +32,9 @@ data/regulations/*
 *.log
 
 # Processed data — large regeneratable files (regenerate with embed scripts)
-data/processed/*.npy
-data/processed/*.sqlite3
 data/processed/*.log
 data/processed/embed_*.py
 data/processed/*_checkpoint.json
-data/processed/local_chunks.json
-data/processed/national_chunks.json
 data/processed/embed_output.log
 !data/processed/arsitrad_training.jsonl
 

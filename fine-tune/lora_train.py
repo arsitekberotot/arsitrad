@@ -10,7 +10,7 @@ import os
 
 
 def load_model_and_tokenizer(
-    model_name: str = "google/gemma-4-2b-it",
+    model_name: str = "google/gemma-4-E2B-it",
     max_seq_length: int = 2048,
     load_in_4bit: bool = True
 ):
