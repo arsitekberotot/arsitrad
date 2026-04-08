@@ -296,3 +296,5 @@ Arsitrad changes that — grounded, citation-backed answers from real Indonesian
 
 
 ## License
+
+CC BY 4.0 — free to use, share, and adapt with attribution.
