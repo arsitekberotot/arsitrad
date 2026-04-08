@@ -1,5 +1,3 @@
-# Arsitrad — AI Advisor for Indonesian Architecture & Construction
-
 <pre>
  █████╗ ██████╗ ███████╗██╗████████╗██████╗  █████╗ ██████╗ 
 ██╔══██╗██╔══██╗██╔════╝██║╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗
@@ -8,7 +6,7 @@
 ██║  ██║██║  ██║███████║██║   ██║   ██║  ██║██║  ██║██████╔╝
 ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ 
                                                             </pre>
-
+# Arsitrad — AI Advisor for Indonesian Architecture & Construction
 <h3 align="center">AI-Powered Indonesian Building Regulation Advisor</h3>
 
 <p align="center">
