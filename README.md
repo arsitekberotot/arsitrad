@@ -268,35 +268,31 @@ python ui/app.py
 
 
 
-## Gemma Good Hackathon
 
-Arsitrad was built for the [Gemma Good Hackathon](https://www.kaggle.com/competitions/gemma-good-hackathon-ne-2/overview) on Kaggle — a competition focused on building impactful AI with Gemma 4.
+## Gemma Good Hackathon — Impact Alignment
+
+Arsitrad was built for the [Gemma Good Hackathon](https://www.kaggle.com/competitions/gemma-good-hackathon-ne-2/overview) on Kaggle, targeting impact in safety, trust, and global resilience.
 
 ### Impact Tracks
 
-**Health & Sciences** — Bridge the gap between humans and data. Build tools that accelerate discovery or democratize knowledge.
-
-**Global Resilience** — Build systems that anticipate, mitigate, and respond to the world's most pressing challenges — from offline edge-based disaster response to climate mitigation.
-
-**Future of Education** — Reimagine the learning journey through multi-tool agents that adapt to the individual.
-
-**Digital Equity & Inclusivity** — Break down barriers through linguistic diversity and tools that close the AI skills gap.
-
-**Safety & Trust** — Pioneer frameworks for transparency and reliability, ensuring AI remains grounded and explainable.
+| Track | How Arsitrad Fits |
+|---|---|
+| **Safety & Trust** | Citation-grounded answers prevent AI hallucination in building regulations — architects get verifiable, sourced advice, not made-up article numbers |
+| **Global Resilience** | Disaster damage reporter + settlement upgrading advisor built on BNPB standards — directly supports disaster preparedness and recovery for Indonesia's most vulnerable communities |
+| **Digital Equity & Inclusivity** | Opens Indonesian building code knowledge to 270M+ Indonesians who currently have zero practical access to these regulations |
 
 ### Technology Tracks
 
-**Cactus** — Best local-first mobile or wearable application.
+| Track | How Arsitrad Fits |
+|---|---|
+| **Unsloth** | Gemma 4 2B E2B fine-tuned using QLoRA via Unsloth — 62M trainable params (1.2%), 4-bit quantization, loss 12.2 -> 2.16 in 3 epochs |
+| **llama.cpp** | LoRA adapters ship at ~747MB — lightweight enough to run locally via llama.cpp on consumer hardware |
 
-**LiteRT** — Most compelling use of Google AI Edge's LiteRT implementation of Gemma 4.
+### Why This Matters
 
-**llama.cpp** — Best innovative implementation of Gemma 4 on resource-constrained hardware.
+Indonesia is one of the world's most disaster-prone countries — earthquake, flood, tsunami, and landslide risk affects hundreds of millions. Yet the architects and construction workers who build Indonesia's buildings have no AI tool to navigate the country's own building codes. When they need to verify earthquake resistance requirements or IMB permit steps, they have no one to ask except PDFs they can't practically search.
 
-**Ollama** — Best project using Gemma 4 running locally via Ollama.
-
-**Unsloth** — Best fine-tuned Gemma 4 model created using Unsloth, optimized for a specific task.
+Arsitrad changes that — grounded, citation-backed answers from real Indonesian regulations (UU, PP, Permen, SNI, Perda), fine-tuned into a model any architect can run.
 
 
 ## License
-
-CC BY 4.0 — free to use, share, and adapt with attribution.
