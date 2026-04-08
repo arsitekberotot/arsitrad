@@ -264,6 +264,34 @@ python ui/app.py
 
 ---
 
+---
+
+## Gemma Good Hackathon — Impact Alignment
+
+Arsitrad was built for the [Gemma Good Hackathon](https://www.kaggle.com/competitions/gemma-good-hackathon-ne-2/overview) on Kaggle, targeting impact in safety, trust, and global resilience.
+
+### Impact Tracks
+
+| Track | Alignment | How Arsitrad Fits |
+|---|---|---|
+| **Safety & Trust** | $10,000 | Citation-grounded answers prevent AI hallucination in building regulations — architects get verifiable, sourced advice, not made-up article numbers |
+| **Global Resilience** | $10,000 | Disaster damage reporter + settlement upgrading advisor built on BNPB standards — directly supports disaster preparedness and recovery for Indonesia's most vulnerable communities |
+| **Digital Equity & Inclusivity** | $10,000 | Opens Indonesian building code knowledge to 270M+ Indonesians who currently have zero practical access to these regulations |
+
+### Technology Tracks
+
+| Track | Alignment | How Arsitrad Fits |
+|---|---|---|
+| **Unsloth** | $10,000 | Gemma 4 2B E2B fine-tuned using QLoRA via Unsloth — 62M trainable params (1.2%), 4-bit quantization, loss 12.2 -> 2.16 in 3 epochs |
+| **llama.cpp** | $10,000 | LoRA adapters ship at ~747MB — lightweight enough to run locally via llama.cpp on consumer hardware |
+
+### Why This Matters
+
+Indonesia is one of the world's most disaster-prone countries — earthquake, flood, tsunami, and landslide risk affects hundreds of millions. Yet the architects and construction workers who build Indonesia's buildings have **no AI tool** to navigate the country's own building codes. When they need to verify earthquake resistance requirements or IMB permit steps, they have no one to ask except PDFs they can't practically search.
+
+Arsitrad changes that — grounded, citation-backed answers from real Indonesian regulations (UU, PP, Permen, SNI, Perda), fine-tuned into a model any architect can run.
+
+
 ## License
 
 CC BY 4.0 — free to use, share, and adapt with attribution.
