@@ -266,4 +266,4 @@ python ui/app.py
 
 ## License
 
-AGPL-3.0 — free to use and modify for academic purposes.
+CC BY 4.0 — free to use, share, and adapt with attribution.
