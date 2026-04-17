@@ -1,28 +1,31 @@
-# Core
-gemma4
-transformers>=4.40.0
-peft>=0.10.0
-unsloth>=2024.4
-bitsandbytes
-scikit-learn
+# Core runtime
 numpy<2.0
-
-# RAG
-chromadb>=0.4.0
-sentence-transformers>=2.5.0
-langchain>=0.1.0
-langchain-community>=0.0.20
-pypdf>=4.0.0
-pdfplumber>=0.10.0
-beautifulsoup4>=4.12.0
+pandas>=2.2.0
+pyyaml>=6.0.1
 requests>=2.31.0
+pydantic>=2.6.0
 
-# Agent / Function Calling
-google-generativeai>=0.3.0
+# Parsing / data
+pdfplumber>=0.10.0
+pypdf>=4.0.0
+beautifulsoup4>=4.12.0
+
+# Retrieval / embeddings
+sentence-transformers>=2.5.0
+rank-bm25>=0.2.2
+FlagEmbedding>=1.2.10
+psycopg[binary]>=3.1.18
+pgvector>=0.2.5
+
+# Inference
+llama-cpp-python>=0.2.79
 
 # UI
-gradio>=4.0.0
+streamlit>=1.44.0
 
-# Utils
-tqdm
-pyyaml
+# Evaluation
+ragas>=0.1.8
+datasets>=2.18.0
+
+# Testing
+pytest>=8.1.0

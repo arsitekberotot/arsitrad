@@ -186,7 +186,7 @@ class BuildingPermitNavigator:
         lines = [
             f"=== PANDUAN PENGURUSAN IMB ===",
             f"Tipe Bangunan: {guidance['building_type'].replace('_', ' ').title()}",
-            f"Lokasi: {location}",
+            f"Lokasi: {guidance.get('location', 'N/A')}",
             f"Luas Lantai: {guidance['floor_area_m2']} m2",
             f"Luas Tanah: {guidance['land_area_m2']} m2",
             f"Fungsi: {guidance['building_function']}",
