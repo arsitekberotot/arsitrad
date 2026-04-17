@@ -298,4 +298,4 @@ If the evidence is weak or the question is outside regulatory scope, the correct
 ## License
 
 CC BY 4.0 — see [`LICENSE`](LICENSE).
-This repository is part of an academic thesis project at Universitas Diponegoro.
+This repository is part of an entry for The Gemma 4 Good Hackathon by Google Deepmind on Kaggle.
