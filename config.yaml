@@ -1,5 +1,6 @@
 # Arsitrad Configuration
 
+# Legacy v1 configuration kept for historical compatibility.
 data:
   sni_corpus: "./data/sni_corpus"
   regulations: "./data/regulations"
@@ -36,3 +37,53 @@ demo:
   output_dir: "./demo_output"
   video_length_seconds: 180
   include_function_calls: true
+
+# Shipped v2 configuration.
+v2:
+  corpus:
+    national_root: "./data/corpus/indonesian-construction-law"
+    local_root: "./data/corpus/local_regulations"
+    processed_root: "./data/processed/v2"
+    sparse_index_path: "./data/processed/v2/bm25_corpus.jsonl"
+    sample_chunks_path: "./data/processed/v2/sample_chunks.json"
+  database:
+    url_env: "ARSITRAD_DATABASE_URL"
+    # Keep tracked config portable. Set ARSITRAD_DATABASE_URL in your shell or notebook for pgvector-backed retrieval.
+    default_url: null
+    table: "regulation_chunks"
+  embedding_model: "intfloat/multilingual-e5-large"
+  reranker_model: "BAAI/bge-reranker-base"
+  chunking:
+    max_chars: 3200
+    min_chars: 500
+    overlap_chars: 200
+    max_table_rows: 8
+    structural_markers:
+      - "BAB"
+      - "Bagian"
+      - "Paragraf"
+      - "Pasal"
+      - "Ayat"
+  retrieval:
+    dense_top_k: 20
+    sparse_top_k: 20
+    rerank_top_k: 5
+    rrf_k: 60
+    confidence_threshold: 0.60
+    include_national_for_local_queries: true
+  inference:
+    model_repo: "ggml-org/gemma-4-E4B-it-GGUF"
+    model_file: "gemma-4-E4B-it-Q4_K_M.gguf"
+    model_path: "./models/gemma-4-E4B-it-Q4_K_M.gguf"
+    context_window: 8192
+    max_tokens: 1024
+    temperature: 0.2
+    top_p: 0.9
+    repeat_penalty: 1.1
+  ui:
+    app_title: "Arsitrad v2"
+    disclaimer: "Arsitrad adalah alat bantu informasi regulasi, bukan pengganti konsultasi dengan profesional berlisensi atau dinas tata ruang setempat."
+    default_question: "Apa syarat PBG untuk rumah tinggal 2 lantai di Semarang?"
+  evaluation:
+    golden_queries_path: "./data/eval/golden_queries.json"
+    output_dir: "./data/eval/results"

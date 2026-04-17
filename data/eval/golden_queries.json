@@ -1,0 +1,122 @@
+[
+  {
+    "question": "Apa saja dokumen untuk PBG rumah tinggal 2 lantai di Semarang?",
+    "ground_truth": "Jawaban harus menyinggung persyaratan administratif dan teknis PBG untuk rumah tinggal, termasuk bukti hak atas tanah dan rencana teknis.",
+    "reference_contexts": [],
+    "metadata": {"region": "Semarang", "typology": "residential"}
+  },
+  {
+    "question": "Berapa KDB maksimal untuk bangunan komersial di Semarang?",
+    "ground_truth": "Jawaban harus mencari aturan KDB dari perda atau RDTR yang berlaku untuk wilayah Semarang dan menyebut perlunya verifikasi zonasi spesifik.",
+    "reference_contexts": [],
+    "metadata": {"region": "Semarang", "typology": "commercial"}
+  },
+  {
+    "question": "Apa syarat sprinkler untuk gudang 5000 m2 di kawasan industri Balikpapan?",
+    "ground_truth": "Jawaban harus menyinggung kewajiban sistem proteksi kebakaran seperti sprinkler dan hydrant untuk gudang besar.",
+    "reference_contexts": [],
+    "metadata": {"region": "Balikpapan", "typology": "industrial"}
+  },
+  {
+    "question": "Apa beda IMB dan PBG menurut aturan terbaru?",
+    "ground_truth": "Jawaban harus menjelaskan bahwa PBG menggantikan IMB pada rezim regulasi baru, dan tidak boleh menganggap keduanya identik tanpa konteks sejarah.",
+    "reference_contexts": [],
+    "metadata": {"region": "nasional"}
+  },
+  {
+    "question": "Bagaimana aturan SLF setelah bangunan selesai dibangun?",
+    "ground_truth": "Jawaban harus menjelaskan fungsi SLF sebagai sertifikat laik fungsi pasca pembangunan dan hubungannya dengan penggunaan bangunan.",
+    "reference_contexts": [],
+    "metadata": {"region": "nasional"}
+  },
+  {
+    "question": "Apa itu GSB dan bagaimana pengaruhnya terhadap desain rumah?",
+    "ground_truth": "Jawaban harus menjelaskan GSB sebagai garis sempadan bangunan dan dampaknya pada batas area terbangun.",
+    "reference_contexts": [],
+    "metadata": {"region": "nasional", "typology": "residential"}
+  },
+  {
+    "question": "Ketentuan KDH minimum untuk kawasan hunian apa?",
+    "ground_truth": "Jawaban harus membahas KDH minimum dan menegaskan bahwa nilainya bisa berbeda per perda atau RDTR.",
+    "reference_contexts": [],
+    "metadata": {"typology": "residential"}
+  },
+  {
+    "question": "Apa kewajiban aksesibilitas bangunan publik menurut Permen 14/2017?",
+    "ground_truth": "Jawaban harus menyebut prinsip desain universal dan persyaratan kemudahan bangunan gedung.",
+    "reference_contexts": [],
+    "metadata": {"reg_type": "Permen", "typology": "public"}
+  },
+  {
+    "question": "Apa syarat ventilasi alami minimum untuk rumah tinggal?",
+    "ground_truth": "Jawaban harus mencari standar ventilasi rumah tinggal dan tidak boleh mengarang ukuran jika konteks tidak ditemukan.",
+    "reference_contexts": [],
+    "metadata": {"typology": "residential"}
+  },
+  {
+    "question": "Bagaimana menghitung gaya geser dasar menurut SNI 1726:2019?",
+    "ground_truth": "Jawaban harus merujuk ke spektrum respons desain, parameter seismik, dan rumus gaya geser dasar tanpa keluar dari konteks SNI.",
+    "reference_contexts": [],
+    "metadata": {"reg_type": "SNI", "typology": "seismic"}
+  },
+  {
+    "question": "Apa syarat bangunan tahan gempa untuk wilayah KDS D?",
+    "ground_truth": "Jawaban harus menyinggung kategori desain seismik dan kebutuhan sistem struktur yang sesuai.",
+    "reference_contexts": [],
+    "metadata": {"typology": "seismic"}
+  },
+  {
+    "question": "Apakah renovasi fasad bangunan heritage di Bandung boleh dilakukan?",
+    "ground_truth": "Jawaban harus menekankan bahwa bangunan heritage membutuhkan aturan konservasi khusus dan biasanya pembatasan perubahan fasad.",
+    "reference_contexts": [],
+    "metadata": {"region": "Bandung"}
+  },
+  {
+    "question": "Apa aturan tata ruang terbaru untuk Jawa Tengah?",
+    "ground_truth": "Jawaban harus mengarah ke RTRW atau RDTR Jawa Tengah yang berlaku dan menyebut tahun regulasi jika ditemukan.",
+    "reference_contexts": [],
+    "metadata": {"region": "Jawa Tengah", "typology": "spatial_planning"}
+  },
+  {
+    "question": "Apa kewajiban dokumen teknis untuk gedung komersial bertingkat?",
+    "ground_truth": "Jawaban harus menyinggung dokumen teknis arsitektur, struktur, dan utilitas untuk perizinan bangunan komersial.",
+    "reference_contexts": [],
+    "metadata": {"typology": "commercial"}
+  },
+  {
+    "question": "Apakah RDTR wajib dicek sebelum mengurus PBG?",
+    "ground_truth": "Jawaban harus menjelaskan pentingnya RDTR atau ketentuan tata ruang lokal sebelum perizinan diajukan.",
+    "reference_contexts": [],
+    "metadata": {"typology": "spatial_planning"}
+  },
+  {
+    "question": "Apa aturan bangunan gedung negara terkait kepemilikan atau SBKBG?",
+    "ground_truth": "Jawaban harus mengarah ke regulasi tentang surat bukti kepemilikan bangunan gedung atau bangunan gedung negara bila tersedia.",
+    "reference_contexts": [],
+    "metadata": {"reg_type": "Permen"}
+  },
+  {
+    "question": "Bagaimana standar akses kursi roda pada bangunan publik?",
+    "ground_truth": "Jawaban harus menyinggung aksesibilitas dan desain universal, bukan sekadar saran umum tanpa regulasi.",
+    "reference_contexts": [],
+    "metadata": {"typology": "public"}
+  },
+  {
+    "question": "Apa yang harus dicek untuk bangunan di dekat sungai menurut tata ruang?",
+    "ground_truth": "Jawaban harus mengarahkan ke sempadan sungai, tata ruang, dan kebutuhan verifikasi aturan lokal.",
+    "reference_contexts": [],
+    "metadata": {"typology": "spatial_planning"}
+  },
+  {
+    "question": "Apa syarat hydrant dan proteksi kebakaran gedung industri?",
+    "ground_truth": "Jawaban harus membahas kewajiban proteksi kebakaran aktif dan pasif pada bangunan industri.",
+    "reference_contexts": [],
+    "metadata": {"typology": "industrial", "reg_type": "Permen"}
+  },
+  {
+    "question": "Apa regulasi yang relevan untuk desain rumah minimalis Jepang skandinavia?",
+    "ground_truth": "Jawaban terbaik justru harus menolak secara aman karena pertanyaan ini lebih ke gaya desain daripada regulasi konstruksi atau perizinan.",
+    "reference_contexts": [],
+    "metadata": {"expected_behavior": "fallback"}
+  }
+]

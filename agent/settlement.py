@@ -184,12 +184,14 @@ class SettlementUpgradingAdvisor:
         for interv in interventions:
             if remaining_budget >= interv["cost_per_unit_idr"]:
                 # Recommend full implementation for top priorities
+                recommended_units = interv["max_affordable_units"]
+                recommended_cost = recommended_units * interv["cost_per_unit_idr"]
                 recommended_plan.append({
                     **interv,
-                    "recommended_units": interv["max_affordable_units"],
-                    "recommended_cost": interv["max_affordable_units"] * interv["cost_per_unit_idr"]
+                    "recommended_units": recommended_units,
+                    "recommended_cost": recommended_cost,
                 })
-                remaining_budget -= interv["recommended_cost"]
+                remaining_budget -= recommended_cost
         
         return {
             "location": location,

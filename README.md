@@ -1,303 +1,226 @@
-<pre>
- █████╗ ██████╗ ███████╗██╗████████╗██████╗  █████╗ ██████╗ 
-██╔══██╗██╔══██╗██╔════╝██║╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗
-███████║██████╔╝███████╗██║   ██║   ██████╔╝███████║██║  ██║
-██╔══██║██╔══██╗╚════██║██║   ██║   ██╔══██╗██╔══██║██║  ██║
-██║  ██║██║  ██║███████║██║   ██║   ██║  ██║██║  ██║██████╔╝
-╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ 
-                                                            </pre>
-# Arsitrad — AI Advisor for Indonesian Architecture & Construction
-<h3 align="center">AI-Powered Indonesian Building Regulation Advisor</h3>
+# Arsitrad v2
 
-<p align="center">
-  <a href="https://github.com/arsitekberotot/arsitrad">GitHub</a> ·
-  <a href="#-demo">Demo Video</a> ·
-  <a href="#-try-it">Try It</a> ·
-  <a href="#-architecture">Architecture</a> ·
-  <a href="#-advisory-modules">Modules</a>
-</p>
+> RAG assistant for Indonesian building regulations, permits, and architecture-adjacent compliance questions.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Model-Gemma_4_E2B-cc785c?style=flat&logo=google&logoColor=white" alt="Gemma 4" />
-  <img src="https://img.shields.io/badge/Fine--Tune-QLoRA_4bit-2B6150?style=flat" alt="QLoRA" />
-  <img src="https://img.shields.io/badge/RAG-ChromaDB-9333FF?style=flat" alt="ChromaDB" />
-  <img src="https://img.shields.io/badge/Embedder-paraphrase--multilingual--MiniLM-F97316?style=flat" alt="Embedder" />
-  <img src="https://img.shields.io/badge/Corpus-110_Regulations-059669?style=flat" alt="Corpus" />
-  <img src="https://img.shields.io/badge/Chunks-59K_vectors-F59E0B?style=flat" alt="Chunks" />
-</p>
+Arsitrad v2 is the current path in this repo.
 
----
+It uses:
+- semantic legal chunking by structure (`BAB`, `Bagian`, `Paragraf`, `Pasal`, `Ayat`)
+- `intfloat/multilingual-e5-large` embeddings
+- Postgres + pgvector for dense retrieval
+- JSONL + BM25 for sparse retrieval
+- RRF fusion + reranking
+- confidence-gated answers and explicit fallback behavior
+- GGUF Gemma 4 inference
+- Streamlit for the UI
 
-## The Problem
+The old v1 stack (`rag/`, `fine-tune/`, older notebooks, MiniLM/Chroma/LoRA-era code) is still in the repo as reference material, but it is not the primary implementation anymore.
 
-Indonesia has **hundreds of building regulations** — UU, PP, Permen, SNI, Perda — but architects and construction professionals have **no practical AI tool** to navigate them. Existing AI assistants hallucinate article numbers and cite non-existent regulations. When someone asks about earthquake-resistant design requirements in Semarang, they get confident nonsense instead of actual SNI 1726 citations.
+## What Arsitrad is for
 
-Arsitrad solves this by grounding every answer in **real Indonesian regulations**, with a fine-tuned model that speaks the language of Indonesian architecture.
+Arsitrad is built to answer questions like:
+- what documents are needed for PBG or SLF
+- what KDB / KDH / GSB / RTRW / RDTR constraints apply
+- what fire-safety, accessibility, seismic, or heritage rules are relevant
+- which national rules should be prioritized before falling back to local regulations
 
----
+It is intentionally not a general design assistant. If the question is about style, aesthetics, or vague concept design, the system should refuse cleanly instead of bluffing.
 
-## What We Built
+## Current repo reality
 
-| | Feature | Description |
-|---|---|---|
-| **RAG Pipeline** | 59,000+ Chunk Vector DB | ChromaDB with national + local regulations (UU, PP, Permen, SNI, Perda) |
-| **Fine-Tuned Model** | Gemma 4 2B E2B + QLoRA | Domain-adapted on 151 Indonesian architecture Q&A pairs |
-| **5 Advisory Modules** | Disaster · Settlement · Permit · Cooling · Local Regulations | Domain-specific guidance with regulatory grounding |
-| **Multi-Island Coverage** | Jawa · Kalimantan · Sumatera · Sulawesi · Papua | 77 Perda/Pergub/Perwali across 40+ cities |
-| **Citation-Grounded** | Every answer cites specific regulations | No hallucination — sources in the output |
-
----
-
-## Try It
-
-### 1. Download LoRA Adapters
-
-**👉 [Download arsitrad_finetuned_adapters.zip (747 MB)](https://github.com/arsitekberotot/arsitrad/releases/download/v1.0.0/arsitrad_finetuned_adapters.zip)**
-
-The fine-tuned LoRA adapters (~747MB).
-
-### 2. Load with Base Model
-
-```python
-from unsloth import FastLanguageModel
-from transformers import AutoTokenizer
-
-# Base model (google/gemma-4-E2B-it) is free on HuggingFace
-# Download LoRA adapters from Releases, then:
-
-model, _ = FastLanguageModel.from_pretrained(
-    model_name="./arsitrad_finetuned",  # LoRA adapter path
-    max_seq_length=2048,
-    load_in_4bit=True,
-)
-tokenizer = AutoTokenizer.from_pretrained("./arsitrad_finetuned")
-FastLanguageModel.for_inference(model)
-```
-
-### 3. Ask
-
-```python
-SYSTEM = (
-    "Kamu adalah Arsitrad, asisten AI untuk regulasi arsitektur Indonesia. "
-    "Jawab dalam Bahasa Indonesia, cite sumber regulasi jika relevan."
-)
-
-prompt = (
-    "<start_of_turn>system\n" + SYSTEM + "<end_of_turn>\n"
-    "<start_of_turn>user\nApa syarat minimum ventilasi alami untuk rumah tinggal di Indonesia?<end_of_turn>\n"
-    "<start_of_turn>model\n"
-)
-
-inputs = tokenizer([prompt], return_tensors='pt').to('cuda')
-outputs = model.generate(**inputs, max_new_tokens=512, temperature=0.3, do_sample=True)
-print(tokenizer.decode(outputs[0], skip_special_tokens=True))
-```
-
----
-
-## Fine-Tuning Results
-
-| Metric | Value |
-|---|---|
-| Base model | `google/gemma-4-E2B-it` (5B params) |
-| Fine-tune method | QLoRA 4-bit (Unsloth) |
-| Training examples | 151 Q&A pairs from ChromaDB retrieval |
-| Trainable parameters | 62,078,976 / 5,185,256,992 (**1.2%**) |
-| Epochs | 3 |
-| Effective batch size | 16 |
-| Initial loss | 12.23 |
-| Final loss | 2.16 |
-| Training time | ~5 minutes (Colab T4) |
-
-```
-Step 10: 12.23
-Step 20:  4.55
-Step 30:  2.16  <- after epoch 3
-```
-
-Loss converged from 12.2 -> 2.2, indicating the model learned domain-specific regulation answering.
-
----
+- Main repo path: `arsitrad/`
+- Current implementation branch in active use: `feat/arsitrad-v2-rag`
+- Corpus roots:
+  - `data/corpus/indonesian-construction-law`
+  - `data/corpus/local_regulations`
+- Checked-in corpus snapshot: 110 PDF documents
+- Sparse artifact path: `data/processed/v2/bm25_corpus.jsonl`
+- Starter evaluation set: `data/eval/golden_queries.json`
+- Tests: `tests/`
+- Streamlit app: `ui/app.py`
+- Colab wrapper notebook: `arsitrad_v2.ipynb`
 
 ## Architecture
 
-```
-                    +--------------------------------------------------+
-                    |         Regulation Corpus (110 docs)              |
-                    |   UU . PP . Permen . SNI . Perda                |
-                    +------------------------+-------------------------+
-                                             |
-                    +------------------------v-------------------------+
-                    |  PDF Scraper (peraturan.go.id)                   |
-                    |  PyMuPDF . Structure Parser                       |
-                    +------------------------+-------------------------+
-                                             |
-                    +------------------------v-------------------------+
-                    |   Chunking (512 chars, 64 olap)                   |
-                    |   paraphrase-multilingual-MiniLM                   |
-                    +------------------------+-------------------------+
-                                             |
-                          +------------------+-------------------+
-                          |                                     |
-          +---------------v----------------+   +---------------v----------------+
-          |  ChromaDB - National            |   |  ChromaDB - Local             |
-          |  22,649 chunks                 |   |  36,854 chunks                |
-          |  UU . PP . Permen . SNI        |   |  Perda . Pergub . Perwali    |
-          +---------------+----------------+   +---------------+----------------+
-                          |                                     |
-                          +------------------+------------------+
-                                             |
-                    +------------------------v-------------------------+
-                    |    Retrieval (query norm)                       |
-                    +------------------------+-------------------------+
-                                             |
-                    +------------------------v-------------------------+
-                    |  Gemma 4 2B + LoRA Adapter                     |
-                    |  (fine-tuned on 151 Q&A)                        |
-                    +------------------------+-------------------------+
-                                             |
-                          +------------------+-------------------+
-                          |                                     |
-          +---------------v----------------+   +---------------v----------------+
-          |  Disaster Damage               |   |  Settlement Upgrading        |
-          |  reporter_structural_dmg       |   |  assess_upgrade_needs         |
-          +---------------+----------------+   +---------------+----------------+
-          |  Building Permit               |   |  Passive Cooling              |
-          |  navigate_permit_process       |   |  analyze_thermal_comfort      |
-          +---------------+----------------+   +---------------+----------------+
-                          |                                     |
-                          +------------------+------------------+
-                                             |
-                    +------------------------v-------------------------+
-                    |  Gradio Chat UI                             |
-                    |  (local / Docker)                            |
-                    +--------------------------------------------------+
+```text
+Raw PDFs
+  -> semantic chunker
+  -> sparse JSONL corpus
+  -> E5 embeddings
+  -> pgvector storage
+  -> dense retrieval + BM25 retrieval
+  -> RRF fusion
+  -> reranker
+  -> confidence gate
+  -> GGUF inference
+  -> Streamlit UI
 ```
 
----
+## Repo layout
 
-## Advisory Modules
-
-### 1. Disaster Damage Reporter
-Classifies building damage from earthquake, flood, tsunami, landslide and generates repair recommendations grounded in BNPB standards and SNI construction codes.
-
-### 2. Settlement Upgrading Advisor
-Assesses informal settlement conditions and recommends prioritized upgrades with cost/impact scoring based on applicable regulations.
-
-### 3. Building Permit (IMB) Navigator
-Takes project description (type, location, floor area) and outputs a step-by-step IMB checklist, required documents, and fee estimator.
-
-### 4. Passive Cooling Advisor
-Analyzes building dimensions, orientation, materials, and climate zone to recommend passive cooling strategies with thermal comfort scoring.
-
-### 5. Local Regulations
-Grounded answers from Perda/Pergub/Perwali across 40+ Indonesian cities — Jawa, Kalimantan, Sumatera, Sulawesi, Papua.
-
----
-
-## Corpus Statistics
-
-| Category | Count | Documents |
-|---|---|---|
-| UU (Undang-Undang) | 7 | UU 28/2002, UU 2/2017, UU 6/2017, UU 6/2023, UU 11/2014 |
-| PP (Peraturan Pemerintah) | 11 | PP 14-16/2021, PP 21/2021, PP 28/2025 |
-| Permen PU | 11 | Permen 6/2025, 8/2023, 9/2021, 12/2024, 14/2017, 21/2021, 26/2008 |
-| SNI Standards | 5 | SNI 1726/2019, 1727/2020, 2847/2019, 8153/2025, 9274/2025 |
-| Local Regulations | 77 | Perda/Pergub/Perwali — Jawa, Kalimantan, Sumatera |
-
-**Total embedded:** 59,503 chunks in ChromaDB
-
----
-
-## Tech Stack
-
-- **Model**: google/gemma-4-E2B-it (fine-tuned)
-- **Fine-tuning**: Unsloth QLoRA (4-bit NF4, rank 32, alpha 64)
-- **Vector DB**: ChromaDB (local, offline-capable)
-- **Embedder**: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
-- **PDF Extraction**: PyMuPDF + BeautifulSoup4
-- **UI**: Gradio chat interface
-- **Deployment**: Docker (offline-capable)
-
----
-
-## Project Structure
-
-```
+```text
 arsitrad/
-  data/
-    corpus/
-      indonesian-construction-law/   # UU, PP, Permen, SNI (33 docs)
-      local_regulations/            # Perda/Pergub/Perwali by city (77 docs)
-    processed/
-      chroma_db/                    # Embedded vector database
-      arsitrad_training.jsonl       # 151 fine-tune Q&A pairs
-  rag/
-    embed.py                        # Chunking + embedding pipeline
-    retrieve.py                     # Vector search with query normalization
-    generate.py                     # Grounded generation
-  fine-tune/
-    dataset.py                       # Builds instruction dataset from ChromaDB
-    lora_train.py                   # QLoRA training pipeline
-  agent/
-    schema.py                        # Function calling schemas
-    disaster.py                     # Disaster damage module
-    settlement.py                   # Settlement upgrading module
-    permit.py                       # Building permit module
-    cooling.py                      # Passive cooling module
-  scraper/
-    scraper.py                       # CLI for crawling regulations
-    extractors.py                    # PDF text extraction
-    peraturan_go_id.py               # Handler for peraturan.go.id
-  ui/
-    app.py                          # Gradio chat interface
-  demo.py                           # Demo entry point
+├── agent/                         # legacy advisory modules still reused by UI tabs
+├── data/
+│   ├── corpus/                    # raw national + local PDF corpus
+│   ├── eval/                      # starter goldens + audit outputs
+│   └── processed/v2/              # sparse artifacts and derived outputs
+├── db/
+│   └── schema.sql                 # pgvector schema
+├── docs/plans/
+│   └── 2026-04-16-arsitrad-v2-implementation.md
+├── pipeline/
+│   ├── chunker.py
+│   ├── ingest.py
+│   ├── retriever.py
+│   ├── query_expander.py
+│   ├── taxonomy.py
+│   ├── conversation_memory.py
+│   ├── inference.py
+│   └── eval/ragas_eval.py
+├── tests/
+├── ui/
+│   └── app.py
+└── arsitrad_v2.ipynb
 ```
 
----
+## Quick start
 
-## Setup
+### 1. Create an environment and install dependencies
 
 ```bash
-git clone https://github.com/arsitekberotot/arsitrad
-cd arsitrad
-pip install -r requirements.txt
-python ui/app.py
+python -m venv .venv-rag
+source .venv-rag/bin/activate
+python -m pip install -r requirements.txt
 ```
 
----
+### 2. Configure the database
 
----
+Tracked `config.yaml` is now portable on purpose.
+It does not ship with a machine-specific Postgres socket DSN anymore.
 
+If you want pgvector-backed ingest or dense retrieval, set your own database URL first:
 
+```bash
+export ARSITRAD_DATABASE_URL='postgresql://user:***@host:5432/arsitrad_v2'
+```
 
+If `ARSITRAD_DATABASE_URL` is not set, Arsitrad can still use the sparse JSONL/BM25 path, but dense retrieval and embedding writes to Postgres will be unavailable.
 
-## Gemma Good Hackathon — Impact Alignment
+Schema lives in `db/schema.sql`.
 
-Arsitrad was built for the [Gemma Good Hackathon](https://www.kaggle.com/competitions/gemma-good-hackathon-ne-2/overview) on Kaggle, targeting impact in safety, trust, and global resilience.
+### 3. Dry-run the ingestion pipeline
 
-### Impact Tracks
+This reparses PDFs and writes sparse artifacts without writing embeddings to Postgres.
 
-| Track | How Arsitrad Fits |
-|---|---|
-| **Safety & Trust** | Citation-grounded answers prevent AI hallucination in building regulations — architects get verifiable, sourced advice, not made-up article numbers |
-| **Global Resilience** | Disaster damage reporter + settlement upgrading advisor built on BNPB standards — directly supports disaster preparedness and recovery for Indonesia's most vulnerable communities |
-| **Digital Equity & Inclusivity** | Opens Indonesian building code knowledge to 270M+ Indonesians who currently have zero practical access to these regulations |
+```bash
+python -m pipeline.ingest --config config.yaml --dry-run --limit-docs 5
+```
 
-### Technology Tracks
+### 4. Full ingest from PDFs
 
-| Track | How Arsitrad Fits |
-|---|---|
-| **Unsloth** | Gemma 4 2B E2B fine-tuned using QLoRA via Unsloth — 62M trainable params (1.2%), 4-bit quantization, loss 12.2 -> 2.16 in 3 epochs |
-| **llama.cpp** | LoRA adapters ship at ~747MB — lightweight enough to run locally via llama.cpp on consumer hardware |
+```bash
+python -m pipeline.ingest --config config.yaml --with-embeddings
+```
 
-### Why This Matters
+### 5. Reuse an existing sparse artifact
 
-Indonesia is one of the world's most disaster-prone countries — earthquake, flood, tsunami, and landslide risk affects hundreds of millions. Yet the architects and construction workers who build Indonesia's buildings have no AI tool to navigate the country's own building codes. When they need to verify earthquake resistance requirements or IMB permit steps, they have no one to ask except PDFs they can't practically search.
+If the JSONL sparse corpus already exists and you only want to rebuild embeddings into pgvector:
 
-Arsitrad changes that — grounded, citation-backed answers from real Indonesian regulations (UU, PP, Permen, SNI, Perda), fine-tuned into a model any architect can run.
+```bash
+python -m pipeline.ingest --config config.yaml --from-sparse --with-embeddings
+```
 
+### 6. Rewrite sparse metadata without recomputing embeddings
 
-## License
+Useful when taxonomy or metadata heuristics change.
 
-CC BY 4.0 — free to use, share, and adapt with attribution.
+```bash
+python -m pipeline.ingest \
+  --config config.yaml \
+  --from-sparse \
+  --rewrite-sparse-metadata \
+  --metadata-only
+```
+
+### 7. Run the Streamlit app
+
+```bash
+streamlit run ui/app.py
+```
+
+## Retrieval behavior
+
+Arsitrad v2 does a few deliberate things:
+- rewrites colloquial permit terms such as `IMB` <-> `PBG`
+- rewrites follow-up questions into standalone retrieval queries
+- applies metadata filters like region, topic, building use, year, and regulation type when detectable
+- blends dense and lexical retrieval instead of trusting one signal blindly
+- uses fallback behavior when confidence is too low
+- short-circuits obviously out-of-scope design-style questions
+
+In a legal-regulatory assistant, refusal is better than confident nonsense.
+
+## Evaluation
+
+Starter goldens live at:
+
+```text
+data/eval/golden_queries.json
+```
+
+RAGAS dry-run example:
+
+```bash
+python -m pipeline.eval.ragas_eval \
+  --questions data/eval/golden_queries.json \
+  --output /tmp/arsitrad_eval.json \
+  --dry-run
+```
+
+Lightweight retrieval audit outputs are stored under:
+
+```text
+data/eval/results/
+```
+
+## Tests
+
+Run the full test suite:
+
+```bash
+pytest tests -q
+```
+
+Target specific modules when iterating on retrieval logic:
+
+```bash
+pytest tests/test_query_expander.py tests/test_retriever.py tests/test_taxonomy.py -q
+```
+
+## Notebook usage
+
+Use `arsitrad_v2.ipynb` as a wrapper notebook, not as a separate source of truth.
+
+The notebook is meant to clone the repo, install dependencies, load the GGUF model, and run the v2 pipeline from this codebase.
+
+## Legacy code
+
+The following are still present as references, but they are not the main shipped path:
+- `rag/`
+- `fine-tune/`
+- older notebook artifacts
+- older MiniLM / Chroma / LoRA assumptions in the repo history
+
+If you are deciding where to extend Arsitrad today, use `pipeline/`, `db/`, `ui/`, `tests/`, and the v2 config block in `config.yaml`.
+
+## Safety and scope
+
+Arsitrad is an advisory tool.
+
+It is not a substitute for:
+- licensed professionals
+- local planning authority guidance
+- formal legal review
+
+If retrieval confidence is weak or the question is outside regulatory scope, the correct behavior is to say so.

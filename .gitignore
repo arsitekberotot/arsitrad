@@ -33,11 +33,22 @@ data/regulations/*
 
 # Processed data — large regeneratable files (regenerate with embed scripts)
 data/processed/*.log
+data/processed/*.sqlite3
+data/processed/*.zip
+data/processed/v2/
 data/processed/embed_*.py
 data/processed/*_checkpoint.json
 data/processed/embed_output.log
 !data/processed/arsitrad_training.jsonl
+config.yaml.v1.bak
+config.yaml.*.bak
 
 # PDFs — too large for GitHub, text versions are in corpus
 **/*.pdf
 data/corpus/**/*.pdf
+
+# Local runtime / audit artifacts
+.pgdata-v2/
+.pgsocket-v2/
+data/eval/results/
+merge_and_push.py
