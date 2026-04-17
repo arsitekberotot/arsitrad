@@ -96,19 +96,16 @@ python -m pip install -r requirements.txt
 
 ### 2. Configure the database
 
-`config.yaml` currently includes a repo-local development default URL:
+Tracked `config.yaml` is now portable on purpose.
+It does not ship with a machine-specific Postgres socket DSN anymore.
 
-```text
-postgresql:///arsitrad_v2_full?host=/home/admin/hermes/projects/arsitrad/.pgsocket-v2&port=54329
-```
-
-That works only on the machine it was created on.
-
-On any other machine, set your own database URL before ingesting embeddings:
+If you want pgvector-backed ingest or dense retrieval, set your own database URL first:
 
 ```bash
-export ARSITRAD_DATABASE_URL='postgresql://user:password@host:5432/arsitrad_v2'
+export ARSITRAD_DATABASE_URL='postgresql://user:***@host:5432/arsitrad_v2'
 ```
+
+If `ARSITRAD_DATABASE_URL` is not set, Arsitrad can still use the sparse JSONL/BM25 path, but dense retrieval and embedding writes to Postgres will be unavailable.
 
 Schema lives in `db/schema.sql`.
 

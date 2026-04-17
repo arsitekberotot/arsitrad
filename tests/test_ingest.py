@@ -10,6 +10,7 @@ from pipeline.ingest import (
     chunk_records_to_sparse_records,
     ingest_corpus,
     load_chunk_records_from_sparse,
+    load_config,
     load_embedding_checkpoint,
     prepare_passage,
     prepare_query,
@@ -94,6 +95,13 @@ def test_resolve_database_url_prefers_environment(monkeypatch):
     monkeypatch.setenv("ARSITRAD_DATABASE_URL", "postgres://env-db")
 
     assert resolve_database_url(config) == "postgres://env-db"
+
+
+def test_repo_config_keeps_database_portable_without_machine_specific_default(monkeypatch):
+    monkeypatch.delenv("ARSITRAD_DATABASE_URL", raising=False)
+    config = load_config(Path(__file__).resolve().parents[1] / "config.yaml")
+
+    assert resolve_database_url(config) is None
 
 
 def test_build_ingest_config_reads_v2_block():

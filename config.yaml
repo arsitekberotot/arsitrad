@@ -48,7 +48,8 @@ v2:
     sample_chunks_path: "./data/processed/v2/sample_chunks.json"
   database:
     url_env: "ARSITRAD_DATABASE_URL"
-    default_url: "postgresql:///arsitrad_v2_full?host=/home/admin/hermes/projects/arsitrad/.pgsocket-v2&port=54329"
+    # Keep tracked config portable. Set ARSITRAD_DATABASE_URL in your shell or notebook for pgvector-backed retrieval.
+    default_url: null
     table: "regulation_chunks"
   embedding_model: "intfloat/multilingual-e5-large"
   reranker_model: "BAAI/bge-reranker-base"
