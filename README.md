@@ -263,7 +263,9 @@ arsitrad/
 │   └── app.py
 ├── arsitrad_v2.ipynb              # wrapper notebook for repo-driven runs
 ├── legacy/
-│   └── Arsitrad_Gemma4_Indonesian_Architecture_AI.ipynb  # legacy end-to-end notebook
+│   ├── Arsitrad_Gemma4_Indonesian_Architecture_AI.ipynb  # legacy end-to-end notebook
+│   ├── Arsitrad_Gemma4_FineTune.ipynb                    # legacy Gemma 4 fine-tuning notebook
+│   └── Arsitrad_Gemma4_Inference_Demo.ipynb              # legacy Gemma 4 inference notebook
 ├── config.yaml
 └── requirements.txt
 ```
@@ -277,6 +279,8 @@ The old v1 stack is still in the repository for historical reference:
 - `rag/`
 - `fine-tune/`
 - `legacy/Arsitrad_Gemma4_Indonesian_Architecture_AI.ipynb`
+- `legacy/Arsitrad_Gemma4_FineTune.ipynb`
+- `legacy/Arsitrad_Gemma4_Inference_Demo.ipynb`
 - older MiniLM / Chroma / LoRA assumptions in repo history
 
 That is reference material now, not the main shipped path.
