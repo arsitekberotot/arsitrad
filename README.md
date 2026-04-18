@@ -262,6 +262,8 @@ arsitrad/
 ├── ui/
 │   └── app.py
 ├── arsitrad_v2.ipynb              # wrapper notebook for repo-driven runs
+├── legacy/
+│   └── Arsitrad_Gemma4_Indonesian_Architecture_AI.ipynb  # legacy end-to-end notebook
 ├── config.yaml
 └── requirements.txt
 ```
@@ -274,7 +276,7 @@ The old v1 stack is still in the repository for historical reference:
 
 - `rag/`
 - `fine-tune/`
-- older notebook artifacts
+- `legacy/Arsitrad_Gemma4_Indonesian_Architecture_AI.ipynb`
 - older MiniLM / Chroma / LoRA assumptions in repo history
 
 That is reference material now, not the main shipped path.
