@@ -2,6 +2,7 @@ from __future__ import annotations
 
 """GGUF inference and structured answer assembly for Arsitrad v2."""
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
@@ -26,11 +27,15 @@ Jika konteks tidak cukup kuat, jangan mengarang.
 @dataclass(slots=True)
 class InferenceConfig:
     model_path: str
-    context_window: int = 8192
+    context_window: int = 4096
     max_tokens: int = 1024
     temperature: float = 0.2
     top_p: float = 0.9
     repeat_penalty: float = 1.1
+    n_gpu_layers: int = 0
+    n_threads: int = 2
+    n_batch: int = 256
+    verbose: bool = False
 
 
 @dataclass(slots=True)
@@ -42,17 +47,39 @@ class InferenceResult:
     raw_text: str | None = None
 
 
+def _read_env_override(name: str, cast, default):
+    raw_value = os.getenv(name)
+    if raw_value in (None, ""):
+        return default
+    try:
+        return cast(raw_value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _read_env_bool(name: str, default: bool) -> bool:
+    raw_value = os.getenv(name)
+    if raw_value in (None, ""):
+        return default
+    return raw_value.strip().lower() in {"1", "true", "yes", "on"}
+
+
 def load_inference_config(config_path: str | Path = "config.yaml") -> InferenceConfig:
     with open(config_path, "r", encoding="utf-8") as handle:
         config = yaml.safe_load(handle)
     inference = config.get("v2", {}).get("inference", {})
+    model_path = os.getenv("ARSITRAD_GGUF_MODEL_PATH") or inference.get("model_path", "./models/gemma-4-E4B-it-Q4_K_M.gguf")
     return InferenceConfig(
-        model_path=inference.get("model_path", "./models/gemma-4-E4B-it-Q4_K_M.gguf"),
-        context_window=inference.get("context_window", 8192),
-        max_tokens=inference.get("max_tokens", 1024),
-        temperature=inference.get("temperature", 0.2),
-        top_p=inference.get("top_p", 0.9),
-        repeat_penalty=inference.get("repeat_penalty", 1.1),
+        model_path=model_path,
+        context_window=_read_env_override("ARSITRAD_GGUF_CONTEXT_WINDOW", int, inference.get("context_window", 4096)),
+        max_tokens=_read_env_override("ARSITRAD_GGUF_MAX_TOKENS", int, inference.get("max_tokens", 1024)),
+        temperature=_read_env_override("ARSITRAD_GGUF_TEMPERATURE", float, inference.get("temperature", 0.2)),
+        top_p=_read_env_override("ARSITRAD_GGUF_TOP_P", float, inference.get("top_p", 0.9)),
+        repeat_penalty=_read_env_override("ARSITRAD_GGUF_REPEAT_PENALTY", float, inference.get("repeat_penalty", 1.1)),
+        n_gpu_layers=_read_env_override("ARSITRAD_GGUF_N_GPU_LAYERS", int, inference.get("n_gpu_layers", 0)),
+        n_threads=_read_env_override("ARSITRAD_GGUF_N_THREADS", int, inference.get("n_threads", 2)),
+        n_batch=_read_env_override("ARSITRAD_GGUF_N_BATCH", int, inference.get("n_batch", 256)),
+        verbose=_read_env_bool("ARSITRAD_GGUF_VERBOSE", bool(inference.get("verbose", False))),
     )
 
 
@@ -154,7 +181,10 @@ class GGUFInferenceEngine:
             self._model = Llama(
                 model_path=self.config.model_path,
                 n_ctx=self.config.context_window,
-                verbose=False,
+                n_gpu_layers=self.config.n_gpu_layers,
+                n_threads=self.config.n_threads,
+                n_batch=self.config.n_batch,
+                verbose=self.config.verbose,
             )
         return self._model
 
