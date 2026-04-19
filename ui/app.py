@@ -3,8 +3,15 @@ from __future__ import annotations
 """Streamlit UI for Arsitrad v2."""
 
 import html
+import os
+import sys
 from pathlib import Path
 from typing import Any
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+os.chdir(REPO_ROOT)
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 import yaml
 
@@ -27,7 +34,10 @@ except Exception:  # pragma: no cover - optional imports for lightweight environ
     SettlementUpgradingAdvisor = None
 
 
-def load_ui_settings(config_path: str | Path = "config.yaml") -> dict[str, Any]:
+DEFAULT_CONFIG_PATH = REPO_ROOT / "config.yaml"
+
+
+def load_ui_settings(config_path: str | Path = DEFAULT_CONFIG_PATH) -> dict[str, Any]:
     with open(config_path, "r", encoding="utf-8") as handle:
         config = yaml.safe_load(handle)
     v2 = config.get("v2", {})
@@ -88,16 +98,16 @@ def inject_base_css() -> None:
     )
 
 
-def _build_answer_engine(config_path: str = "config.yaml") -> ArsitradAnswerEngine:
+def _build_answer_engine(config_path: str | Path = DEFAULT_CONFIG_PATH) -> ArsitradAnswerEngine:
     return ArsitradAnswerEngine(config_path=config_path)
 
 
 if st is not None:  # pragma: no branch
     @st.cache_resource(show_spinner=False)
-    def get_answer_engine(config_path: str = "config.yaml") -> ArsitradAnswerEngine:
+    def get_answer_engine(config_path: str | Path = DEFAULT_CONFIG_PATH) -> ArsitradAnswerEngine:
         return _build_answer_engine(config_path)
 else:
-    def get_answer_engine(config_path: str = "config.yaml") -> ArsitradAnswerEngine:
+    def get_answer_engine(config_path: str | Path = DEFAULT_CONFIG_PATH) -> ArsitradAnswerEngine:
         return _build_answer_engine(config_path)
 
 
@@ -117,7 +127,7 @@ def render_inference_result(result: InferenceResult) -> None:
     )
 
 
-def render_regulation_tab(config_path: str = "config.yaml") -> None:
+def render_regulation_tab(config_path: str | Path = DEFAULT_CONFIG_PATH) -> None:
     if st is None:
         return
     settings = load_ui_settings(config_path)
@@ -258,7 +268,7 @@ def render_settlement_tab() -> None:
         st.text(advisor.format_advice(advice))
 
 
-def main(config_path: str = "config.yaml") -> None:
+def main(config_path: str | Path = DEFAULT_CONFIG_PATH) -> None:
     if st is None:
         raise RuntimeError("streamlit belum terpasang. Install dependency lalu jalankan ulang.")
 
