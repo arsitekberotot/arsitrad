@@ -48,15 +48,20 @@ def classify_disaster_damage(disaster_type: str, damage_description: str) -> Dic
     """Classify damage based on disaster type and description."""
     # Simple keyword-based classification
     # In production: integrate with fine-tuned Gemma 4 vision model
-    
+
     damage_lower = damage_description.lower()
-    
+
     if any(kw in damage_lower for kw in ["kolaps", "runtuh", "patah", "ambles", "miring", "seluruh", "parah"]):
-        return DAMAGE_CLASSIFICATION["rusak_berat"]
+        damage_key = "rusak_berat"
     elif any(kw in damage_lower for kw in ["retak", "geser", "pecah", "sedang", "tidak rata"]):
-        return DAMAGE_CLASSIFICATION["rusak_sedang"]
+        damage_key = "rusak_sedang"
     else:
-        return DAMAGE_CLASSIFICATION["rusak_ringan"]
+        damage_key = "rusak_ringan"
+
+    return {
+        "damage_key": damage_key,
+        **DAMAGE_CLASSIFICATION[damage_key],
+    }
 
 
 def generate_repair_recommendations(
@@ -135,15 +140,16 @@ class DisasterDamageReporter:
     ) -> Dict:
         """Main reporting function — classify damage and generate recommendations."""
         # Step 1: Classify damage
-        damage_class = classify_disaster_damage(disaster_type, damage_description)
-        
+        damage_info = classify_disaster_damage(disaster_type, damage_description)
+        damage_key = str(damage_info.get("damage_key", "rusak_ringan"))
+
         # Step 2: Get area estimate if not provided
         if floor_area_m2 is None:
             floor_area_m2 = self._estimate_area(building_type)
-        
+
         # Step 3: Generate repair recommendations
         report = generate_repair_recommendations(
-            damage_class.get("description", "").split(",")[0].lower().replace("rusak_", "").replace("_", " "),
+            damage_key,
             building_type,
             floor_area_m2,
             disaster_type

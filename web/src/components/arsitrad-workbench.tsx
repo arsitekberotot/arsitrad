@@ -467,7 +467,7 @@ export function ArsitradWorkbench() {
                     </Button>
                   </CardContent>
                 </Card>
-                <ModuleResult title="Permit guidance" payload={moduleResults.permit ?? null} />
+                <ModuleResult module="permit" title="Permit guidance" payload={moduleResults.permit ?? null} />
               </div>
             ) : null}
 
@@ -532,7 +532,7 @@ export function ArsitradWorkbench() {
                     </Button>
                   </CardContent>
                 </Card>
-                <ModuleResult title="Cooling recommendations" payload={moduleResults.cooling ?? null} />
+                <ModuleResult module="cooling" title="Cooling recommendations" payload={moduleResults.cooling ?? null} />
               </div>
             ) : null}
 
@@ -579,7 +579,7 @@ export function ArsitradWorkbench() {
                     </Button>
                   </CardContent>
                 </Card>
-                <ModuleResult title="Disaster report" payload={moduleResults.disaster ?? null} />
+                <ModuleResult module="disaster" title="Disaster report" payload={moduleResults.disaster ?? null} />
               </div>
             ) : null}
 
@@ -618,7 +618,7 @@ export function ArsitradWorkbench() {
                     </Button>
                   </CardContent>
                 </Card>
-                <ModuleResult title="Settlement upgrading plan" payload={moduleResults.settlement ?? null} />
+                <ModuleResult module="settlement" title="Settlement upgrading plan" payload={moduleResults.settlement ?? null} />
               </div>
             ) : null}
 
