@@ -20,8 +20,10 @@ pgvector>=0.2.5
 # Inference
 llama-cpp-python>=0.2.79
 
-# UI
+# UI / API
 streamlit>=1.44.0
+fastapi>=0.115.0
+uvicorn>=0.30.0
 
 # Evaluation
 ragas>=0.1.8
