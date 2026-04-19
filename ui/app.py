@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -62,22 +63,87 @@ def build_confidence_label(score: float) -> str:
     return "Rendah"
 
 
+SECTION_ORDER = ("RINGKASAN", "DETAIL REGULASI", "SARAN TEKNIS", "SUMBER")
+
+
 def inject_base_css() -> None:
     if st is None:
         return
     st.markdown(
         """
         <style>
-        .arsitrad-card {
-            background: #0f172a;
+        .stApp {
+            background:
+                radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 28%),
+                radial-gradient(circle at top right, rgba(168, 85, 247, 0.12), transparent 24%),
+                linear-gradient(180deg, #020617 0%, #0f172a 100%);
+        }
+        .arsitrad-hero {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92));
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 24px;
+            padding: 22px 24px;
             color: #e2e8f0;
-            border: 1px solid #1e293b;
-            border-radius: 16px;
+            margin: 8px 0 18px 0;
+            box-shadow: 0 24px 60px rgba(2, 6, 23, 0.28);
+        }
+        .arsitrad-hero h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.15rem;
+        }
+        .arsitrad-hero p {
+            margin: 0;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        .arsitrad-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0 14px 0;
+        }
+        .arsitrad-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.82rem;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: rgba(15, 23, 42, 0.88);
+            color: #dbeafe;
+        }
+        .arsitrad-chip-soft {
+            background: rgba(30, 41, 59, 0.88);
+            color: #cbd5e1;
+        }
+        .arsitrad-card {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.88));
+            color: #e2e8f0;
+            border: 1px solid rgba(51, 65, 85, 0.95);
+            border-radius: 18px;
             padding: 18px 20px;
             margin-bottom: 12px;
             white-space: pre-wrap;
-            line-height: 1.55;
+            line-height: 1.6;
             font-size: 0.97rem;
+            box-shadow: 0 16px 36px rgba(2, 6, 23, 0.22);
+        }
+        .arsitrad-card-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            color: #f8fafc;
+        }
+        .arsitrad-card-body {
+            color: #dbe4f0;
+            white-space: pre-wrap;
+            line-height: 1.65;
         }
         .arsitrad-meta {
             color: #94a3b8;
@@ -92,10 +158,104 @@ def inject_base_css() -> None:
             color: #e2e8f0;
             margin-bottom: 16px;
         }
+        .arsitrad-divider-label {
+            margin: 10px 0 8px 0;
+            color: #93c5fd;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
         </style>
         """,
         unsafe_allow_html=True,
     )
+
+
+def clean_answer_text(text: str) -> str:
+    cleaned = (text or "").replace("\r\n", "\n").strip()
+    if len(cleaned) >= 2 and cleaned[0] == cleaned[-1] and cleaned[0] in {'"', "'"}:
+        cleaned = cleaned[1:-1].strip()
+    cleaned = cleaned.replace("\n\n\n", "\n\n")
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned
+
+
+def normalize_section_heading(line: str) -> str | None:
+    normalized = re.sub(r"^\d+\.\s*", "", line.strip().upper())
+    return normalized if normalized in SECTION_ORDER else None
+
+
+def split_answer_sections(text: str) -> tuple[str, dict[str, str]]:
+    cleaned = clean_answer_text(text)
+    sections: dict[str, list[str]] = {}
+    current_key: str | None = None
+
+    for raw_line in cleaned.splitlines():
+        heading = normalize_section_heading(raw_line)
+        if heading:
+            current_key = heading
+            sections.setdefault(current_key, [])
+            continue
+        if current_key is None:
+            continue
+        sections[current_key].append(raw_line)
+
+    normalized_sections = {
+        key: "\n".join(lines).strip()
+        for key, lines in sections.items()
+        if "\n".join(lines).strip()
+    }
+    return cleaned, normalized_sections
+
+
+def _htmlize_body(text: str) -> str:
+    return html.escape(text).replace("\n", "<br>")
+
+
+def render_text_card(title: str, body: str, badge: str | None = None) -> None:
+    if st is None or not body.strip():
+        return
+    badge_html = f"<span class='arsitrad-chip arsitrad-chip-soft'>{html.escape(badge)}</span>" if badge else ""
+    st.markdown(
+        (
+            "<div class='arsitrad-card'>"
+            f"<div class='arsitrad-card-title'><span>{html.escape(title)}</span>{badge_html}</div>"
+            f"<div class='arsitrad-card-body'>{_htmlize_body(body)}</div>"
+            "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def render_assistant_message(message: dict[str, Any]) -> None:
+    if st is None:
+        return
+
+    cleaned, sections = split_answer_sections(str(message.get("content", "")))
+    confidence = message.get("confidence")
+    confidence_label = build_confidence_label(float(confidence)) if confidence is not None else None
+    mode = "GGUF" if message.get("used_model") else "Fallback"
+    query = str(message.get("standalone_query", "")).strip()
+
+    chips: list[str] = []
+    if confidence is not None and confidence_label is not None:
+        chips.append(f"<span class='arsitrad-chip'>Confidence {float(confidence):.2f} · {confidence_label}</span>")
+    if message.get("used_model") is not None:
+        chips.append(f"<span class='arsitrad-chip arsitrad-chip-soft'>Mode {html.escape(mode)}</span>")
+    if query:
+        chips.append(f"<span class='arsitrad-chip arsitrad-chip-soft'>Query {html.escape(query)}</span>")
+    if chips:
+        st.markdown(f"<div class='arsitrad-chip-row'>{''.join(chips)}</div>", unsafe_allow_html=True)
+
+    if sections:
+        for heading in SECTION_ORDER:
+            body = sections.get(heading)
+            if body:
+                render_text_card(heading.title(), body)
+    else:
+        render_text_card("Jawaban", cleaned)
+
 
 
 def _build_answer_engine(config_path: str | Path = DEFAULT_CONFIG_PATH) -> ArsitradAnswerEngine:
@@ -114,16 +274,13 @@ else:
 def render_inference_result(result: InferenceResult) -> None:
     if st is None:
         return
-    confidence_label = build_confidence_label(result.retrieval.confidence)
-    meta = (
-        f"Confidence: {result.retrieval.confidence:.2f} ({confidence_label})"
-        f" · Mode: {'GGUF' if result.used_model else 'Fallback'}"
-        f" · Query: {html.escape(result.retrieval.standalone_query)}"
-    )
-    st.markdown(f"<div class='arsitrad-meta'>{meta}</div>", unsafe_allow_html=True)
-    st.markdown(
-        f"<div class='arsitrad-card'>{html.escape(result.answer)}</div>",
-        unsafe_allow_html=True,
+    render_assistant_message(
+        {
+            "content": result.answer,
+            "confidence": result.retrieval.confidence,
+            "used_model": result.used_model,
+            "standalone_query": result.retrieval.standalone_query,
+        }
     )
 
 
@@ -138,25 +295,22 @@ def render_regulation_tab(config_path: str | Path = DEFAULT_CONFIG_PATH) -> None
         st.session_state["arsitrad_messages"] = [
             {
                 "role": "assistant",
-                "content": "Tanyakan regulasi bangunan, PBG, KDB/KDH, RDTR, RTRW, atau standar SNI yang kamu butuhkan.",
+                "content": "Tanyakan regulasi bangunan, PBG, KDB/KDH, RDTR, RTRW, aksesibilitas, proteksi kebakaran, atau SBKBG yang kamu butuhkan.",
             }
         ]
 
     for message in st.session_state["arsitrad_messages"]:
         with st.chat_message(message["role"]):
             if message["role"] == "assistant":
-                st.markdown(
-                    f"<div class='arsitrad-card'>{html.escape(message['content'])}</div>",
-                    unsafe_allow_html=True,
-                )
+                render_assistant_message(message)
             else:
-                st.markdown(message["content"])
+                render_text_card("Pertanyaan", str(message["content"]))
 
     prompt = st.chat_input(settings["default_question"])
     if prompt:
         st.session_state["arsitrad_messages"].append({"role": "user", "content": prompt})
         with st.chat_message("user"):
-            st.markdown(prompt)
+            render_text_card("Pertanyaan", prompt)
 
         with st.chat_message("assistant"):
             with st.spinner("Mencari regulasi terbaik..."):
@@ -166,9 +320,10 @@ def render_regulation_tab(config_path: str | Path = DEFAULT_CONFIG_PATH) -> None
                 st.session_state["arsitrad_messages"].append(
                     {
                         "role": "assistant",
-                        "content": result.answer,
+                        "content": clean_answer_text(result.answer),
                         "confidence": result.retrieval.confidence,
                         "used_model": result.used_model,
+                        "standalone_query": result.retrieval.standalone_query,
                     }
                 )
 
@@ -278,12 +433,28 @@ def main(config_path: str | Path = DEFAULT_CONFIG_PATH) -> None:
 
     st.title(settings["app_title"])
     st.caption("Semantic chunking · E5 embeddings · pgvector hybrid retrieval · GGUF Gemma 4")
+    st.markdown(
+        """
+        <div class='arsitrad-hero'>
+            <h3>Regulatory copilot, not a guess machine</h3>
+            <p>
+                Arsitrad menata jawaban ke format yang lebih rapi: ringkasan, detail regulasi, saran teknis, dan sumber.
+                Pakai tab Regulation QA untuk tanya regulasi, lalu buka tab lain saat butuh workflow yang lebih spesifik.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     with st.sidebar:
         st.markdown("### Status")
         st.write("Confidence tinggi >= 0.75")
         st.write("Confidence sedang >= 0.60")
         st.write("Confidence rendah < 0.60")
+        st.markdown("### Cara pakai")
+        st.write("• Mulai dari pertanyaan regulasi yang spesifik")
+        st.write("• Sebut kota/daerah kalau konteksnya lokal")
+        st.write("• Verifikasi kutipan sebelum dipakai buat keputusan desain")
         st.markdown("### Disclaimer")
         st.info(settings["disclaimer"])
 
