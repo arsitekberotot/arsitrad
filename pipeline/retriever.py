@@ -60,8 +60,13 @@ def tokenize(text: str) -> list[str]:
     return TOKEN_RE.findall((text or "").lower())
 
 
-def matches_filters(metadata: dict[str, object], filters: dict[str, object]) -> bool:
-    enriched = enrich_metadata(metadata)
+def matches_filters(
+    metadata: dict[str, object],
+    filters: dict[str, object],
+    *,
+    assume_enriched: bool = False,
+) -> bool:
+    enriched = metadata if assume_enriched else enrich_metadata(metadata)
     for key, expected in filters.items():
         if expected in (None, "", []):
             continue
@@ -237,8 +242,18 @@ def authority_score_adjustment(query: str, filters: dict[str, object], candidate
 
 class JsonlSparseIndex:
     def __init__(self, records: Sequence[dict[str, object]] | None = None, path: str | Path | None = None):
-        self.records = list(records) if records is not None else load_sparse_records(path) if path else []
-        self.tokens = [tokenize(record.get("content", "")) for record in self.records]
+        raw_records = list(records) if records is not None else load_sparse_records(path) if path else []
+        self.records: list[dict[str, object]] = []
+        self.metadatas: list[dict[str, object]] = []
+        for record in raw_records:
+            content = str(record.get("content", ""))
+            metadata = enrich_metadata(record.get("metadata", {}), content)
+            normalized_record = dict(record)
+            normalized_record["content"] = content
+            normalized_record["metadata"] = metadata
+            self.records.append(normalized_record)
+            self.metadatas.append(metadata)
+        self.tokens = [tokenize(record["content"]) for record in self.records]
         self._bm25 = None
         if self.records:
             try:
@@ -254,8 +269,8 @@ class JsonlSparseIndex:
 
         filtered_records: list[tuple[int, dict[str, object], dict[str, object]]] = []
         for idx, record in enumerate(self.records):
-            metadata = enrich_metadata(record.get("metadata", {}), str(record.get("content", "")))
-            if matches_filters(metadata, filters):
+            metadata = self.metadatas[idx]
+            if matches_filters(metadata, filters, assume_enriched=True):
                 filtered_records.append((idx, record, metadata))
 
         if not filtered_records:
@@ -374,7 +389,7 @@ class PostgresDenseRetriever:
             metadata.setdefault("start_page", row.get("start_page"))
             metadata.setdefault("end_page", row.get("end_page"))
             metadata = enrich_metadata(metadata, row["content"])
-            if not matches_filters(metadata, filters):
+            if not matches_filters(metadata, filters, assume_enriched=True):
                 continue
             candidates.append(
                 CandidateChunk(
