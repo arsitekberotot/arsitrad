@@ -1,4 +1,5 @@
 from ui.app import (
+    build_base_css,
     build_confidence_label,
     clean_answer_text,
     load_ui_settings,
@@ -51,3 +52,12 @@ def test_split_answer_sections_parses_numbered_headings():
     assert sections["DETAIL REGULASI"] == "Detail."
     assert sections["SARAN TEKNIS"] == "Saran."
     assert sections["SUMBER"] == "[1] Permen"
+
+
+def test_build_base_css_styles_streamlit_shell_and_chat_input():
+    css = build_base_css()
+
+    assert '.arsitrad-shell' in css
+    assert '[data-testid="stSidebar"]' in css
+    assert '[data-testid="stChatInput"]' in css
+    assert '[data-testid="stToolbar"]' in css

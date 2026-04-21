@@ -14,6 +14,26 @@ def test_expand_query_bridges_imb_and_pbg():
     assert expansions[0] == "cara urus IMB rumah 2 lantai di Semarang"
 
 
+def test_expand_query_keeps_imb_pbg_comparison_terms_distinct():
+    expansions = expand_query("Apa bedanya IMB dan PBG?")
+
+    lowered = [item.lower() for item in expansions]
+    assert not any("imb dan imb" in item for item in lowered)
+    assert not any("pbg dan pbg" in item for item in lowered)
+    assert any(
+        "izin mendirikan bangunan" in item and "persetujuan bangunan gedung" in item
+        for item in lowered
+    )
+
+
+def test_expand_query_adds_definition_hints_for_imb_pbg_comparison():
+    expansions = expand_query("Apa beda IMB dan PBG menurut aturan terbaru?")
+
+    lowered = [item.lower() for item in expansions]
+    assert any("yang selanjutnya disingkat imb adalah" in item for item in lowered)
+    assert any("yang selanjutnya disingkat pbg adalah" in item for item in lowered)
+
+
 def test_extract_filters_reads_region_building_use_and_year():
     filters = extract_filters_from_query("Perda Semarang 2024 untuk rumah tinggal")
 
@@ -79,3 +99,10 @@ def test_extract_filters_detects_spatial_topic_with_punctuation():
     filters = extract_filters_from_query("Apa yang harus dicek untuk bangunan di dekat sungai menurut tata ruang?")
 
     assert filters["topic"] == "spatial_planning"
+
+
+def test_extract_filters_does_not_force_national_for_imb_pbg_comparison():
+    filters = extract_filters_from_query("Apa beda IMB dan PBG menurut aturan terbaru?")
+
+    assert filters["topic"] == "building_permit"
+    assert "region" not in filters

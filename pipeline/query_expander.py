@@ -95,6 +95,15 @@ REGULATORY_ANCHORS = (
     "heritage",
     "konservasi",
 )
+COMPARISON_KEYWORDS = (
+    "beda",
+    "bedanya",
+    "perbedaan",
+    "perbandingan",
+    "banding",
+    "versus",
+    "vs",
+)
 
 
 @dataclass(slots=True)
@@ -128,10 +137,19 @@ def is_regionless_spatial_query(query: str) -> bool:
     return infer_topic(query) == "spatial_planning" and not has_explicit_region(query)
 
 
+def is_imb_pbg_comparison_query(query: str) -> bool:
+    normalized = normalize_lookup_text(query)
+    has_imb = "imb" in normalized or "izin mendirikan bangunan" in normalized
+    has_pbg = "pbg" in normalized or "persetujuan bangunan gedung" in normalized
+    has_comparison = any(keyword in normalized for keyword in COMPARISON_KEYWORDS)
+    return has_imb and has_pbg and has_comparison
+
+
 def expand_query(query: str, max_expansions: int = 6) -> list[str]:
     normalized = re.sub(r"\s+", " ", query.strip())
     lowered = normalized.lower()
     expansions = [normalized]
+    imb_pbg_comparison = is_imb_pbg_comparison_query(query)
 
     if is_regionless_spatial_query(query):
         expansions.append(f"{normalized} pp 21 2021 penataan ruang")
@@ -140,6 +158,8 @@ def expand_query(query: str, max_expansions: int = 6) -> list[str]:
         variants = (anchor, *equivalents)
         matched_term = next((variant for variant in variants if variant in lowered), None)
         if not matched_term:
+            continue
+        if any(variant in lowered for variant in variants if variant != matched_term):
             continue
         for variant in variants:
             if variant == matched_term:
@@ -158,12 +178,16 @@ def expand_query(query: str, max_expansions: int = 6) -> list[str]:
         expansions.append(f"{normalized} surat bukti kepemilikan bangunan gedung")
     if "rdtr" in lowered and any(term in lowered for term in ("pbg", "imb", "slf")):
         expansions.append(f"{normalized} zonasi tata ruang persetujuan bangunan gedung")
-    if "imb" in lowered and "pbg" in lowered:
+    if "imb" in lowered and "pbg" in lowered and not imb_pbg_comparison:
         expansions.append(f"{normalized} pp 16 2021 persetujuan bangunan gedung")
     if "sungai" in lowered and "sempadan sungai" not in lowered:
         expansions.append(f"{normalized} sempadan sungai")
     if "rdtr" in lowered and "rtrw" not in lowered:
         expansions.append(f"{normalized} rtrw")
+    if imb_pbg_comparison:
+        expansions.append(f"{normalized} perbedaan izin mendirikan bangunan dan persetujuan bangunan gedung")
+        expansions.append("izin mendirikan bangunan gedung yang selanjutnya disingkat IMB adalah")
+        expansions.append("persetujuan bangunan gedung yang selanjutnya disingkat PBG adalah")
 
     return dedupe_preserve_order(expansions)[:max_expansions]
 
@@ -179,6 +203,7 @@ def is_non_regulatory_design_query(query: str) -> bool:
 def extract_filters_from_query(query: str) -> dict[str, object]:
     lowered = query.lower()
     filters: dict[str, object] = {}
+    imb_pbg_comparison = is_imb_pbg_comparison_query(query)
 
     if is_non_regulatory_design_query(query):
         return {"out_of_scope": True}
@@ -208,7 +233,11 @@ def extract_filters_from_query(query: str) -> dict[str, object]:
     if "region" not in filters:
         if topic in {"accessibility", "seismic", "ownership"}:
             filters["region"] = "nasional"
-        elif topic == "building_permit" and not any(term in lowered for term in ("rdtr", "rtrw", "zonasi", "kdb", "kdh", "klb")):
+        elif (
+            topic == "building_permit"
+            and not imb_pbg_comparison
+            and not any(term in lowered for term in ("rdtr", "rtrw", "zonasi", "kdb", "kdh", "klb"))
+        ):
             filters["region"] = "nasional"
 
     return filters

@@ -12,13 +12,19 @@ import yaml
 
 from pipeline.conversation_memory import contextualize_question
 from pipeline.ingest import E5Embedder, load_config, resolve_database_url
-from pipeline.query_expander import QueryInterpretation, interpret_query, is_regionless_spatial_query
+from pipeline.query_expander import (
+    QueryInterpretation,
+    interpret_query,
+    is_imb_pbg_comparison_query,
+    is_regionless_spatial_query,
+)
 from pipeline.taxonomy import (
     enrich_metadata,
     infer_building_use,
     infer_topic,
     is_rpjmd_source,
     is_spatial_source,
+    normalize_lookup_text,
     source_name_matches,
 )
 
@@ -114,6 +120,66 @@ def rrf_fusion(*ranked_lists: Sequence[CandidateChunk], k: int = 60, limit: int 
     return reranked[:limit] if limit else reranked
 
 
+def normalize_candidate_signature(candidate: CandidateChunk) -> str:
+    normalized = normalize_lookup_text(candidate.content)
+    return normalized or candidate.chunk_key.lower()
+
+
+def is_imb_definition_candidate(candidate: CandidateChunk) -> bool:
+    normalized = normalize_lookup_text(candidate.content)
+    return "yang selanjutnya disingkat imb adalah" in normalized or " imb adalah " in f" {normalized} "
+
+
+def is_pbg_definition_candidate(candidate: CandidateChunk) -> bool:
+    normalized = normalize_lookup_text(candidate.content)
+    return "yang selanjutnya disingkat pbg adalah" in normalized or " pbg adalah " in f" {normalized} "
+
+
+def is_pbg_context_candidate(candidate: CandidateChunk) -> bool:
+    normalized = normalize_lookup_text(candidate.content)
+    source_name = str(candidate.metadata.get("source_name") or "")
+    return (
+        "persetujuan bangunan gedung" in normalized
+        or " pbg " in f" {normalized} "
+        or source_name_matches(source_name, "pp_16_2021", "pp 16 2021", "persetujuan bangunan gedung")
+    )
+
+
+def dedupe_candidates(candidates: Sequence[CandidateChunk]) -> list[CandidateChunk]:
+    deduped: list[CandidateChunk] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        signature = normalize_candidate_signature(candidate)
+        if signature in seen:
+            continue
+        seen.add(signature)
+        deduped.append(candidate)
+    return deduped
+
+
+def rebalance_contrastive_candidates(query: str, candidates: Sequence[CandidateChunk], limit: int) -> list[CandidateChunk]:
+    ordered = list(candidates)
+    if not is_imb_pbg_comparison_query(query):
+        return ordered[:limit]
+
+    imb_candidate = next((candidate for candidate in ordered if is_imb_definition_candidate(candidate)), None)
+    pbg_candidate = next((candidate for candidate in ordered if is_pbg_definition_candidate(candidate)), None)
+    if pbg_candidate is None:
+        pbg_candidate = next((candidate for candidate in ordered if is_pbg_context_candidate(candidate)), None)
+
+    balanced: list[CandidateChunk] = []
+    for candidate in (imb_candidate, pbg_candidate):
+        if candidate is not None and candidate not in balanced:
+            balanced.append(candidate)
+
+    for candidate in ordered:
+        if candidate not in balanced:
+            balanced.append(candidate)
+        if len(balanced) >= limit:
+            break
+    return balanced[:limit]
+
+
 def build_low_confidence_message(filters: dict[str, object]) -> str:
     region = filters.get("region")
     region_text = f" untuk wilayah {region}" if region else ""
@@ -150,12 +216,18 @@ def authority_score_adjustment(query: str, filters: dict[str, object], candidate
     source_name = str(metadata.get("source_name") or "")
     lowered_query = query.lower()
     lowered_content = candidate.content.lower()
+    normalized_content = normalize_lookup_text(candidate.content)
     topic = filters.get("topic") or infer_topic(query)
     building_use = filters.get("building_use") or infer_building_use(query)
     adjustment = 0.0
     zoning_terms = ("rdtr", "rtrw", "tata ruang", "zonasi", "kdb", "kdh", "klb", "gsb")
     permit_terms = ("imb", "pbg", "slf", "persetujuan bangunan gedung", "sertifikat laik fungsi")
     regionless_spatial = is_regionless_spatial_query(query)
+    imb_pbg_comparison = (
+        any(term in lowered_query for term in ("beda", "bedanya", "perbedaan", "perbandingan", "versus", "vs"))
+        and any(term in lowered_query for term in ("imb", "izin mendirikan bangunan"))
+        and any(term in lowered_query for term in ("pbg", "persetujuan bangunan gedung"))
+    )
 
     if is_rpjmd_source(source_name) and not any(
         term in lowered_query for term in ("rpjmd", "rencana pembangunan jangka menengah daerah")
@@ -186,6 +258,26 @@ def authority_score_adjustment(query: str, filters: dict[str, object], candidate
         adjustment -= 0.12
     elif building_use:
         adjustment -= 0.10
+
+    if imb_pbg_comparison:
+        has_imb_definition = "yang selanjutnya disingkat imb adalah" in normalized_content or " imb adalah " in f" {normalized_content} "
+        has_pbg_definition = "yang selanjutnya disingkat pbg adalah" in normalized_content or " pbg adalah " in f" {normalized_content} "
+        has_transition_hint = any(
+            term in normalized_content
+            for term in (
+                "sebelum berlakunya peraturan pemerintah ini",
+                "izinnya dinyatakan masih tetap berlaku",
+                "telah memperoleh perizinan yang dikeluarkan oleh pemerintah daerah",
+            )
+        )
+        if has_imb_definition:
+            adjustment += 0.32
+        if has_pbg_definition:
+            adjustment += 0.24
+        if has_transition_hint:
+            adjustment += 0.22
+        if not has_imb_definition and not has_pbg_definition and not has_transition_hint:
+            adjustment -= 0.14
 
     if topic == "spatial_planning" or any(term in lowered_query for term in ("rdtr", "rtrw", "tata ruang", "zonasi", "sempadan sungai")):
         if is_spatial_source(source_name):
@@ -232,7 +324,11 @@ def authority_score_adjustment(query: str, filters: dict[str, object], candidate
             adjustment -= 0.30
 
     if topic == "building_permit" and filters.get("region") in (None, "", "nasional"):
-        if metadata.get("region") not in (None, "", "nasional") and not any(term in lowered_query for term in zoning_terms):
+        if (
+            metadata.get("region") not in (None, "", "nasional")
+            and not any(term in lowered_query for term in zoning_terms)
+            and not imb_pbg_comparison
+        ):
             adjustment -= 0.22
         if str(candidate_reg_type or "").lower() in {"pp", "permen", "uu"}:
             adjustment += 0.10
@@ -531,6 +627,7 @@ class HybridRetriever:
 
         dense_lists: list[list[CandidateChunk]] = []
         sparse_lists: list[list[CandidateChunk]] = []
+        contrastive_imb_pbg = is_imb_pbg_comparison_query(standalone_query)
         for query in interpretation.expanded_queries or [standalone_query]:
             if self.dense_retriever is not None:
                 dense_lists.append(
@@ -553,22 +650,37 @@ class HybridRetriever:
                         self.sparse_index.search(query, national_filters, top_k=self.settings.sparse_top_k)
                     )
 
+        if contrastive_imb_pbg:
+            national_filters = {**interpretation.filters, "region": "nasional"}
+            for query in interpretation.expanded_queries or [standalone_query]:
+                if self.dense_retriever is not None:
+                    dense_lists.append(
+                        self.dense_retriever.search(query, national_filters, top_k=self.settings.dense_top_k)
+                    )
+                if self.sparse_index is not None:
+                    sparse_lists.append(
+                        self.sparse_index.search(query, national_filters, top_k=self.settings.sparse_top_k)
+                    )
+
         fused = rrf_fusion(
             *dense_lists,
             *sparse_lists,
             k=self.settings.rrf_k,
             limit=max(self.settings.dense_top_k, self.settings.sparse_top_k),
         )
+        rerank_limit = max(self.settings.rerank_top_k * 2, 8) if contrastive_imb_pbg else self.settings.rerank_top_k
         try:
             reranked = self.reranker.rerank(
                 standalone_query,
                 fused,
-                top_k=self.settings.rerank_top_k,
+                top_k=rerank_limit,
                 filters=interpretation.filters,
             )
         except TypeError:
-            reranked = self.reranker.rerank(standalone_query, fused, top_k=self.settings.rerank_top_k)
-        confidence = reranked[0].score if reranked else 0.0
+            reranked = self.reranker.rerank(standalone_query, fused, top_k=rerank_limit)
+        reranked = dedupe_candidates(reranked)
+        reranked = rebalance_contrastive_candidates(standalone_query, reranked, limit=self.settings.rerank_top_k)
+        confidence = min(reranked[0].score, 1.0) if reranked else 0.0
         should_answer = bool(reranked) and confidence >= self.settings.confidence_threshold
         message = None if should_answer else build_low_confidence_message(interpretation.filters)
 

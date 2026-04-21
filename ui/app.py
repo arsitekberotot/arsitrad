@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Streamlit UI for Arsitrad v2."""
+# Streamlit UI for Arsitrad v2.
 
 import html
 import os
@@ -63,71 +63,214 @@ def build_confidence_label(score: float) -> str:
     return "Rendah"
 
 
+def build_shell_header(app_title: str) -> str:
+    safe_title = html.escape(app_title)
+    return (
+        "<div class='arsitrad-shell'>"
+        "<div class='arsitrad-kicker'>Indonesian building-regulation copilot</div>"
+        "<div class='arsitrad-title-row'>"
+        f"<h1>{safe_title}</h1>"
+        "<div class='arsitrad-badge'>Hybrid retrieval · GGUF-ready · 5 workflows</div>"
+        "</div>"
+        "<p class='arsitrad-subtitle'>"
+        "Tanya regulasi PBG, RDTR, RTRW, aksesibilitas, proteksi kebakaran, dan kepemilikan bangunan dengan jawaban yang lebih rapi, tegas, dan bisa dilacak ke sumbernya."
+        "</p>"
+        "<div class='arsitrad-pill-row'>"
+        "<span class='arsitrad-pill'>Regulatory QA</span>"
+        "<span class='arsitrad-pill arsitrad-pill-soft'>Permit guidance</span>"
+        "<span class='arsitrad-pill arsitrad-pill-soft'>Cooling · Disaster · Settlement</span>"
+        "</div>"
+        "</div>"
+    )
+
+
 SECTION_ORDER = ("RINGKASAN", "DETAIL REGULASI", "SARAN TEKNIS", "SUMBER")
 
 
-def inject_base_css() -> None:
-    if st is None:
-        return
-    st.markdown(
-        """
+def build_base_css() -> str:
+    return """
         <style>
-        .stApp {
+        [data-testid="stAppViewContainer"] {
             background:
-                radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 28%),
-                radial-gradient(circle at top right, rgba(168, 85, 247, 0.12), transparent 24%),
-                linear-gradient(180deg, #020617 0%, #0f172a 100%);
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
+                radial-gradient(circle at top right, rgba(168, 85, 247, 0.14), transparent 24%),
+                linear-gradient(180deg, #020617 0%, #0b1120 48%, #111827 100%);
         }
-        .arsitrad-hero {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92));
-            border: 1px solid rgba(148, 163, 184, 0.16);
-            border-radius: 24px;
-            padding: 22px 24px;
+        .stApp {
+            background: transparent;
             color: #e2e8f0;
-            margin: 8px 0 18px 0;
-            box-shadow: 0 24px 60px rgba(2, 6, 23, 0.28);
         }
-        .arsitrad-hero h3 {
-            margin: 0 0 8px 0;
-            font-size: 1.15rem;
+        [data-testid="stHeader"] {
+            background: transparent;
         }
-        .arsitrad-hero p {
+        [data-testid="stToolbar"],
+        [data-testid="stAppDeployButton"],
+        [data-testid="stMainMenu"] {
+            display: none;
+        }
+        [data-testid="stMainBlockContainer"] {
+            max-width: 1120px;
+            padding-top: 2.25rem;
+            padding-bottom: 7rem;
+        }
+        [data-testid="stSidebar"] {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.88));
+            border-right: 1px solid rgba(71, 85, 105, 0.45);
+        }
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+        [data-testid="stSidebar"] p,
+        [data-testid="stSidebar"] h3,
+        [data-testid="stSidebar"] label {
+            color: #dbeafe !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stAlert"] {
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(96, 165, 250, 0.22);
+            color: #e2e8f0;
+        }
+        .arsitrad-shell {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(17, 24, 39, 0.82));
+            border: 1px solid rgba(96, 165, 250, 0.16);
+            border-radius: 28px;
+            padding: 24px 26px 22px 26px;
+            margin: 0 0 18px 0;
+            box-shadow: 0 28px 70px rgba(2, 6, 23, 0.32);
+            backdrop-filter: blur(16px);
+        }
+        .arsitrad-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(96, 165, 250, 0.24);
+            background: rgba(37, 99, 235, 0.12);
+            color: #bfdbfe;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .arsitrad-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .arsitrad-title-row h1 {
             margin: 0;
-            color: #cbd5e1;
-            line-height: 1.6;
+            font-size: clamp(2rem, 3vw, 2.7rem);
+            line-height: 1.05;
+            color: #f8fafc;
         }
+        .arsitrad-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 999px;
+            padding: 8px 14px;
+            background: rgba(15, 23, 42, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .arsitrad-subtitle {
+            margin: 12px 0 0 0;
+            color: #cbd5e1;
+            line-height: 1.7;
+            max-width: 820px;
+            font-size: 1rem;
+        }
+        .arsitrad-pill-row,
         .arsitrad-chip-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin: 10px 0 14px 0;
+            gap: 10px;
         }
+        .arsitrad-pill-row {
+            margin: 16px 0 0 0;
+        }
+        .arsitrad-pill,
         .arsitrad-chip {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             border-radius: 999px;
-            padding: 6px 12px;
+            padding: 7px 12px;
             font-size: 0.82rem;
             border: 1px solid rgba(148, 163, 184, 0.18);
-            background: rgba(15, 23, 42, 0.88);
+            background: rgba(15, 23, 42, 0.7);
             color: #dbeafe;
         }
+        .arsitrad-pill-soft,
         .arsitrad-chip-soft {
-            background: rgba(30, 41, 59, 0.88);
+            background: rgba(30, 41, 59, 0.7);
             color: #cbd5e1;
         }
-        .arsitrad-card {
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.88));
+        .arsitrad-hero {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.78));
+            border: 1px solid rgba(71, 85, 105, 0.42);
+            border-radius: 22px;
+            padding: 20px 22px;
             color: #e2e8f0;
-            border: 1px solid rgba(51, 65, 85, 0.95);
+            margin: 0 0 16px 0;
+            box-shadow: 0 20px 52px rgba(2, 6, 23, 0.24);
+        }
+        .arsitrad-hero h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.08rem;
+            color: #f8fafc;
+        }
+        .arsitrad-hero p {
+            margin: 0;
+            color: #cbd5e1;
+            line-height: 1.65;
+        }
+        .arsitrad-section-label {
+            margin: 8px 0 8px 2px;
+            color: #93c5fd;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        [data-testid="stTabs"] {
+            margin-top: 0.15rem;
+        }
+        [data-testid="stTabs"] [role="tablist"] {
+            gap: 0.45rem;
+            padding: 0.3rem;
             border-radius: 18px;
+            border: 1px solid rgba(71, 85, 105, 0.42);
+            background: rgba(15, 23, 42, 0.56);
+        }
+        [data-testid="stTabs"] [role="tab"] {
+            height: 42px;
+            padding: 0 16px;
+            border-radius: 12px;
+            color: #cbd5e1;
+            background: transparent;
+            border: none;
+        }
+        [data-testid="stTabs"] [role="tab"][aria-selected="true"] {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(59, 130, 246, 0.8));
+            color: #f8fafc;
+            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.24);
+        }
+        .arsitrad-card {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.82));
+            color: #e2e8f0;
+            border: 1px solid rgba(51, 65, 85, 0.9);
+            border-radius: 20px;
             padding: 18px 20px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             white-space: pre-wrap;
             line-height: 1.6;
             font-size: 0.97rem;
-            box-shadow: 0 16px 36px rgba(2, 6, 23, 0.22);
+            box-shadow: 0 16px 40px rgba(2, 6, 23, 0.2);
         }
         .arsitrad-card-title {
             display: flex;
@@ -143,33 +286,61 @@ def inject_base_css() -> None:
         .arsitrad-card-body {
             color: #dbe4f0;
             white-space: pre-wrap;
-            line-height: 1.65;
+            line-height: 1.7;
         }
         .arsitrad-meta {
             color: #94a3b8;
-            font-size: 0.88rem;
-            margin-bottom: 10px;
+            font-size: 0.87rem;
+            margin: 0 0 12px 2px;
+            line-height: 1.5;
         }
         .arsitrad-disclaimer {
-            border-left: 4px solid #f59e0b;
-            background: rgba(245, 158, 11, 0.08);
-            padding: 12px 14px;
-            border-radius: 10px;
-            color: #e2e8f0;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.28);
+            padding: 13px 14px;
+            border-radius: 14px;
+            color: #f8fafc;
             margin-bottom: 16px;
         }
-        .arsitrad-divider-label {
-            margin: 10px 0 8px 0;
-            color: #93c5fd;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+        [data-testid="stChatMessage"] {
+            background: transparent;
+        }
+        [data-testid="stChatInput"] {
+            position: sticky;
+            bottom: 1rem;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(71, 85, 105, 0.55);
+            border-radius: 18px;
+            padding: 0.35rem 0.5rem;
+            box-shadow: 0 20px 44px rgba(2, 6, 23, 0.35);
+            backdrop-filter: blur(16px);
+        }
+        [data-testid="stChatInput"] textarea {
+            color: #f8fafc !important;
+        }
+        [data-testid="stChatInput"] textarea::placeholder {
+            color: #94a3b8 !important;
+        }
+        [data-testid="stChatInputSubmitButton"] {
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(59, 130, 246, 0.86));
+        }
+        @media (max-width: 900px) {
+            [data-testid="stMainBlockContainer"] {
+                padding-top: 1.4rem;
+            }
+            .arsitrad-shell {
+                padding: 20px 18px;
+            }
         }
         </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    """
+
+
+def inject_base_css() -> None:
+    if st is None:
+        return
+    st.markdown(build_base_css(), unsafe_allow_html=True)
 
 
 def clean_answer_text(text: str) -> str:
@@ -243,10 +414,10 @@ def render_assistant_message(message: dict[str, Any]) -> None:
         chips.append(f"<span class='arsitrad-chip'>Confidence {float(confidence):.2f} · {confidence_label}</span>")
     if message.get("used_model") is not None:
         chips.append(f"<span class='arsitrad-chip arsitrad-chip-soft'>Mode {html.escape(mode)}</span>")
-    if query:
-        chips.append(f"<span class='arsitrad-chip arsitrad-chip-soft'>Query {html.escape(query)}</span>")
     if chips:
         st.markdown(f"<div class='arsitrad-chip-row'>{''.join(chips)}</div>", unsafe_allow_html=True)
+    if query:
+        st.markdown(f"<div class='arsitrad-meta'>Standalone query: {html.escape(query)}</div>", unsafe_allow_html=True)
 
     if sections:
         for heading in SECTION_ORDER:
@@ -431,15 +602,14 @@ def main(config_path: str | Path = DEFAULT_CONFIG_PATH) -> None:
     st.set_page_config(page_title=settings["app_title"], layout="wide")
     inject_base_css()
 
-    st.title(settings["app_title"])
-    st.caption("Semantic chunking · E5 embeddings · pgvector hybrid retrieval · GGUF Gemma 4")
+    st.markdown(build_shell_header(settings["app_title"]), unsafe_allow_html=True)
     st.markdown(
         """
         <div class='arsitrad-hero'>
             <h3>Regulatory copilot, not a guess machine</h3>
             <p>
-                Arsitrad menata jawaban ke format yang lebih rapi: ringkasan, detail regulasi, saran teknis, dan sumber.
-                Pakai tab Regulation QA untuk tanya regulasi, lalu buka tab lain saat butuh workflow yang lebih spesifik.
+                Arsitrad dipoles untuk kerja yang lebih enak dilihat: struktur jawaban jelas, percakapan lebih fokus,
+                dan workflow cepat pindah dari QA regulasi ke permit, passive cooling, disaster, atau settlement.
             </p>
         </div>
         """,
@@ -458,6 +628,7 @@ def main(config_path: str | Path = DEFAULT_CONFIG_PATH) -> None:
         st.markdown("### Disclaimer")
         st.info(settings["disclaimer"])
 
+    st.markdown("<div class='arsitrad-section-label'>Workflow</div>", unsafe_allow_html=True)
     regulation_tab, permit_tab, cooling_tab, disaster_tab, settlement_tab = st.tabs(
         [
             "Regulation QA",

@@ -8,7 +8,9 @@ from pipeline.retriever import (
     HybridRetriever,
     PostgresDenseRetriever,
     authority_score_adjustment,
+    dedupe_candidates,
     matches_filters,
+    rebalance_contrastive_candidates,
     rrf_fusion,
 )
 
@@ -62,6 +64,86 @@ def test_rrf_fusion_rewards_shared_candidates():
     fused = rrf_fusion(dense, sparse, k=60)
 
     assert fused[0].chunk_key == "b"
+
+
+def test_dedupe_candidates_collapses_repeated_snippets():
+    repeated = "Persetujuan Bangunan Gedung yang selanjutnya disingkat PBG adalah perizinan ..."
+    candidates = [
+        CandidateChunk("a", repeated, {"source_name": "PP_16_2021_A"}, 0.92, "reranked"),
+        CandidateChunk("b", repeated, {"source_name": "PP_16_2021_B"}, 0.88, "reranked"),
+        CandidateChunk(
+            "c",
+            "Izin Mendirikan Bangunan yang selanjutnya disingkat IMB adalah izin daerah ...",
+            {"source_name": "Perda Kota X"},
+            0.80,
+            "reranked",
+        ),
+    ]
+
+    deduped = dedupe_candidates(candidates)
+
+    assert [candidate.chunk_key for candidate in deduped] == ["a", "c"]
+
+
+def test_rebalance_contrastive_candidates_keeps_imb_and_pbg_definitions():
+    candidates = [
+        CandidateChunk(
+            "imb-1",
+            "Izin Mendirikan Bangunan Gedung yang selanjutnya disingkat IMB adalah izin daerah untuk membangun baru.",
+            {"source_name": "Perda A"},
+            0.95,
+            "reranked",
+        ),
+        CandidateChunk(
+            "imb-2",
+            "Izin Mendirikan Bangunan Gedung yang selanjutnya disingkat IMB adalah izin daerah untuk mengubah bangunan.",
+            {"source_name": "Perda B"},
+            0.90,
+            "reranked",
+        ),
+        CandidateChunk(
+            "pbg-def",
+            "Persetujuan Bangunan Gedung yang selanjutnya disingkat PBG adalah perizinan yang diberikan kepada pemilik bangunan gedung.",
+            {"source_name": "PP 16/2021"},
+            0.62,
+            "reranked",
+        ),
+    ]
+
+    balanced = rebalance_contrastive_candidates("Apa beda IMB dan PBG menurut aturan terbaru?", candidates, limit=3)
+
+    assert any(candidate.chunk_key == "imb-1" for candidate in balanced)
+    assert any(candidate.chunk_key == "pbg-def" for candidate in balanced)
+
+
+def test_rebalance_contrastive_candidates_falls_back_to_pbg_context_when_definition_missing():
+    candidates = [
+        CandidateChunk(
+            "imb-1",
+            "Izin Mendirikan Bangunan Gedung yang selanjutnya disingkat IMB adalah izin daerah untuk membangun baru.",
+            {"source_name": "Perda A"},
+            0.95,
+            "reranked",
+        ),
+        CandidateChunk(
+            "imb-2",
+            "Izin Mendirikan Bangunan Gedung yang selanjutnya disingkat IMB adalah izin daerah untuk mengubah bangunan.",
+            {"source_name": "Perda B"},
+            0.90,
+            "reranked",
+        ),
+        CandidateChunk(
+            "pbg-procedure",
+            "Permohonan PBG dilakukan melalui SIMBG dan dilengkapi dokumen administratif serta teknis.",
+            {"source_name": "PP_16_2021_BatangTubuh"},
+            0.55,
+            "reranked",
+        ),
+    ]
+
+    balanced = rebalance_contrastive_candidates("Apa beda IMB dan PBG menurut aturan terbaru?", candidates, limit=2)
+
+    assert [candidate.chunk_key for candidate in balanced] == ["imb-1", "pbg-procedure"]
 
 
 def test_matches_filters_supports_topic_and_building_use():
@@ -251,6 +333,50 @@ def test_authority_score_adjustment_prefers_pp16_over_permen6_for_document_requi
     assert authority_score_adjustment(query, filters, pp16) > authority_score_adjustment(query, filters, permen6)
 
 
+def test_authority_score_adjustment_boosts_definition_chunks_for_imb_pbg_comparison():
+    imb_definition = CandidateChunk(
+        chunk_key="imb-def",
+        content="Izin Mendirikan Bangunan Gedung yang selanjutnya disingkat IMB adalah perizinan yang diberikan oleh Pemerintah Daerah kepada pemilik bangunan gedung.",
+        metadata={"source_name": "Perda Kota Example", "region": "Example", "topic": "building_permit", "reg_type": "Perda"},
+        score=0.5,
+        source="reranked",
+    )
+    pbg_procedure = CandidateChunk(
+        chunk_key="pbg-procedure",
+        content="Permohonan PBG dilakukan melalui SIMBG dan dilengkapi dokumen administratif serta teknis.",
+        metadata={"source_name": "PP_16_2021_BatangTubuh", "region": "nasional", "topic": "building_permit", "reg_type": "PP"},
+        score=0.5,
+        source="reranked",
+    )
+
+    query = "Apa beda IMB dan PBG menurut aturan terbaru?"
+    filters = {"topic": "building_permit"}
+
+    assert authority_score_adjustment(query, filters, imb_definition) > authority_score_adjustment(query, filters, pbg_procedure)
+
+
+def test_authority_score_adjustment_boosts_transition_chunks_for_imb_pbg_comparison():
+    transition = CandidateChunk(
+        chunk_key="transition",
+        content="Bangunan Gedung yang telah memperoleh perizinan yang dikeluarkan oleh Pemerintah Daerah kabupaten/kota sebelum berlakunya Peraturan Pemerintah ini izinnya dinyatakan masih tetap berlaku.",
+        metadata={"source_name": "PP_16_2021_BGPelaksanaanBG_BatangTubuh", "region": "nasional", "topic": "building_permit", "reg_type": "PP"},
+        score=0.5,
+        source="reranked",
+    )
+    pbg_procedure = CandidateChunk(
+        chunk_key="pbg-procedure",
+        content="Permohonan PBG dilakukan melalui SIMBG dan dilengkapi dokumen administratif serta teknis.",
+        metadata={"source_name": "PP_16_2021_BatangTubuh", "region": "nasional", "topic": "building_permit", "reg_type": "PP"},
+        score=0.5,
+        source="reranked",
+    )
+
+    query = "Apa beda IMB dan PBG menurut aturan terbaru?"
+    filters = {"topic": "building_permit"}
+
+    assert authority_score_adjustment(query, filters, transition) > authority_score_adjustment(query, filters, pbg_procedure)
+
+
 def test_hybrid_retriever_short_circuits_out_of_scope_design_question():
     retriever = HybridRetriever(
         config_path="",
@@ -286,6 +412,35 @@ def test_hybrid_retriever_runs_national_supplement_for_regionless_spatial_query(
     )
 
     retriever.retrieve("Apakah RDTR wajib dicek sebelum mengurus PBG?")
+
+    dense_regions = [call["filters"].get("region") for call in dense.calls]
+    sparse_regions = [call["filters"].get("region") for call in sparse.calls]
+
+    assert None in dense_regions
+    assert "nasional" in dense_regions
+    assert None in sparse_regions
+    assert "nasional" in sparse_regions
+
+
+def test_hybrid_retriever_runs_national_supplement_for_imb_pbg_comparison():
+    candidate = CandidateChunk(
+        chunk_key="pp16",
+        content="PP 16 Tahun 2021 mengatur PBG dan standar teknis bangunan gedung.",
+        metadata={"source_name": "PP_16_2021_BatangTubuh", "region": "nasional", "topic": "building_permit", "reg_type": "PP"},
+        score=0.9,
+        source="dense",
+    )
+    dense = RecordingSearchBackend([candidate])
+    sparse = RecordingSearchBackend([candidate])
+    retriever = HybridRetriever(
+        config_path="",
+        dense_retriever=dense,
+        sparse_index=sparse,
+        reranker=FakeReranker(0.9),
+        config_overrides={"dense_top_k": 3, "sparse_top_k": 3, "rerank_top_k": 1},
+    )
+
+    retriever.retrieve("Apa beda IMB dan PBG menurut aturan terbaru?")
 
     dense_regions = [call["filters"].get("region") for call in dense.calls]
     sparse_regions = [call["filters"].get("region") for call in sparse.calls]
