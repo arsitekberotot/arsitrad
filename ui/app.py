@@ -92,13 +92,13 @@ def build_base_css() -> str:
         <style>
         [data-testid="stAppViewContainer"] {
             background:
-                radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
-                radial-gradient(circle at top right, rgba(168, 85, 247, 0.14), transparent 24%),
-                linear-gradient(180deg, #020617 0%, #0b1120 48%, #111827 100%);
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 30%),
+                radial-gradient(circle at top right, rgba(168, 85, 247, 0.08), transparent 24%),
+                linear-gradient(180deg, #f8fafc 0%, #eff6ff 52%, #eef2ff 100%);
         }
         .stApp {
             background: transparent;
-            color: #e2e8f0;
+            color: #0f172a;
         }
         [data-testid="stHeader"] {
             background: transparent;
@@ -114,27 +114,27 @@ def build_base_css() -> str:
             padding-bottom: 7rem;
         }
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.88));
-            border-right: 1px solid rgba(71, 85, 105, 0.45);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(239, 246, 255, 0.92));
+            border-right: 1px solid rgba(148, 163, 184, 0.34);
         }
         [data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
         [data-testid="stSidebar"] p,
         [data-testid="stSidebar"] h3,
         [data-testid="stSidebar"] label {
-            color: #dbeafe !important;
+            color: #1e293b !important;
         }
         [data-testid="stSidebar"] [data-testid="stAlert"] {
-            background: rgba(30, 41, 59, 0.75);
-            border: 1px solid rgba(96, 165, 250, 0.22);
-            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(37, 99, 235, 0.18);
+            color: #1e293b;
         }
         .arsitrad-shell {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(17, 24, 39, 0.82));
-            border: 1px solid rgba(96, 165, 250, 0.16);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(239, 246, 255, 0.88));
+            border: 1px solid rgba(96, 165, 250, 0.20);
             border-radius: 28px;
             padding: 24px 26px 22px 26px;
             margin: 0 0 18px 0;
-            box-shadow: 0 28px 70px rgba(2, 6, 23, 0.32);
+            box-shadow: 0 28px 70px rgba(30, 64, 175, 0.14);
             backdrop-filter: blur(16px);
         }
         .arsitrad-kicker {
@@ -143,9 +143,9 @@ def build_base_css() -> str:
             gap: 8px;
             padding: 6px 12px;
             border-radius: 999px;
-            border: 1px solid rgba(96, 165, 250, 0.24);
-            background: rgba(37, 99, 235, 0.12);
-            color: #bfdbfe;
+            border: 1px solid rgba(37, 99, 235, 0.22);
+            background: rgba(219, 234, 254, 0.76);
+            color: #1d4ed8;
             font-size: 0.78rem;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -163,7 +163,7 @@ def build_base_css() -> str:
             margin: 0;
             font-size: clamp(2rem, 3vw, 2.7rem);
             line-height: 1.05;
-            color: #f8fafc;
+            color: #0f172a;
         }
         .arsitrad-badge {
             display: inline-flex;
@@ -171,15 +171,15 @@ def build_base_css() -> str:
             gap: 8px;
             border-radius: 999px;
             padding: 8px 14px;
-            background: rgba(15, 23, 42, 0.82);
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            color: #334155;
             font-size: 0.82rem;
             font-weight: 600;
         }
         .arsitrad-subtitle {
             margin: 12px 0 0 0;
-            color: #cbd5e1;
+            color: #475569;
             line-height: 1.7;
             max-width: 820px;
             font-size: 1rem;
@@ -201,37 +201,37 @@ def build_base_css() -> str:
             border-radius: 999px;
             padding: 7px 12px;
             font-size: 0.82rem;
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            background: rgba(15, 23, 42, 0.7);
-            color: #dbeafe;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            background: rgba(255, 255, 255, 0.84);
+            color: #1e40af;
         }
         .arsitrad-pill-soft,
         .arsitrad-chip-soft {
-            background: rgba(30, 41, 59, 0.7);
-            color: #cbd5e1;
+            background: rgba(239, 246, 255, 0.86);
+            color: #334155;
         }
         .arsitrad-hero {
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.78));
-            border: 1px solid rgba(71, 85, 105, 0.42);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.88));
+            border: 1px solid rgba(148, 163, 184, 0.30);
             border-radius: 22px;
             padding: 20px 22px;
-            color: #e2e8f0;
+            color: #1e293b;
             margin: 0 0 16px 0;
-            box-shadow: 0 20px 52px rgba(2, 6, 23, 0.24);
+            box-shadow: 0 20px 52px rgba(30, 64, 175, 0.12);
         }
         .arsitrad-hero h3 {
             margin: 0 0 8px 0;
             font-size: 1.08rem;
-            color: #f8fafc;
+            color: #0f172a;
         }
         .arsitrad-hero p {
             margin: 0;
-            color: #cbd5e1;
+            color: #475569;
             line-height: 1.65;
         }
         .arsitrad-section-label {
             margin: 8px 0 8px 2px;
-            color: #93c5fd;
+            color: #2563eb;
             font-size: 0.76rem;
             font-weight: 700;
             letter-spacing: 0.1em;
@@ -244,33 +244,33 @@ def build_base_css() -> str:
             gap: 0.45rem;
             padding: 0.3rem;
             border-radius: 18px;
-            border: 1px solid rgba(71, 85, 105, 0.42);
-            background: rgba(15, 23, 42, 0.56);
+            border: 1px solid rgba(148, 163, 184, 0.32);
+            background: rgba(255, 255, 255, 0.68);
         }
         [data-testid="stTabs"] [role="tab"] {
             height: 42px;
             padding: 0 16px;
             border-radius: 12px;
-            color: #cbd5e1;
+            color: #475569;
             background: transparent;
             border: none;
         }
         [data-testid="stTabs"] [role="tab"][aria-selected="true"] {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(59, 130, 246, 0.8));
-            color: #f8fafc;
-            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.24);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.94), rgba(59, 130, 246, 0.86));
+            color: #ffffff;
+            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
         }
         .arsitrad-card {
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.82));
-            color: #e2e8f0;
-            border: 1px solid rgba(51, 65, 85, 0.9);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.92));
+            color: #1e293b;
+            border: 1px solid rgba(148, 163, 184, 0.34);
             border-radius: 20px;
             padding: 18px 20px;
             margin-bottom: 14px;
             white-space: pre-wrap;
             line-height: 1.6;
             font-size: 0.97rem;
-            box-shadow: 0 16px 40px rgba(2, 6, 23, 0.2);
+            box-shadow: 0 16px 40px rgba(30, 64, 175, 0.10);
         }
         .arsitrad-card-title {
             display: flex;
@@ -281,25 +281,25 @@ def build_base_css() -> str:
             font-weight: 700;
             font-size: 0.95rem;
             letter-spacing: 0.02em;
-            color: #f8fafc;
+            color: #0f172a;
         }
         .arsitrad-card-body {
-            color: #dbe4f0;
+            color: #334155;
             white-space: pre-wrap;
             line-height: 1.7;
         }
         .arsitrad-meta {
-            color: #94a3b8;
+            color: #64748b;
             font-size: 0.87rem;
             margin: 0 0 12px 2px;
             line-height: 1.5;
         }
         .arsitrad-disclaimer {
-            background: rgba(245, 158, 11, 0.12);
-            border: 1px solid rgba(245, 158, 11, 0.28);
+            background: rgba(254, 243, 199, 0.88);
+            border: 1px solid rgba(245, 158, 11, 0.30);
             padding: 13px 14px;
             border-radius: 14px;
-            color: #f8fafc;
+            color: #78350f;
             margin-bottom: 16px;
         }
         [data-testid="stChatMessage"] {
@@ -308,18 +308,18 @@ def build_base_css() -> str:
         [data-testid="stChatInput"] {
             position: sticky;
             bottom: 1rem;
-            background: rgba(15, 23, 42, 0.92);
-            border: 1px solid rgba(71, 85, 105, 0.55);
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.40);
             border-radius: 18px;
             padding: 0.35rem 0.5rem;
-            box-shadow: 0 20px 44px rgba(2, 6, 23, 0.35);
+            box-shadow: 0 20px 44px rgba(30, 64, 175, 0.16);
             backdrop-filter: blur(16px);
         }
         [data-testid="stChatInput"] textarea {
-            color: #f8fafc !important;
+            color: #0f172a !important;
         }
         [data-testid="stChatInput"] textarea::placeholder {
-            color: #94a3b8 !important;
+            color: #64748b !important;
         }
         [data-testid="stChatInputSubmitButton"] {
             border-radius: 12px;
@@ -335,7 +335,6 @@ def build_base_css() -> str:
         }
         </style>
     """
-
 
 def inject_base_css() -> None:
     if st is None:
