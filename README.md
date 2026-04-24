@@ -77,17 +77,29 @@ If you do not set `ARSITRAD_DATABASE_URL`, Arsitrad still runs with the checked-
 
 ### 4. Run the web UI
 
-Start the Python API:
+Fast path:
+
+```bash
+./scripts/run_web_demo.sh
+```
+
+Manual path — start the Python API:
 
 ```bash
 python -m uvicorn api.server:app --host 127.0.0.1 --port 8000
 ```
 
-Start the Next.js frontend:
+Then start the Next.js frontend:
 
 ```bash
 cd web
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000 npm run dev -- --hostname 127.0.0.1 --port 3000
+```
+
+For public temporary demo URLs with Cloudflare Tunnel, see `docs/demo-deployment.md` or run:
+
+```bash
+./scripts/run_cloudflare_demo.sh
 ```
 
 Legacy Streamlit fallback is still available:
