@@ -3,12 +3,13 @@ from __future__ import annotations
 import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Callable, Literal, TypeVar
 
 import yaml
 from fastapi import FastAPI, HTTPException
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from agent.cooling import PassiveCoolingAdvisor
 from agent.disaster import DisasterDamageReporter
@@ -22,65 +23,71 @@ DEFAULT_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+DEFAULT_ALLOWED_ORIGIN_REGEX = r"https://.*\.trycloudflare\.com"
+T = TypeVar("T")
 
 
-class ChatMessage(BaseModel):
+class ApiModel(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+
+class ChatMessage(ApiModel):
     role: Literal["user", "assistant"]
     content: str
 
 
-class AskRequest(BaseModel):
+class AskRequest(ApiModel):
     question: str = Field(min_length=3)
     history: list[ChatMessage] = Field(default_factory=list)
 
 
-class PermitRequest(BaseModel):
-    building_type: str
-    location: str
+class PermitRequest(ApiModel):
+    building_type: str = Field(min_length=1)
+    location: str = Field(min_length=1)
     floor_area_m2: float = Field(gt=0)
     land_area_m2: float = Field(gt=0)
     building_height_m: float | None = Field(default=None, gt=0)
     building_function: str = "hunian"
 
 
-class CoolingDimensions(BaseModel):
+class CoolingDimensions(ApiModel):
     length_m: float = Field(gt=0)
     width_m: float = Field(gt=0)
     height_m: float = Field(gt=0)
     floor_count: int = Field(default=1, ge=1)
 
 
-class CoolingMaterials(BaseModel):
-    wall_material: str
-    roof_material: str
+class CoolingMaterials(ApiModel):
+    wall_material: str = Field(min_length=1)
+    roof_material: str = Field(min_length=1)
 
 
-class CoolingRequest(BaseModel):
+class CoolingRequest(ApiModel):
     dimensions: CoolingDimensions
-    orientation: str
+    orientation: str = Field(min_length=1)
     materials: CoolingMaterials
-    climate_zone: str
+    climate_zone: str = Field(min_length=1)
     budget_idr: float | None = Field(default=None, ge=0)
 
 
-class DisasterRequest(BaseModel):
-    location: str
-    disaster_type: str
-    building_type: str
+class DisasterRequest(ApiModel):
+    location: str = Field(min_length=1)
+    disaster_type: str = Field(min_length=1)
+    building_type: str = Field(min_length=1)
     damage_description: str = Field(min_length=5)
     floor_area_m2: float | None = Field(default=None, ge=0)
     photo_urls: list[str] = Field(default_factory=list)
 
 
-class SettlementRequest(BaseModel):
-    location: str
+class SettlementRequest(ApiModel):
+    location: str = Field(min_length=1)
     population_density: float = Field(gt=0)
     current_infrastructure: str = Field(min_length=5)
     budget_constraint_idr: float = Field(gt=0)
     priority_goals: list[str] = Field(default_factory=list)
 
 
-class CandidateResponse(BaseModel):
+class CandidateResponse(ApiModel):
     chunk_key: str
     content: str
     metadata: dict[str, Any]
@@ -88,7 +95,7 @@ class CandidateResponse(BaseModel):
     source: str
 
 
-class RetrievalResponse(BaseModel):
+class RetrievalResponse(ApiModel):
     question: str
     standalone_query: str
     expanded_queries: list[str]
@@ -99,7 +106,7 @@ class RetrievalResponse(BaseModel):
     message: str | None = None
 
 
-class AskResponse(BaseModel):
+class AskResponse(ApiModel):
     answer: str
     used_model: bool
     model_path: str | None = None
@@ -107,11 +114,11 @@ class AskResponse(BaseModel):
     retrieval: RetrievalResponse
 
 
-class ModuleResponse(BaseModel):
+class ModuleResponse(ApiModel):
     payload: dict[str, Any]
 
 
-class BootstrapResponse(BaseModel):
+class BootstrapResponse(ApiModel):
     app_title: str
     disclaimer: str
     default_question: str
@@ -119,7 +126,7 @@ class BootstrapResponse(BaseModel):
     modules: list[dict[str, str]]
 
 
-class HealthResponse(BaseModel):
+class HealthResponse(ApiModel):
     status: Literal["ok"]
     config_path: str
     model_path: str
@@ -183,7 +190,38 @@ def get_allowed_origins() -> list[str]:
     raw_origins = os.getenv("ARSITRAD_WEB_ALLOWED_ORIGINS")
     if not raw_origins:
         return DEFAULT_ALLOWED_ORIGINS
-    return [item.strip() for item in raw_origins.split(",") if item.strip()]
+    return [item.strip().rstrip("/") for item in raw_origins.split(",") if item.strip()]
+
+
+@lru_cache(maxsize=1)
+def get_allowed_origin_regex() -> str | None:
+    raw_regex = os.getenv("ARSITRAD_WEB_ALLOWED_ORIGIN_REGEX")
+    if raw_regex == "":
+        return None
+    return raw_regex or DEFAULT_ALLOWED_ORIGIN_REGEX
+
+
+def clean_question(question: str) -> str:
+    cleaned = question.strip()
+    if len(cleaned) < 3:
+        raise HTTPException(status_code=400, detail="Question must contain at least 3 non-space characters")
+    return cleaned
+
+
+def run_api_call(operation: str, fn: Callable[[], T]) -> T:
+    try:
+        return fn()
+    except HTTPException:
+        raise
+    except Exception as exc:  # pragma: no cover - exact failures vary by environment
+        raise HTTPException(status_code=503, detail=f"{operation} is temporarily unavailable") from exc
+
+
+def to_json_payload(payload: Any) -> dict[str, Any]:
+    encoded = jsonable_encoder(payload)
+    if not isinstance(encoded, dict):
+        return {"result": encoded}
+    return encoded
 
 
 QUICK_PROMPTS = [
@@ -241,6 +279,7 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=get_allowed_origins(),
+        allow_origin_regex=get_allowed_origin_regex(),
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -278,61 +317,74 @@ def create_app() -> FastAPI:
 
     @app.post("/api/ask", response_model=AskResponse)
     def ask(payload: AskRequest) -> AskResponse:
-        question = payload.question.strip()
-        if not question:
-            raise HTTPException(status_code=400, detail="Question must not be empty")
+        question = clean_question(payload.question)
 
-        result = get_answer_engine().answer(
-            question,
-            history=[message.model_dump() for message in payload.history],
+        result = run_api_call(
+            "Regulation QA",
+            lambda: get_answer_engine().answer(
+                question,
+                history=[message.model_dump() for message in payload.history],
+            ),
         )
         return AskResponse(**serialize_result(result))
 
     @app.post("/api/permit", response_model=ModuleResponse)
     def permit(payload: PermitRequest) -> ModuleResponse:
-        guidance = get_building_permit_navigator().navigate(
-            payload.building_type,
-            payload.location,
-            payload.floor_area_m2,
-            payload.land_area_m2,
-            payload.building_height_m,
-            payload.building_function,
+        guidance = run_api_call(
+            "Permit Navigator",
+            lambda: get_building_permit_navigator().navigate(
+                payload.building_type,
+                payload.location,
+                payload.floor_area_m2,
+                payload.land_area_m2,
+                payload.building_height_m,
+                payload.building_function,
+            ),
         )
-        return ModuleResponse(payload=guidance)
+        return ModuleResponse(payload=to_json_payload(guidance))
 
     @app.post("/api/cooling", response_model=ModuleResponse)
     def cooling(payload: CoolingRequest) -> ModuleResponse:
-        advice = get_passive_cooling_advisor().advise(
-            dimensions=payload.dimensions.model_dump(),
-            orientation=payload.orientation,
-            materials=payload.materials.model_dump(),
-            climate_zone=payload.climate_zone,
-            budget_idr=payload.budget_idr,
+        advice = run_api_call(
+            "Passive Cooling",
+            lambda: get_passive_cooling_advisor().advise(
+                dimensions=payload.dimensions.model_dump(),
+                orientation=payload.orientation,
+                materials=payload.materials.model_dump(),
+                climate_zone=payload.climate_zone,
+                budget_idr=payload.budget_idr,
+            ),
         )
-        return ModuleResponse(payload=advice)
+        return ModuleResponse(payload=to_json_payload(advice))
 
     @app.post("/api/disaster", response_model=ModuleResponse)
     def disaster(payload: DisasterRequest) -> ModuleResponse:
-        report = get_disaster_damage_reporter().report(
-            payload.location,
-            payload.disaster_type,
-            payload.building_type,
-            payload.damage_description,
-            payload.floor_area_m2,
-            payload.photo_urls,
+        report = run_api_call(
+            "Disaster Reporter",
+            lambda: get_disaster_damage_reporter().report(
+                payload.location,
+                payload.disaster_type,
+                payload.building_type,
+                payload.damage_description,
+                payload.floor_area_m2,
+                payload.photo_urls,
+            ),
         )
-        return ModuleResponse(payload=report)
+        return ModuleResponse(payload=to_json_payload(report))
 
     @app.post("/api/settlement", response_model=ModuleResponse)
     def settlement(payload: SettlementRequest) -> ModuleResponse:
-        advice = get_settlement_upgrading_advisor().advise(
-            payload.location,
-            payload.population_density,
-            payload.current_infrastructure,
-            payload.budget_constraint_idr,
-            payload.priority_goals,
+        advice = run_api_call(
+            "Settlement Upgrading",
+            lambda: get_settlement_upgrading_advisor().advise(
+                payload.location,
+                payload.population_density,
+                payload.current_infrastructure,
+                payload.budget_constraint_idr,
+                payload.priority_goals,
+            ),
         )
-        return ModuleResponse(payload=advice)
+        return ModuleResponse(payload=to_json_payload(advice))
 
     return app
 
