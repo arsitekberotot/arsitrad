@@ -95,13 +95,13 @@ function formatPriority(priority: string | null) {
 function priorityClass(priority: string | null) {
   switch ((priority ?? "").toUpperCase()) {
     case "HIGH":
-      return "border-rose-400/20 bg-rose-400/10 text-rose-100";
+      return "border-rose-200 bg-rose-50 text-rose-800";
     case "MEDIUM":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-100";
+      return "border-amber-200 bg-amber-50 text-amber-800";
     case "LOW":
-      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-100";
+      return "border-emerald-200 bg-emerald-50 text-emerald-800";
     default:
-      return "bg-white/5 text-slate-200";
+      return "bg-white/80 text-slate-800";
   }
 }
 
@@ -120,15 +120,15 @@ function repairPriorityLabel(priority: number | null) {
 
 function repairPriorityClass(priority: number | null) {
   if (priority === 1) {
-    return "border-rose-400/20 bg-rose-400/10 text-rose-100";
+    return "border-rose-200 bg-rose-50 text-rose-800";
   }
   if (priority === 2) {
-    return "border-amber-400/20 bg-amber-400/10 text-amber-100";
+    return "border-amber-200 bg-amber-50 text-amber-800";
   }
   if (priority === 3) {
-    return "border-sky-400/20 bg-sky-400/10 text-sky-100";
+    return "border-sky-200 bg-sky-100 text-sky-800";
   }
-  return "bg-white/5 text-slate-200";
+  return "bg-white/80 text-slate-800";
 }
 
 function replaceTokens(text: string, tokens: Record<string, string>) {
@@ -137,10 +137,10 @@ function replaceTokens(text: string, tokens: Record<string, string>) {
 
 function MetricCard({ label, value, caption }: Metric) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
       <p className="text-xs uppercase tracking-[0.24em] text-slate-500">{label}</p>
-      <p className="mt-2 text-lg font-semibold text-white">{value}</p>
-      {caption ? <p className="mt-2 text-sm leading-6 text-slate-400">{caption}</p> : null}
+      <p className="mt-2 text-lg font-semibold text-slate-950">{value}</p>
+      {caption ? <p className="mt-2 text-sm leading-6 text-slate-600">{caption}</p> : null}
     </div>
   );
 }
@@ -208,13 +208,13 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl border border-sky-400/20 bg-sky-400/10 p-3 text-sky-200">
+            <div className="rounded-2xl border border-sky-200 bg-sky-100 p-3 text-sky-700">
               <Building2 className="size-5" />
             </div>
             <div>
               <CardTitle>{title}</CardTitle>
               <CardDescription className="leading-6">
-                Checklist izin yang kebaca manusia, bukan dump dictionary murahan.
+                Human-readable permit checklist with cost, timeline, and document breakdown.
               </CardDescription>
             </div>
           </div>
@@ -227,44 +227,44 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
           </div>
 
           <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
-                <ClipboardList className="size-4 text-sky-300" /> Ringkasan proyek
+            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+                <ClipboardList className="size-4 text-sky-600" /> Ringkasan proyek
               </div>
               <dl className="mt-4 grid gap-3 sm:grid-cols-2">
                 <div>
                   <dt className="text-xs uppercase tracking-[0.24em] text-slate-500">Tipe bangunan</dt>
-                  <dd className="mt-2 text-sm text-slate-200">{buildingType}</dd>
+                  <dd className="mt-2 text-sm text-slate-800">{buildingType}</dd>
                 </div>
                 <div>
                   <dt className="text-xs uppercase tracking-[0.24em] text-slate-500">Tinggi bangunan</dt>
-                  <dd className="mt-2 text-sm text-slate-200">{buildingHeight !== null ? `${formatCount(buildingHeight)} m` : "-"}</dd>
+                  <dd className="mt-2 text-sm text-slate-800">{buildingHeight !== null ? `${formatCount(buildingHeight)} m` : "-"}</dd>
                 </div>
                 <div>
                   <dt className="text-xs uppercase tracking-[0.24em] text-slate-500">Luas lantai</dt>
-                  <dd className="mt-2 text-sm text-slate-200">{floorArea !== null ? `${formatCount(floorArea)} m²` : "-"}</dd>
+                  <dd className="mt-2 text-sm text-slate-800">{floorArea !== null ? `${formatCount(floorArea)} m²` : "-"}</dd>
                 </div>
                 <div>
                   <dt className="text-xs uppercase tracking-[0.24em] text-slate-500">Luas tanah</dt>
-                  <dd className="mt-2 text-sm text-slate-200">{landArea !== null ? `${formatCount(landArea)} m²` : "-"}</dd>
+                  <dd className="mt-2 text-sm text-slate-800">{landArea !== null ? `${formatCount(landArea)} m²` : "-"}</dd>
                 </div>
               </dl>
             </div>
 
             <div className="rounded-2xl border border-sky-400/10 bg-sky-400/5 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
-                <Wallet className="size-4 text-sky-300" /> Snapshot retribusi
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+                <Wallet className="size-4 text-sky-600" /> Snapshot retribusi
               </div>
-              <div className="mt-4 space-y-3 text-sm text-slate-300">
+              <div className="mt-4 space-y-3 text-sm text-slate-700">
                 <p>{toStringValue(retribution?.breakdown) ?? "Breakdown belum tersedia."}</p>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-white/10 bg-slate-950/50 p-3">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Tarif / m²</p>
-                    <p className="mt-2 text-sm font-semibold text-white">{formatIDR(toNumber(retribution?.rate_per_m2_idr) ?? undefined)}</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatIDR(toNumber(retribution?.rate_per_m2_idr) ?? undefined)}</p>
                   </div>
-                  <div className="rounded-2xl border border-white/10 bg-slate-950/50 p-3">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Total retribusi</p>
-                    <p className="mt-2 text-sm font-semibold text-white">{formatIDR(toNumber(retribution?.total_retribution_idr) ?? undefined)}</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatIDR(toNumber(retribution?.total_retribution_idr) ?? undefined)}</p>
                   </div>
                 </div>
               </div>
@@ -284,20 +284,20 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
             const docs = toStringArray(step.required_docs);
             const estimatedStepCost = toNumber(step.estimated_cost_idr);
             return (
-              <div key={`${stepName}-${stepNumber}`} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div key={`${stepName}-${stepNumber}`} className="rounded-2xl border border-slate-200 bg-white/80 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge className="border-sky-400/20 bg-sky-400/10 text-sky-100">Tahap {stepNumber}</Badge>
-                      <p className="text-sm font-semibold text-white">{stepName}</p>
+                      <Badge className="border-sky-200 bg-sky-100 text-sky-800">Tahap {stepNumber}</Badge>
+                      <p className="text-sm font-semibold text-slate-950">{stepName}</p>
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-slate-300">{toStringValue(step.description) ?? "-"}</p>
+                    <p className="mt-3 text-sm leading-6 text-slate-700">{toStringValue(step.description) ?? "-"}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-white/5 text-slate-300">
+                    <Badge className="bg-white/80 text-slate-700">
                       <Clock3 className="mr-1 size-3.5" /> {toStringValue(step.estimated_days) ?? "-"}
                     </Badge>
-                    <Badge className="bg-white/5 text-slate-300">
+                    <Badge className="bg-white/80 text-slate-700">
                       <Wallet className="mr-1 size-3.5" /> {formatIDR(estimatedStepCost ?? undefined)}
                     </Badge>
                   </div>
@@ -306,9 +306,9 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
                 {docs.length > 0 ? (
                   <div className="mt-4 grid gap-2 md:grid-cols-2">
                     {docs.map((doc) => (
-                      <div key={`${stepName}-${doc}`} className="rounded-2xl border border-white/8 bg-slate-950/50 p-3 text-sm leading-6 text-slate-300">
+                      <div key={`${stepName}-${doc}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700">
                         <div className="flex items-start gap-2">
-                          <CheckCircle2 className="mt-1 size-4 text-emerald-300" />
+                          <CheckCircle2 className="mt-1 size-4 text-emerald-600" />
                           <span>{doc}</span>
                         </div>
                       </div>
@@ -317,7 +317,7 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
                 ) : null}
 
                 {toStringValue(step.note) ? (
-                  <div className="mt-4 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-100">
+                  <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
                     {toStringValue(step.note)}
                   </div>
                 ) : null}
@@ -331,9 +331,9 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
         <SectionShell title="Persyaratan tambahan" description="Item ekstra yang biasanya muncul kalau fungsi, luas, atau tinggi bangunannya bikin birokrasi tambah rewel.">
           <div className="grid gap-2">
             {additionalRequirements.map((item) => (
-              <div key={item} className="rounded-2xl border border-white/10 bg-white/5 p-3 text-sm leading-6 text-slate-300">
+              <div key={item} className="rounded-2xl border border-slate-200 bg-white/80 p-3 text-sm leading-6 text-slate-700">
                 <div className="flex items-start gap-2">
-                  <ArrowRight className="mt-1 size-4 text-sky-300" />
+                  <ArrowRight className="mt-1 size-4 text-sky-600" />
                   <span>{item}</span>
                 </div>
               </div>
@@ -346,7 +346,7 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
         <SectionShell title="Referensi standar" description="Pegangan normatif yang dipakai modul untuk ngarahin checklist ini.">
           <div className="flex flex-wrap gap-2">
             {references.map((reference) => (
-              <Badge key={reference} className="bg-white/5 text-slate-300">
+              <Badge key={reference} className="bg-white/80 text-slate-700">
                 {reference}
               </Badge>
             ))}
@@ -402,7 +402,7 @@ function CoolingResult({ title, payload }: { title: string; payload: Record<stri
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl border border-sky-400/20 bg-sky-400/10 p-3 text-sky-200">
+            <div className="rounded-2xl border border-sky-200 bg-sky-100 p-3 text-sky-700">
               <Wind className="size-5" />
             </div>
             <div>
@@ -421,44 +421,44 @@ function CoolingResult({ title, payload }: { title: string; payload: Record<stri
           </div>
 
           <div className="grid gap-4 xl:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
-                <ThermometerSun className="size-4 text-sky-300" /> Thermal snapshot
+            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+                <ThermometerSun className="size-4 text-sky-600" /> Thermal snapshot
               </div>
-              <div className="mt-4 grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+              <div className="mt-4 grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Volume</p>
-                  <p className="mt-2 text-sm font-semibold text-white">{formatCount(toNumber(thermalPerformance?.volume_m3), "m³")}</p>
+                  <p className="mt-2 text-sm font-semibold text-slate-950">{formatCount(toNumber(thermalPerformance?.volume_m3), "m³")}</p>
                 </div>
-                <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Luas dinding</p>
-                  <p className="mt-2 text-sm font-semibold text-white">{formatCount(toNumber(thermalPerformance?.wall_area_m2), "m²")}</p>
+                  <p className="mt-2 text-sm font-semibold text-slate-950">{formatCount(toNumber(thermalPerformance?.wall_area_m2), "m²")}</p>
                 </div>
-                <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Material dinding</p>
-                  <p className="mt-2 text-sm font-semibold text-white">{toStringValue(wallMaterial?.description) ?? formatLabel(toStringValue(payload.materials) ?? "-")}</p>
+                  <p className="mt-2 text-sm font-semibold text-slate-950">{toStringValue(wallMaterial?.description) ?? formatLabel(toStringValue(payload.materials) ?? "-")}</p>
                 </div>
-                <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Material atap</p>
-                  <p className="mt-2 text-sm font-semibold text-white">{toStringValue(roofMaterial?.description) ?? "-"}</p>
+                  <p className="mt-2 text-sm font-semibold text-slate-950">{toStringValue(roofMaterial?.description) ?? "-"}</p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
-                <Ruler className="size-4 text-sky-300" /> Catatan performa
+            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+                <Ruler className="size-4 text-sky-600" /> Catatan performa
               </div>
-              <div className="mt-4 space-y-3 text-sm leading-6 text-slate-300">
+              <div className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
                 <p>{toStringValue(thermalPerformance?.climate_description) ?? climateDescription}</p>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Thermal mass dinding</p>
-                    <p className="mt-2 text-sm font-semibold text-white">{formatLabel(toStringValue(wallMaterial?.thermal_mass) ?? "-")}</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatLabel(toStringValue(wallMaterial?.thermal_mass) ?? "-")}</p>
                   </div>
-                  <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Thermal mass atap</p>
-                    <p className="mt-2 text-sm font-semibold text-white">{formatLabel(toStringValue(roofMaterial?.thermal_mass) ?? "-")}</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatLabel(toStringValue(roofMaterial?.thermal_mass) ?? "-")}</p>
                   </div>
                 </div>
               </div>
@@ -479,20 +479,20 @@ function CoolingResult({ title, payload }: { title: string; payload: Record<stri
             );
             const recommendationTitle = toStringValue(recommendation.title) ?? `Rekomendasi ${index + 1}`;
             return (
-              <div key={`${recommendationTitle}-${index}`} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div key={`${recommendationTitle}-${index}`} className="rounded-2xl border border-slate-200 bg-white/80 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm font-semibold text-white">{recommendationTitle}</p>
+                      <p className="text-sm font-semibold text-slate-950">{recommendationTitle}</p>
                       <Badge className={priorityClass(priority)}>{formatPriority(priority)}</Badge>
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-slate-300">{toStringValue(recommendation.description) ?? "-"}</p>
+                    <p className="mt-3 text-sm leading-6 text-slate-700">{toStringValue(recommendation.description) ?? "-"}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-white/5 text-slate-300">
+                    <Badge className="bg-white/80 text-slate-700">
                       <ThermometerSun className="mr-1 size-3.5" /> {toStringValue(recommendation.thermal_impact) ?? "-"}
                     </Badge>
-                    <Badge className="bg-white/5 text-slate-300">
+                    <Badge className="bg-white/80 text-slate-700">
                       <Wallet className="mr-1 size-3.5" /> {formatIDR(toNumber(recommendation.estimated_cost_idr) ?? undefined)}
                     </Badge>
                   </div>
@@ -501,9 +501,9 @@ function CoolingResult({ title, payload }: { title: string; payload: Record<stri
                 {implementation.length > 0 ? (
                   <div className="mt-4 grid gap-2">
                     {implementation.map((item) => (
-                      <div key={`${recommendationTitle}-${item}`} className="rounded-2xl border border-white/8 bg-slate-950/50 p-3 text-sm leading-6 text-slate-300">
+                      <div key={`${recommendationTitle}-${item}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700">
                         <div className="flex items-start gap-2">
-                          <ArrowRight className="mt-1 size-4 text-sky-300" />
+                          <ArrowRight className="mt-1 size-4 text-sky-600" />
                           <span>{item}</span>
                         </div>
                       </div>
@@ -520,7 +520,7 @@ function CoolingResult({ title, payload }: { title: string; payload: Record<stri
         <SectionShell title="Referensi standar" description="Rujukan teknis yang dipakai modul saat nyusun strategi pendinginan pasif.">
           <div className="flex flex-wrap gap-2">
             {references.map((reference) => (
-              <Badge key={reference} className="bg-white/5 text-slate-300">
+              <Badge key={reference} className="bg-white/80 text-slate-700">
                 {reference}
               </Badge>
             ))}
@@ -573,13 +573,13 @@ function DisasterResult({ title, payload }: { title: string; payload: Record<str
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl border border-rose-400/20 bg-rose-400/10 p-3 text-rose-100">
+            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-3 text-rose-800">
               <Flame className="size-5" />
             </div>
             <div>
               <CardTitle>{title}</CardTitle>
               <CardDescription className="leading-6">
-                Ringkas, tegas, dan langsung nunjuk prioritas perbaikan. Jauh lebih waras daripada baca objek mentah.
+                Structured damage summary with repair priority, estimated cost, and recommended actions.
               </CardDescription>
             </div>
           </div>
@@ -595,9 +595,9 @@ function DisasterResult({ title, payload }: { title: string; payload: Record<str
               <ShieldAlert className="mr-1 size-3.5" /> Prioritas {repairPriorityLabel(repairPriority)}
             </Badge>
             {photoUrls.length > 0 ? (
-              <Badge className="bg-white/5 text-slate-300">{formatCount(photoUrls.length)} foto terlampir</Badge>
+              <Badge className="bg-white/80 text-slate-700">{formatCount(photoUrls.length)} foto terlampir</Badge>
             ) : (
-              <Badge className="bg-white/5 text-slate-300">Tanpa foto lampiran</Badge>
+              <Badge className="bg-white/80 text-slate-700">Tanpa foto lampiran</Badge>
             )}
           </div>
         </CardContent>
@@ -611,20 +611,20 @@ function DisasterResult({ title, payload }: { title: string; payload: Record<str
           {recommendations.map((recommendation, index) => {
             const action = toStringValue(recommendation.action) ?? `Tindakan ${index + 1}`;
             return (
-              <div key={`${action}-${index}`} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div key={`${action}-${index}`} className="rounded-2xl border border-slate-200 bg-white/80 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge className="border-rose-400/20 bg-rose-400/10 text-rose-100">
+                      <Badge className="border-rose-200 bg-rose-50 text-rose-800">
                         Step {formatCount(toNumber(recommendation.step) ?? index + 1)}
                       </Badge>
-                      <p className="text-sm font-semibold text-white">{action}</p>
+                      <p className="text-sm font-semibold text-slate-950">{action}</p>
                     </div>
                     {toStringValue(recommendation.note) ? (
-                      <p className="mt-3 text-sm leading-6 text-slate-300">{toStringValue(recommendation.note)}</p>
+                      <p className="mt-3 text-sm leading-6 text-slate-700">{toStringValue(recommendation.note)}</p>
                     ) : null}
                   </div>
-                  <Badge className="bg-white/5 text-slate-300">
+                  <Badge className="bg-white/80 text-slate-700">
                     <Wallet className="mr-1 size-3.5" /> {formatIDR(toNumber(recommendation.estimated_cost_idr) ?? undefined)}
                   </Badge>
                 </div>
@@ -638,7 +638,7 @@ function DisasterResult({ title, payload }: { title: string; payload: Record<str
         <SectionShell title="Referensi standar" description="Standar dan regulasi yang sebaiknya dicek saat validasi atau audit perbaikan.">
           <div className="flex flex-wrap gap-2">
             {references.map((reference) => (
-              <Badge key={reference} className="bg-white/5 text-slate-300">
+              <Badge key={reference} className="bg-white/80 text-slate-700">
                 {reference}
               </Badge>
             ))}
@@ -688,13 +688,13 @@ function SettlementResult({ title, payload }: { title: string; payload: Record<s
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-emerald-100">
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-800">
               <House className="size-5" />
             </div>
             <div>
               <CardTitle>{title}</CardTitle>
               <CardDescription className="leading-6">
-                Hasilnya sekarang kebaca seperti dashboard prioritas kawasan, bukan angka-angka yang dibuang begitu saja.
+                Area-priority dashboard for budget, service gaps, and recommended settlement interventions.
               </CardDescription>
             </div>
           </div>
@@ -707,18 +707,18 @@ function SettlementResult({ title, payload }: { title: string; payload: Record<s
           </div>
 
           <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
-                <CircleGauge className="size-4 text-sky-300" /> Status layanan dasar
+            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+                <CircleGauge className="size-4 text-sky-600" /> Status layanan dasar
               </div>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 {Object.entries(componentScores ?? {}).map(([key, value]) => {
                   const available = Boolean(toNumber(value));
                   return (
-                    <div key={key} className="rounded-2xl border border-white/8 bg-slate-950/50 p-3 text-sm text-slate-300">
+                    <div key={key} className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
                       <div className="flex items-center justify-between gap-3">
                         <span>{formatLabel(key)}</span>
-                        <Badge className={available ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-100" : "border-rose-400/20 bg-rose-400/10 text-rose-100"}>
+                        <Badge className={available ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-rose-200 bg-rose-50 text-rose-800"}>
                           {available ? "Ada" : "Gap"}
                         </Badge>
                       </div>
@@ -728,19 +728,19 @@ function SettlementResult({ title, payload }: { title: string; payload: Record<s
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
-                <Waves className="size-4 text-sky-300" /> Gap prioritas
+            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+                <Waves className="size-4 text-sky-600" /> Gap prioritas
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 {gaps.length > 0 ? (
                   gaps.map((gap) => (
-                    <Badge key={gap} className="border-amber-400/20 bg-amber-400/10 text-amber-100">
+                    <Badge key={gap} className="border-amber-200 bg-amber-50 text-amber-800">
                       {formatLabel(gap)}
                     </Badge>
                   ))
                 ) : (
-                  <Badge className="border-emerald-400/20 bg-emerald-400/10 text-emerald-100">Tidak ada gap besar</Badge>
+                  <Badge className="border-emerald-200 bg-emerald-50 text-emerald-800">Tidak ada gap besar</Badge>
                 )}
               </div>
             </div>
@@ -757,45 +757,45 @@ function SettlementResult({ title, payload }: { title: string; payload: Record<s
             plan.map((intervention, index) => {
               const description = toStringValue(intervention.description) ?? `Intervensi ${index + 1}`;
               return (
-                <div key={`${description}-${index}`} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div key={`${description}-${index}`} className="rounded-2xl border border-slate-200 bg-white/80 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge className="border-sky-400/20 bg-sky-400/10 text-sky-100">
+                        <Badge className="border-sky-200 bg-sky-100 text-sky-800">
                           Prioritas {formatCount(toNumber(intervention.priority_rank) ?? index + 1)}
                         </Badge>
-                        <p className="text-sm font-semibold text-white">{description}</p>
+                        <p className="text-sm font-semibold text-slate-950">{description}</p>
                       </div>
-                      <p className="mt-3 text-sm leading-6 text-slate-300">
+                      <p className="mt-3 text-sm leading-6 text-slate-700">
                         {formatLabel(toStringValue(intervention.category) ?? "-")} · dampak {formatCount(toNumber(intervention.impact_score))}/10
                       </p>
                     </div>
-                    <Badge className="bg-white/5 text-slate-300">
+                    <Badge className="bg-white/80 text-slate-700">
                       <Wallet className="mr-1 size-3.5" /> {formatIDR(toNumber(intervention.recommended_cost) ?? undefined)}
                     </Badge>
                   </div>
 
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                       <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Unit disarankan</p>
-                      <p className="mt-2 text-sm font-semibold text-white">
+                      <p className="mt-2 text-sm font-semibold text-slate-950">
                         {formatCount(toNumber(intervention.recommended_units))} {toStringValue(intervention.unit) ?? "unit"}
                       </p>
                     </div>
-                    <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                       <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Biaya per unit</p>
-                      <p className="mt-2 text-sm font-semibold text-white">{formatIDR(toNumber(intervention.cost_per_unit_idr) ?? undefined)}</p>
+                      <p className="mt-2 text-sm font-semibold text-slate-950">{formatIDR(toNumber(intervention.cost_per_unit_idr) ?? undefined)}</p>
                     </div>
-                    <div className="rounded-2xl border border-white/8 bg-slate-950/50 p-3">
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                       <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Maks unit terjangkau</p>
-                      <p className="mt-2 text-sm font-semibold text-white">{formatCount(toNumber(intervention.max_affordable_units))}</p>
+                      <p className="mt-2 text-sm font-semibold text-slate-950">{formatCount(toNumber(intervention.max_affordable_units))}</p>
                     </div>
                   </div>
                 </div>
               );
             })
           ) : (
-            <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100">
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800">
               Tidak ada intervensi yang lolos dalam budget saat ini. Naikkan budget atau perbaiki target prioritas.
             </div>
           )}
@@ -831,11 +831,11 @@ function JsonNode({ label, value, depth = 0 }: { label?: string; value: unknown;
         {label ? <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">{formatLabel(label)}</p> : null}
         <div className="space-y-3">
           {value.map((item, index) => (
-            <div key={`${label ?? "item"}-${index}`} className="rounded-2xl border border-white/8 bg-white/5 p-4">
+            <div key={`${label ?? "item"}-${index}`} className="rounded-2xl border border-slate-200 bg-white/80 p-4">
               {isPlainObject(item) || Array.isArray(item) ? (
                 <JsonNode value={item} depth={depth + 1} />
               ) : (
-                <p className="text-sm leading-6 text-slate-300">{renderPrimitive(item)}</p>
+                <p className="text-sm leading-6 text-slate-700">{renderPrimitive(item)}</p>
               )}
             </div>
           ))}
@@ -850,13 +850,13 @@ function JsonNode({ label, value, depth = 0 }: { label?: string; value: unknown;
         {label ? <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">{formatLabel(label)}</p> : null}
         <div className={depth === 0 ? "grid gap-3 xl:grid-cols-2" : "space-y-3"}>
           {Object.entries(value).map(([key, nestedValue]) => (
-            <div key={key} className="rounded-2xl border border-white/8 bg-white/5 p-4">
+            <div key={key} className="rounded-2xl border border-slate-200 bg-white/80 p-4">
               {isPlainObject(nestedValue) || Array.isArray(nestedValue) ? (
                 <JsonNode label={key} value={nestedValue} depth={depth + 1} />
               ) : (
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">{formatLabel(key)}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">{renderPrimitive(nestedValue)}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-700">{renderPrimitive(nestedValue)}</p>
                 </div>
               )}
             </div>
@@ -869,8 +869,33 @@ function JsonNode({ label, value, depth = 0 }: { label?: string; value: unknown;
   return (
     <div className="space-y-2">
       {label ? <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">{formatLabel(label)}</p> : null}
-      <p className="text-sm leading-6 text-slate-300">{renderPrimitive(value)}</p>
+      <p className="text-sm leading-6 text-slate-700">{renderPrimitive(value)}</p>
     </div>
+  );
+}
+
+
+function EmptyModuleState({ title, module }: { title: string; module: StructuredModuleId }) {
+  const hints: Record<StructuredModuleId, string> = {
+    permit: "Isi data bangunan untuk melihat checklist dokumen, estimasi biaya, dan urutan pengurusan.",
+    cooling: "Isi dimensi, orientasi, material, dan iklim untuk mendapatkan strategi pendinginan pasif.",
+    disaster: "Isi konteks bencana dan deskripsi kerusakan untuk mendapatkan prioritas perbaikan.",
+    settlement: "Isi kondisi infrastruktur dan budget untuk mendapatkan urutan intervensi kawasan.",
+  };
+
+  return (
+    <Card className="border-dashed border-slate-300 bg-white/70">
+      <CardContent className="flex min-h-[260px] flex-col items-center justify-center gap-4 p-8 text-center">
+        <div className="rounded-3xl border border-sky-200 bg-sky-50 p-4 text-sky-700">
+          <ClipboardList className="size-7" />
+        </div>
+        <div>
+          <CardTitle className="text-base">{title}</CardTitle>
+          <CardDescription className="mt-2 max-w-md leading-6">{hints[module]}</CardDescription>
+        </div>
+        <Badge className="border-slate-200 bg-white text-slate-600">Result will appear here</Badge>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -879,7 +904,7 @@ function GenericResult({ title, payload }: { title: string; payload: Record<stri
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>Fallback renderer. Masih ada karena data liar kadang tetap perlu tempat mendarat.</CardDescription>
+        <CardDescription>Fallback renderer for unexpected module payloads.</CardDescription>
       </CardHeader>
       <CardContent>
         <JsonNode value={payload} />
@@ -898,7 +923,7 @@ export function ModuleResult({
   payload: Record<string, unknown> | null;
 }) {
   if (!payload) {
-    return null;
+    return <EmptyModuleState title={title} module={module} />;
   }
 
   switch (module) {

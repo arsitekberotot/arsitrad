@@ -122,22 +122,22 @@ function ModuleTabButton({
       onClick={onClick}
       className={`rounded-2xl border p-4 text-left transition ${
         active
-          ? "border-sky-400/40 bg-sky-400/10 shadow-lg shadow-sky-500/10"
-          : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10"
+          ? "border-sky-300 bg-sky-100 shadow-lg shadow-sky-200/60"
+          : "border-slate-200 bg-white/80 hover:border-sky-200 hover:bg-sky-50"
       }`}
     >
       <div className="mb-2 flex items-center gap-2">
-        <span className="text-sm font-semibold text-white">{title}</span>
-        {active ? <Badge className="border-sky-400/20 bg-sky-400/10 text-sky-200">Active</Badge> : null}
+        <span className="text-sm font-semibold text-slate-950">{title}</span>
+        {active ? <Badge className="border-sky-200 bg-sky-100 text-sky-700">Active</Badge> : null}
       </div>
-      <p className="text-sm text-slate-400">{description}</p>
+      <p className="text-sm text-slate-600">{description}</p>
     </button>
   );
 }
 
 function QuestionBubble({ content }: { content: string }) {
   return (
-    <div className="ml-auto max-w-3xl rounded-3xl border border-sky-400/20 bg-sky-400/10 p-4 text-sm leading-7 text-sky-50">
+    <div className="ml-auto max-w-3xl rounded-3xl border border-sky-200 bg-sky-100 p-4 text-sm leading-7 text-sky-950">
       {content}
     </div>
   );
@@ -292,32 +292,32 @@ export function ArsitradWorkbench() {
   return (
     <div className="grid gap-6 xl:grid-cols-[1.55fr_0.9fr]">
       <div className="space-y-6">
-        <Card className="overflow-hidden border-sky-400/10 bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.18),transparent_32%),linear-gradient(180deg,rgba(15,23,42,0.98),rgba(2,6,23,0.94))]">
+        <Card className="overflow-hidden border-sky-200 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.10),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.98),rgba(239,246,255,0.94))]">
           <CardHeader className="space-y-4">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="border-sky-400/20 bg-sky-400/10 text-sky-100">Next.js + shadcn-style</Badge>
-              <Badge className="bg-white/5 text-slate-300">Python API wrapper</Badge>
-              <Badge className="bg-white/5 text-slate-300">GGUF-backed</Badge>
+              <Badge className="border-sky-200 bg-sky-100 text-sky-800">Next.js + shadcn-style</Badge>
+              <Badge className="bg-white/80 text-slate-700">Python API wrapper</Badge>
+              <Badge className="bg-white/80 text-slate-700">GGUF-backed</Badge>
             </div>
             <CardTitle className="text-3xl leading-tight sm:text-4xl">
-              Arsitrad, minus the toy-store UI.
+              Arsitrad Web Workbench
             </CardTitle>
-            <CardDescription className="max-w-3xl text-base leading-7 text-slate-300">
-              Same retrieval and GGUF engine, now behind a proper web shell. Regulation QA stays first-class, helper modules stay reachable, and the whole thing stops looking like a late-night Streamlit prototype.
+            <CardDescription className="max-w-3xl text-base leading-7 text-slate-700">
+              A clean Next.js interface for Arsitrad regulation QA, citations, and architecture helper workflows. The Python retrieval engine stays unchanged behind a typed FastAPI bridge.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Primary brain</p>
-              <p className="mt-2 text-sm font-medium text-white">ArsitradAnswerEngine</p>
+            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Core engine</p>
+              <p className="mt-2 text-sm font-medium text-slate-950">ArsitradAnswerEngine</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Delivery</p>
-              <p className="mt-2 text-sm font-medium text-white">Next.js app router + typed API client</p>
+              <p className="mt-2 text-sm font-medium text-slate-950">Next.js app router + typed API client</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Tonight scope</p>
-              <p className="mt-2 text-sm font-medium text-white">Additive rebuild, Streamlit preserved</p>
+            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Migration scope</p>
+              <p className="mt-2 text-sm font-medium text-slate-950">Additive web UI with Streamlit fallback</p>
             </div>
           </CardContent>
         </Card>
@@ -328,7 +328,7 @@ export function ArsitradWorkbench() {
               <div>
                 <CardTitle>Workspace</CardTitle>
                 <CardDescription>
-                  Pick a module. Regulation QA is the main event, the rest are task-specific helpers.
+                  Choose a workflow. Regulation QA stays primary; helper modules handle focused architectural tasks.
                 </CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={() => void refreshHealth()}>
@@ -350,7 +350,7 @@ export function ArsitradWorkbench() {
             </div>
 
             {bootstrapError ? (
-              <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm text-amber-100">
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
                 Backend bootstrap failed: {bootstrapError}
               </div>
             ) : null}
@@ -371,7 +371,7 @@ export function ArsitradWorkbench() {
                   ))}
                 </div>
 
-                <div className="space-y-4 rounded-3xl border border-white/10 bg-black/10 p-4">
+                <div className="space-y-4 rounded-3xl border border-slate-200 bg-slate-100/70 p-4">
                   {conversation.map((entry) => (
                     <div key={entry.id} className="space-y-4">
                       {entry.role === "user" ? (
@@ -379,8 +379,8 @@ export function ArsitradWorkbench() {
                       ) : entry.response ? (
                         <AnswerView response={entry.response} />
                       ) : (
-                        <Card className="border-white/8 bg-white/5">
-                          <CardContent className="p-4 text-sm leading-7 text-slate-300">
+                        <Card className="border-slate-200 bg-white/80">
+                          <CardContent className="p-4 text-sm leading-7 text-slate-700">
                             {entry.content}
                           </CardContent>
                         </Card>
@@ -389,16 +389,16 @@ export function ArsitradWorkbench() {
                   ))}
 
                   {chatLoading ? (
-                    <Card className="border-white/8 bg-white/5">
-                      <CardContent className="flex items-center gap-3 p-4 text-sm text-slate-300">
-                        <LoaderCircle className="size-4 animate-spin text-sky-300" />
-                        Arsitrad lagi kerja. Retrieval jalan dulu, terus GGUF nyusun jawaban.
+                    <Card className="border-slate-200 bg-white/80">
+                      <CardContent className="flex items-center gap-3 p-4 text-sm text-slate-700">
+                        <LoaderCircle className="size-4 animate-spin text-sky-600" />
+                        Arsitrad is retrieving sources and drafting the answer.
                       </CardContent>
                     </Card>
                   ) : null}
                 </div>
 
-                <div className="space-y-3 rounded-3xl border border-white/10 bg-white/5 p-4">
+                <div className="space-y-3 rounded-3xl border border-slate-200 bg-white/80 p-4">
                   <Label htmlFor="reg-question">Pertanyaan</Label>
                   <Textarea
                     id="reg-question"
@@ -408,7 +408,7 @@ export function ArsitradWorkbench() {
                     className="min-h-[130px]"
                   />
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    {chatError ? <p className="text-sm text-rose-300">{chatError}</p> : <span className="text-sm text-slate-500">Ask something specific. Local context makes retrieval smarter.</span>}
+                    {chatError ? <p className="text-sm text-rose-600">{chatError}</p> : <span className="text-sm text-slate-500">Ask a specific regulation question. Mention city/local context when relevant.</span>}
                     <Button onClick={() => void handleAsk()} disabled={chatLoading}>
                       {chatLoading ? <LoaderCircle className="size-4 animate-spin" /> : <ArrowRight className="size-4" />}
                       Tanya Arsitrad
@@ -422,7 +422,7 @@ export function ArsitradWorkbench() {
               <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg"><Building2 className="size-5 text-sky-300" /> Permit Navigator</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-lg"><Building2 className="size-5 text-sky-600" /> Permit Navigator</CardTitle>
                     <CardDescription>Generate checklist dan estimasi alur pengurusan izin bangunan.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -475,7 +475,7 @@ export function ArsitradWorkbench() {
               <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg"><Wind className="size-5 text-sky-300" /> Passive Cooling</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-lg"><Wind className="size-5 text-sky-600" /> Passive Cooling</CardTitle>
                     <CardDescription>Quick passive-cooling recommendations for tropical building setups.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -540,7 +540,7 @@ export function ArsitradWorkbench() {
               <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg"><Flame className="size-5 text-sky-300" /> Disaster Reporter</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-lg"><Flame className="size-5 text-sky-600" /> Disaster Reporter</CardTitle>
                     <CardDescription>Classify damage and get a structured repair recommendation payload.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -587,7 +587,7 @@ export function ArsitradWorkbench() {
               <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg"><MapPinned className="size-5 text-sky-300" /> Settlement Upgrading</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-lg"><MapPinned className="size-5 text-sky-600" /> Settlement Upgrading</CardTitle>
                     <CardDescription>Budget-aware prioritization for settlement improvement actions.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -623,7 +623,7 @@ export function ArsitradWorkbench() {
             ) : null}
 
             {moduleError ? (
-              <div className="rounded-2xl border border-rose-400/20 bg-rose-400/10 p-4 text-sm text-rose-200">
+              <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
                 {moduleError}
               </div>
             ) : null}

@@ -15,22 +15,22 @@ export function StatusSidebar({ bootstrap, health, apiBaseUrl }: StatusSidebarPr
     <div className="space-y-5">
       <Card>
         <CardHeader>
-          <div className="flex items-center gap-2 text-sky-300">
+          <div className="flex items-center gap-2 text-sky-600">
             <Sparkles className="size-4" />
-            <Badge className="border-sky-400/20 bg-sky-400/10 text-sky-200">Tonight build</Badge>
+            <Badge className="border-sky-200 bg-sky-100 text-sky-700">Tonight build</Badge>
           </div>
           <CardTitle>{bootstrap?.app_title ?? "Arsitrad Web"}</CardTitle>
           <CardDescription>
             Proper UI shell on top of the existing Python brain. Streamlit stays as fallback.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm text-slate-300">
+        <CardContent className="space-y-3 text-sm text-slate-700">
           <p>{bootstrap?.disclaimer ?? "Loading disclaimer..."}</p>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <div className="mb-2 flex items-center gap-2 text-slate-200">
-              <Gauge className="size-4 text-emerald-300" /> Runtime endpoint
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+            <div className="mb-2 flex items-center gap-2 text-slate-800">
+              <Gauge className="size-4 text-emerald-600" /> Runtime endpoint
             </div>
-            <p className="break-all font-mono text-xs text-slate-400">{apiBaseUrl}</p>
+            <p className="break-all font-mono text-xs text-slate-600">{apiBaseUrl}</p>
           </div>
         </CardContent>
       </Card>
@@ -39,36 +39,36 @@ export function StatusSidebar({ bootstrap, health, apiBaseUrl }: StatusSidebarPr
         <CardHeader>
           <CardTitle className="text-base">Runtime status</CardTitle>
           <CardDescription>
-            Quick read on whether the backend is actually alive or just pretending.
+            Quick read on API connectivity, retrieval assets, and model availability.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm text-slate-300">
-          <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-            <span className="text-slate-400">API health</span>
-            <Badge className={health ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-200" : "border-amber-400/20 bg-amber-400/10 text-amber-200"}>
+        <CardContent className="space-y-3 text-sm text-slate-700">
+          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3">
+            <span className="text-slate-600">API health</span>
+            <Badge className={health ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"}>
               {health ? "Connected" : "Waiting"}
             </Badge>
           </div>
-          <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-            <span className="flex items-center gap-2 text-slate-400"><Database className="size-4" /> Sparse index</span>
-            <Badge className={health?.sparse_index_exists ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-200" : "border-rose-400/20 bg-rose-400/10 text-rose-200"}>
+          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3">
+            <span className="flex items-center gap-2 text-slate-600"><Database className="size-4" /> Sparse index</span>
+            <Badge className={health?.sparse_index_exists ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-rose-200 bg-rose-50 text-rose-700"}>
               {health?.sparse_index_exists ? "Ready" : "Missing"}
             </Badge>
           </div>
-          <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-            <span className="flex items-center gap-2 text-slate-400"><Layers3 className="size-4" /> GGUF model</span>
-            <Badge className={health?.model_exists ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-200" : "border-amber-400/20 bg-amber-400/10 text-amber-200"}>
+          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3">
+            <span className="flex items-center gap-2 text-slate-600"><Layers3 className="size-4" /> GGUF model</span>
+            <Badge className={health?.model_exists ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"}>
               {health?.model_exists ? "Found" : "Not found"}
             </Badge>
           </div>
-          <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-            <span className="text-slate-400">Dense retrieval</span>
-            <Badge className={health?.dense_enabled ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-200" : "border-white/10 bg-white/5 text-slate-300"}>
+          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3">
+            <span className="text-slate-600">Dense retrieval</span>
+            <Badge className={health?.dense_enabled ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-slate-200 bg-white/80 text-slate-700"}>
               {health?.dense_enabled ? "Enabled" : "Sparse-first"}
             </Badge>
           </div>
           {!health && (
-            <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-amber-100">
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-800">
               <div className="mb-2 flex items-center gap-2 font-medium">
                 <AlertTriangle className="size-4" /> Backend belum nyambung
               </div>
@@ -84,11 +84,11 @@ export function StatusSidebar({ bootstrap, health, apiBaseUrl }: StatusSidebarPr
         <CardHeader>
           <CardTitle className="text-base">What changed</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm text-slate-300">
+        <CardContent className="space-y-2 text-sm text-slate-700">
           <p>• Next.js App Router shell with client-side workbench</p>
           <p>• shadcn-style card/button/input primitives</p>
           <p>• dedicated Python API instead of Streamlit-only rendering</p>
-          <p>• same ArsitradAnswerEngine underneath, less toy-store UI on top</p>
+          <p>• same ArsitradAnswerEngine underneath, with a dedicated product UI on top</p>
         </CardContent>
       </Card>
     </div>

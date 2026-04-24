@@ -13,35 +13,35 @@ function confidenceTone(score: number) {
   if (score >= 0.75) {
     return {
       label: "Tinggi",
-      className: "border-emerald-400/20 bg-emerald-400/10 text-emerald-100",
+      className: "border-emerald-200 bg-emerald-50 text-emerald-800",
     };
   }
 
   if (score >= 0.6) {
     return {
       label: "Sedang",
-      className: "border-amber-400/20 bg-amber-400/10 text-amber-100",
+      className: "border-amber-200 bg-amber-50 text-amber-800",
     };
   }
 
   return {
     label: "Rendah",
-    className: "border-rose-400/20 bg-rose-400/10 text-rose-100",
+    className: "border-rose-200 bg-rose-50 text-rose-800",
   };
 }
 
 function sectionIcon(heading: (typeof SECTION_ORDER)[number]) {
   switch (heading) {
     case "RINGKASAN":
-      return <Sparkles className="size-4 text-sky-300" />;
+      return <Sparkles className="size-4 text-sky-600" />;
     case "DETAIL REGULASI":
-      return <FileText className="size-4 text-sky-300" />;
+      return <FileText className="size-4 text-sky-600" />;
     case "SARAN TEKNIS":
-      return <ShieldCheck className="size-4 text-sky-300" />;
+      return <ShieldCheck className="size-4 text-sky-600" />;
     case "SUMBER":
-      return <BookOpenText className="size-4 text-sky-300" />;
+      return <BookOpenText className="size-4 text-sky-600" />;
     default:
-      return <ShieldCheck className="size-4 text-sky-300" />;
+      return <ShieldCheck className="size-4 text-sky-600" />;
   }
 }
 
@@ -58,16 +58,16 @@ export function AnswerView({ response }: { response: AskResponse }) {
             <Badge className={confidence.className}>
               Confidence {response.retrieval.confidence.toFixed(2)} · {confidence.label}
             </Badge>
-            <Badge className="bg-white/5 text-slate-300">
+            <Badge className="bg-white/80 text-slate-700">
               Mode {response.used_model ? "GGUF" : "Fallback"}
             </Badge>
-            <Badge className="bg-white/5 text-slate-300">
+            <Badge className="bg-white/80 text-slate-700">
               Kandidat {response.retrieval.candidates.length}
             </Badge>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Standalone query</p>
-            <p className="mt-3 text-sm leading-7 text-slate-200">{response.retrieval.standalone_query}</p>
+            <p className="mt-3 text-sm leading-7 text-slate-800">{response.retrieval.standalone_query}</p>
           </div>
         </CardContent>
       </Card>
@@ -77,13 +77,13 @@ export function AnswerView({ response }: { response: AskResponse }) {
           {sectionEntries.map((heading) => (
             <Card key={heading}>
               <CardHeader className="pb-3">
-                <div className="flex items-center gap-2 text-slate-100">
+                <div className="flex items-center gap-2 text-slate-900">
                   {sectionIcon(heading)}
                   <CardTitle className="text-base">{formatLabel(heading.toLowerCase())}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="whitespace-pre-wrap text-sm leading-7 text-slate-300">{sections[heading]}</div>
+                <div className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{sections[heading]}</div>
               </CardContent>
             </Card>
           ))}
@@ -94,7 +94,7 @@ export function AnswerView({ response }: { response: AskResponse }) {
             <CardTitle className="text-base">Jawaban</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="whitespace-pre-wrap text-sm leading-7 text-slate-300">{cleaned}</div>
+            <div className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{cleaned}</div>
           </CardContent>
         </Card>
       )}

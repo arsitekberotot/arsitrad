@@ -68,19 +68,19 @@ function SourcePreviewModal({
   const kind = sourceChunkKind(candidate);
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm">
-      <div className="max-h-[88vh] w-full max-w-4xl overflow-hidden rounded-[28px] border border-white/10 bg-slate-950 shadow-2xl shadow-black/40">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-5">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-white/75 p-4 backdrop-blur-sm">
+      <div className="max-h-[88vh] w-full max-w-4xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl shadow-slate-200/40">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="border-sky-400/20 bg-sky-400/10 text-sky-100">[{index + 1}]</Badge>
-              <h3 className="text-lg font-semibold text-white">{name}</h3>
+              <Badge className="border-sky-200 bg-sky-100 text-sky-800">[{index + 1}]</Badge>
+              <h3 className="text-lg font-semibold text-slate-950">{name}</h3>
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              {kind ? <Badge className="bg-white/5 text-slate-300">{kind}</Badge> : null}
-              {region ? <Badge className="bg-white/5 text-slate-300">{region}</Badge> : null}
-              {page ? <Badge className="bg-white/5 text-slate-300">Hlm. {page}</Badge> : null}
-              <Badge className="bg-white/5 text-slate-300">Score {candidate.score.toFixed(2)}</Badge>
+              {kind ? <Badge className="bg-white/80 text-slate-700">{kind}</Badge> : null}
+              {region ? <Badge className="bg-white/80 text-slate-700">{region}</Badge> : null}
+              {page ? <Badge className="bg-white/80 text-slate-700">Hlm. {page}</Badge> : null}
+              <Badge className="bg-white/80 text-slate-700">Score {candidate.score.toFixed(2)}</Badge>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close source preview">
@@ -88,8 +88,8 @@ function SourcePreviewModal({
           </Button>
         </div>
         <div className="max-h-[calc(88vh-112px)] overflow-y-auto px-6 py-5">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-            <p className="whitespace-pre-wrap text-sm leading-7 text-slate-200">{candidate.content}</p>
+          <div className="rounded-3xl border border-slate-200 bg-white/80 p-5">
+            <p className="whitespace-pre-wrap text-sm leading-7 text-slate-800">{candidate.content}</p>
           </div>
         </div>
       </div>
@@ -109,22 +109,22 @@ function CitationDrawer({
   onPreview: (candidate: Candidate, index: number) => void;
 }) {
   return (
-    <div className="fixed inset-0 z-[60] bg-slate-950/65 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] bg-white/45 backdrop-blur-sm">
       <button
         type="button"
         aria-label="Close citations drawer"
         className="absolute inset-0"
         onClick={onClose}
       />
-      <aside className="absolute inset-y-0 right-0 z-[61] flex h-full w-full max-w-2xl flex-col border-l border-white/10 bg-slate-950 shadow-2xl shadow-black/40">
-        <div className="border-b border-white/10 px-6 py-5">
+      <aside className="absolute inset-y-0 right-0 z-[61] flex h-full w-full max-w-2xl flex-col border-l border-slate-200 bg-white shadow-2xl shadow-slate-200/40">
+        <div className="border-b border-slate-200 px-6 py-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 text-white">
-                <FileText className="size-4 text-sky-300" />
+              <div className="flex items-center gap-2 text-slate-950">
+                <FileText className="size-4 text-sky-600" />
                 <h3 className="text-lg font-semibold">Citations drawer</h3>
               </div>
-              <p className="mt-3 text-sm leading-6 text-slate-300">
+              <p className="mt-3 text-sm leading-6 text-slate-700">
                 Arsitrad narik {candidates.length} kandidat sumber buat jawaban ini.
               </p>
             </div>
@@ -132,9 +132,9 @@ function CitationDrawer({
               <X className="size-4" />
             </Button>
           </div>
-          <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
-            <div className="flex items-center gap-2 text-slate-100">
-              <Search className="size-4 text-sky-300" />
+          <div className="mt-4 rounded-2xl border border-slate-200 bg-white/80 p-4 text-sm text-slate-700">
+            <div className="flex items-center gap-2 text-slate-900">
+              <Search className="size-4 text-sky-600" />
               <span className="font-medium">Standalone query</span>
             </div>
             <p className="mt-3 leading-6">{standaloneQuery}</p>
@@ -149,26 +149,26 @@ function CitationDrawer({
             const kind = sourceChunkKind(candidate);
 
             return (
-              <Card key={`${candidate.chunk_key}-${index}`} className="border-white/10 bg-white/5">
+              <Card key={`${candidate.chunk_key}-${index}`} className="border-slate-200 bg-white/80">
                 <CardContent className="space-y-4 p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge className="border-sky-400/20 bg-sky-400/10 text-sky-100">[{index + 1}]</Badge>
-                        <p className="text-sm font-semibold text-white">{name}</p>
+                        <Badge className="border-sky-200 bg-sky-100 text-sky-800">[{index + 1}]</Badge>
+                        <p className="text-sm font-semibold text-slate-950">{name}</p>
                       </div>
                       <div className="mt-3 flex flex-wrap gap-2">
-                        {kind ? <Badge className="bg-white/5 text-slate-300">{kind}</Badge> : null}
-                        {region ? <Badge className="bg-white/5 text-slate-300">{region}</Badge> : null}
-                        {page ? <Badge className="bg-white/5 text-slate-300">Hlm. {page}</Badge> : null}
-                        <Badge className="bg-white/5 text-slate-300">Score {candidate.score.toFixed(2)}</Badge>
+                        {kind ? <Badge className="bg-white/80 text-slate-700">{kind}</Badge> : null}
+                        {region ? <Badge className="bg-white/80 text-slate-700">{region}</Badge> : null}
+                        {page ? <Badge className="bg-white/80 text-slate-700">Hlm. {page}</Badge> : null}
+                        <Badge className="bg-white/80 text-slate-700">Score {candidate.score.toFixed(2)}</Badge>
                       </div>
                     </div>
                     <Button variant="outline" size="sm" onClick={() => onPreview(candidate, index)}>
                       <ExternalLink className="size-4" /> Preview source
                     </Button>
                   </div>
-                  <p className="line-clamp-6 whitespace-pre-wrap text-sm leading-7 text-slate-300">{candidate.content}</p>
+                  <p className="line-clamp-6 whitespace-pre-wrap text-sm leading-7 text-slate-700">{candidate.content}</p>
                 </CardContent>
               </Card>
             );
@@ -227,22 +227,22 @@ export function CitationBrowser({
       <Card>
         <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-medium text-slate-100">
-              <FileText className="size-4 text-sky-300" />
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
+              <FileText className="size-4 text-sky-600" />
               Citations ready
             </div>
             <div className="flex flex-wrap gap-2">
               {topNames.map((name, index) => (
-                <Badge key={`${name}-${index}`} className="bg-white/5 text-slate-300">
+                <Badge key={`${name}-${index}`} className="bg-white/80 text-slate-700">
                   [{index + 1}] {name}
                 </Badge>
               ))}
               {candidates.length > 3 ? (
-                <Badge className="bg-white/5 text-slate-300">+{candidates.length - 3} lainnya</Badge>
+                <Badge className="bg-white/80 text-slate-700">+{candidates.length - 3} lainnya</Badge>
               ) : null}
             </div>
-            <p className="text-sm leading-6 text-slate-400">
-              Buka drawer kalau mau audit chunk yang dipakai Arsitrad, lalu preview full source tanpa bikin layar utama jadi berantakan.
+            <p className="text-sm leading-6 text-slate-600">
+              Open the drawer to audit the retrieved chunks and preview full source text without crowding the main answer.
             </p>
           </div>
           <Button variant="outline" onClick={() => setDrawerOpen(true)}>
