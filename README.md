@@ -41,7 +41,7 @@ Arsitrad v2 solves that with a hybrid retrieval pipeline grounded in real Indone
 | **Grounded Inference** | GGUF Gemma 4 answer engine | Uses retrieved regulatory context, structured sections, and source citations |
 | **Safe Fallbacks** | Confidence gate + out-of-scope refusal | Weak evidence and design-style questions are rejected cleanly instead of hallucinated |
 | **Portable Runtime** | Sparse-first local path | Works with checked-in JSONL/BM25 without requiring a machine-specific database config |
-| **Interactive UI** | Streamlit chat + helper tabs | Main regulation assistant plus permit, cooling, disaster, and settlement tools |
+| **Interactive UI** | Next.js workbench + FastAPI bridge | Main regulation assistant plus permit, cooling, disaster, and settlement tools; Streamlit kept under `legacy/` as fallback |
 
 ---
 
@@ -75,9 +75,26 @@ export ARSITRAD_DATABASE_URL='postgresql://user:***@host:5432/arsitrad_v2'
 
 If you do not set `ARSITRAD_DATABASE_URL`, Arsitrad still runs with the checked-in sparse JSONL + BM25 path.
 
-### 4. Run the UI
+### 4. Run the web UI
+
+Start the Python API:
 
 ```bash
+python -m uvicorn api.server:app --host 127.0.0.1 --port 8000
+```
+
+Start the Next.js frontend:
+
+```bash
+cd web
+NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000 npm run dev -- --hostname 127.0.0.1 --port 3000
+```
+
+Legacy Streamlit fallback is still available:
+
+```bash
+streamlit run legacy/streamlit_app.py
+# compatibility shim also works:
 streamlit run ui/app.py
 ```
 
@@ -150,7 +167,7 @@ If the GGUF model file is not available yet, Arsitrad falls back to retrieval-on
                     +------------------------+-------------------------+
                                              |
                     +------------------------v-------------------------+
-                    |  Streamlit UI + helper tabs                     |
+                    |  Next.js web UI + FastAPI API bridge             |
                     +--------------------------------------------------+
 ```
 
@@ -231,7 +248,7 @@ data/eval/results/
 - **Embedder**: `intfloat/multilingual-e5-large`
 - **Reranker**: `BAAI/bge-reranker-base`
 - **Chunking / parsing**: semantic legal chunker + `pdfplumber`
-- **UI**: Streamlit
+- **UI**: Next.js workbench + FastAPI bridge; legacy Streamlit fallback under `legacy/streamlit_app.py`
 - **Validation**: pytest + retrieval audits + RAGAS dry-run hooks
 
 ---

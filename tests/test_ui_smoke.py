@@ -61,3 +61,11 @@ def test_build_base_css_styles_streamlit_shell_and_chat_input():
     assert '[data-testid="stSidebar"]' in css
     assert '[data-testid="stChatInput"]' in css
     assert '[data-testid="stToolbar"]' in css
+
+
+def test_legacy_streamlit_module_exposes_ui_helpers():
+    from legacy.streamlit_app import build_base_css as legacy_build_base_css
+    from ui.app import build_base_css as compatibility_build_base_css
+
+    assert legacy_build_base_css() == compatibility_build_base_css()
+    assert '.arsitrad-shell' in legacy_build_base_css()
