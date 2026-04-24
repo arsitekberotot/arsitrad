@@ -83,6 +83,16 @@ In the browser:
 5. Confirm answer cards and citation controls render.
 6. Check browser console for errors.
 
+## Rollback path
+
+If the Next.js/FastAPI stack fails during demo, switch to the legacy Streamlit fallback:
+
+```bash
+./scripts/run_legacy_streamlit.sh
+```
+
+Full rollback checklist: `docs/rollback-runbook.md`.
+
 ## Known runtime notes
 
 - If `/health` says `model_exists=false`, the web bridge is still healthy; QA runs fallback/retrieval mode.
@@ -90,7 +100,9 @@ In the browser:
 - Legacy Streamlit fallback remains available:
 
 ```bash
+./scripts/run_legacy_streamlit.sh
 streamlit run legacy/streamlit_app.py
+streamlit run ui/app.py
 ```
 
 ## Do not commit local runtime files

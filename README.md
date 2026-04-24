@@ -105,10 +105,14 @@ For public temporary demo URLs with Cloudflare Tunnel, see `docs/demo-deployment
 Legacy Streamlit fallback is still available:
 
 ```bash
+./scripts/run_legacy_streamlit.sh
+# direct legacy command:
 streamlit run legacy/streamlit_app.py
 # compatibility shim also works:
 streamlit run ui/app.py
 ```
+
+Rollback runbook: `docs/rollback-runbook.md`.
 
 ### 5. Or ask from Python
 
