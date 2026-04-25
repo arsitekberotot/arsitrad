@@ -46,3 +46,30 @@ def test_chat_ui_prioritizes_conversation_after_first_message():
     assert "max-h-[120px]" in workbench
     assert 'data-testid="module-tabs"' in workbench
     assert "px-3 py-2" in workbench
+
+
+def test_workbench_positions_primary_chat_as_building_doctor_ai_advisor():
+    workbench = read("web/src/components/arsitrad-workbench.tsx")
+    types = read("web/src/lib/types.ts")
+
+    assert "AI Advisor" in workbench
+    assert "Building Doctor" in workbench
+    assert "visual_analysis" in types
+    assert "Regulation QA stays primary" not in workbench
+    assert "Regulation QA + architecture helper workflows" not in workbench
+
+
+def test_answer_view_surfaces_visual_analysis_when_present():
+    answer_view = read("web/src/components/answer-view.tsx")
+
+    assert "response.visual_analysis" in answer_view
+    assert "Visual triage" in answer_view
+    assert "preliminary" in answer_view
+
+
+def test_status_sidebar_reports_optional_vision_bridge():
+    status_sidebar = read("web/src/components/status-sidebar.tsx")
+
+    assert "Vision bridge" in status_sidebar
+    assert "Gemma vision" in status_sidebar
+    assert "vision_enabled" in status_sidebar

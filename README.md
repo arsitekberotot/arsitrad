@@ -39,9 +39,10 @@ Arsitrad v2 solves that with a hybrid retrieval pipeline grounded in real Indone
 | **Hybrid Retrieval** | pgvector + BM25 + RRF + reranker | Dense and lexical retrieval are fused instead of trusting one signal blindly |
 | **Semantic Chunking** | Legal-structure-aware parsing | Chunks follow `BAB`, `Bagian`, `Paragraf`, `Pasal`, `Ayat` instead of dumb fixed windows |
 | **Grounded Inference** | GGUF Gemma 4 answer engine | Uses retrieved regulatory context, structured sections, and source citations |
+| **Building Doctor Bridge** | Optional Gemma vision via llama.cpp server | Uploaded building photos can be summarized as preliminary visual triage before Arsitrad produces regulation-grounded advice |
 | **Safe Fallbacks** | Confidence gate + out-of-scope refusal | Weak evidence and design-style questions are rejected cleanly instead of hallucinated |
 | **Portable Runtime** | Sparse-first local path | Works with checked-in JSONL/BM25 without requiring a machine-specific database config |
-| **Interactive UI** | Next.js workbench + FastAPI bridge | Main regulation assistant plus permit, cooling, disaster, and settlement tools; Streamlit kept under `legacy/` as fallback |
+| **Interactive UI** | Next.js workbench + FastAPI bridge | AI Advisor chat plus permit, cooling, disaster, and settlement tools; Streamlit kept under `legacy/` as fallback |
 
 ---
 
@@ -95,6 +96,27 @@ Then start the Next.js frontend:
 cd web
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000 npm run dev -- --hostname 127.0.0.1 --port 3000
 ```
+
+
+### Optional: enable Gemma vision bridge
+
+Image upload works without this setting, but true pixel-level triage is only enabled when Arsitrad can reach a llama.cpp/OpenAI-compatible vision server running Gemma 4 E4B IT with its `mmproj` file.
+
+```bash
+export ARSITRAD_VISION_BASE_URL=http://127.0.0.1:8080
+export ARSITRAD_VISION_MODEL=gemma-4-E4B-it
+# optional
+export ARSITRAD_VISION_MAX_TOKENS=220
+export ARSITRAD_VISION_TIMEOUT_SECONDS=45
+```
+
+When this is enabled, the chat flow becomes:
+
+```text
+image upload -> Gemma vision observations -> Arsitrad AI Advisor / Building Doctor -> regulation/SNI/PUPR-grounded answer + citations
+```
+
+The visual step is deliberately framed as preliminary triage, not structural certification.
 
 For public temporary demo URLs with Cloudflare Tunnel, see `docs/demo-deployment.md` or run:
 

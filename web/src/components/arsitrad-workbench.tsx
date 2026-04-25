@@ -62,14 +62,14 @@ const FALLBACK_BOOTSTRAP: BootstrapData = {
   app_title: "Arsitrad Web",
   disclaimer:
     "Arsitrad adalah alat bantu informasi regulasi, bukan pengganti konsultasi profesional.",
-  default_question: "Apa syarat PBG untuk rumah tinggal 2 lantai di Semarang?",
+  default_question: "Apa yang perlu dicek dari retak diagonal pada dinding rumah tinggal ini?",
   quick_prompts: [
-    "Apa syarat PBG untuk rumah tinggal 2 lantai di Semarang?",
-    "Apa aturan bangunan gedung negara terkait SBKBG?",
-    "Apakah RDTR wajib dicek sebelum mengurus PBG?",
+    "Apa yang perlu dicek dari retak diagonal pada dinding rumah tinggal?",
+    "Upload foto bangunan rusak, lalu buat triase awal dan checklist inspeksi.",
+    "Apa syarat PBG untuk renovasi rumah tinggal 2 lantai di Semarang?",
   ],
   modules: [
-    { id: "regulation", title: "Regulation QA", description: "Tanya regulasi utama Arsitrad." },
+    { id: "regulation", title: "AI Advisor", description: "Building Doctor + regulasi." },
     { id: "permit", title: "Permit Navigator", description: "Checklist dan estimasi alur izin." },
     { id: "cooling", title: "Passive Cooling", description: "Strategi pendinginan pasif." },
     { id: "disaster", title: "Disaster Reporter", description: "Klasifikasi kerusakan bangunan." },
@@ -278,7 +278,7 @@ export function ArsitradWorkbench() {
   }
 
   async function handleAsk(prefilled?: string) {
-    const currentQuestion = (prefilled ?? question).trim() || (attachedImages.length > 0 ? "Analisis gambar terlampir untuk konteks regulasi dan arsitektur." : "");
+    const currentQuestion = (prefilled ?? question).trim() || (attachedImages.length > 0 ? "Analisis gambar terlampir sebagai triase awal Building Doctor dan kaitkan dengan regulasi/SNI yang relevan." : "");
     if (!currentQuestion) {
       return;
     }
@@ -367,7 +367,7 @@ export function ArsitradWorkbench() {
             </div>
             <div className="min-w-0">
               <h1 className="truncate text-lg font-semibold tracking-tight text-slate-950">Arsitrad</h1>
-              <p className="truncate text-sm text-slate-600">Regulation QA + architecture helper workflows</p>
+              <p className="truncate text-sm text-slate-600">AI Advisor + Building Doctor workflows</p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -395,7 +395,7 @@ export function ArsitradWorkbench() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <CardTitle className="text-base">Workspace</CardTitle>
-<CardDescription className="text-xs">Choose a workflow. Regulation QA stays primary.</CardDescription>
+<CardDescription className="text-xs">Choose a workflow. AI Advisor is the main Building Doctor chat.</CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={() => void refreshHealth()}>
                 <RefreshCcw className="size-4" /> Refresh status
@@ -442,7 +442,7 @@ export function ArsitradWorkbench() {
                   {!conversationStarted ? (
                     <Card className="border-dashed border-slate-300 bg-white/70">
                       <CardContent className="p-4 text-sm leading-7 text-slate-600">
-                        Start with a regulation question, or attach a floor plan/site photo for visual context.
+                        Start with a building problem, cracked-wall photo, floor plan, or regulation question. Arsitrad will separate visible evidence from what still needs site verification.
                       </CardContent>
                     </Card>
                   ) : null}
@@ -466,7 +466,7 @@ export function ArsitradWorkbench() {
                     <Card className="border-slate-200 bg-white/80">
                       <CardContent className="flex items-center gap-3 p-4 text-sm text-slate-700">
                         <LoaderCircle className="size-4 animate-spin text-sky-600" />
-                        Arsitrad is retrieving sources and drafting the answer.
+                        Arsitrad is checking visual context, retrieving sources, and drafting advisor guidance.
                       </CardContent>
                     </Card>
                   ) : null}

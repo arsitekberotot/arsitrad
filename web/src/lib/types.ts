@@ -27,6 +27,8 @@ export interface HealthData {
   sparse_index_exists: boolean;
   dense_enabled: boolean;
   app_title: string;
+  vision_enabled?: boolean;
+  vision_base_url?: string | null;
 }
 
 export interface ChatMessageInput {
@@ -67,6 +69,7 @@ export interface AskResponse {
   model_path?: string | null;
   raw_text?: string | null;
   retrieval: RetrievalPayload;
+  visual_analysis?: string | null;
 }
 
 export interface ModuleResponse {

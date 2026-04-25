@@ -1,4 +1,4 @@
-import { AlertTriangle, Database, Gauge, Layers3, Sparkles } from "lucide-react";
+import { AlertTriangle, Database, Eye, Gauge, Layers3, Sparkles } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,6 +65,13 @@ export function StatusSidebar({ bootstrap, health, apiBaseUrl }: StatusSidebarPr
             <span className="text-slate-600">Dense retrieval</span>
             <Badge className={health?.dense_enabled ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-slate-200 bg-white/80 text-slate-700"}>
               {health?.dense_enabled ? "Enabled" : "Sparse-first"}
+            </Badge>
+          </div>
+
+          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 px-4 py-3">
+            <span className="flex items-center gap-2 text-slate-600"><Eye className="size-4" /> Vision bridge</span>
+            <Badge className={health?.vision_enabled ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-slate-200 bg-white/80 text-slate-700"}>
+              {health?.vision_enabled ? "Gemma vision" : "Metadata only"}
             </Badge>
           </div>
           {!health && (

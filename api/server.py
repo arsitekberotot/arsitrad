@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import os
+import urllib.request
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, Literal, TypeVar
@@ -120,6 +122,7 @@ class AskResponse(ApiModel):
     model_path: str | None = None
     raw_text: str | None = None
     retrieval: RetrievalResponse
+    visual_analysis: str | None = None
 
 
 class ModuleResponse(ApiModel):
@@ -142,6 +145,8 @@ class HealthResponse(ApiModel):
     sparse_index_exists: bool
     dense_enabled: bool
     app_title: str
+    vision_enabled: bool = False
+    vision_base_url: str | None = None
 
 
 @lru_cache(maxsize=1)
@@ -165,6 +170,80 @@ def load_ui_settings(config_path: Path = DEFAULT_CONFIG_PATH) -> dict[str, str]:
 @lru_cache(maxsize=1)
 def get_answer_engine() -> ArsitradAnswerEngine:
     return ArsitradAnswerEngine(config_path=DEFAULT_CONFIG_PATH)
+
+
+class NoopVisionAnalyzer:
+    def analyze(self, images: list[ImageAttachment]) -> str:
+        return ""
+
+
+class LlamaCppVisionAnalyzer:
+    def __init__(self, base_url: str, model: str = "gemma-4-E4B-it", timeout_seconds: float = 45.0, max_tokens: int = 220):
+        self.base_url = base_url.rstrip("/")
+        self.model = model
+        self.timeout_seconds = timeout_seconds
+        self.max_tokens = max_tokens
+
+    def analyze(self, images: list[ImageAttachment]) -> str:
+        if not images:
+            return ""
+
+        content: list[dict[str, Any]] = [
+            {
+                "type": "text",
+                "text": (
+                    "Analyze the attached building image(s) as preliminary architectural visual triage. "
+                    "Return concise observations only: visible damage, likely risk category, what must be verified on site, "
+                    "and any readable OCR text. Do not invent hidden structural conditions. Use Indonesian."
+                ),
+            }
+        ]
+        for image in images:
+            content.append({"type": "image_url", "image_url": {"url": image.data_url}})
+
+        request_payload = {
+            "model": self.model,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a cautious building-photo triage assistant for Arsitrad. "
+                        "You describe visible evidence, not final engineering certification."
+                    ),
+                },
+                {"role": "user", "content": content},
+            ],
+            "temperature": 0.1,
+            "max_tokens": self.max_tokens,
+        }
+        request = urllib.request.Request(
+            f"{self.base_url}/v1/chat/completions",
+            data=json.dumps(request_payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
+            response_payload = json.loads(response.read().decode("utf-8"))
+
+        choice = response_payload.get("choices", [{}])[0]
+        message = choice.get("message", {})
+        content_text = message.get("content") or choice.get("text") or ""
+        if isinstance(content_text, list):
+            content_text = "\n".join(str(item.get("text", item)) for item in content_text)
+        return str(content_text).strip()
+
+
+@lru_cache(maxsize=1)
+def get_visual_analyzer() -> NoopVisionAnalyzer | LlamaCppVisionAnalyzer:
+    base_url = os.getenv("ARSITRAD_VISION_BASE_URL", "").strip().rstrip("/")
+    if not base_url:
+        return NoopVisionAnalyzer()
+    return LlamaCppVisionAnalyzer(
+        base_url=base_url,
+        model=os.getenv("ARSITRAD_VISION_MODEL", "gemma-4-E4B-it"),
+        timeout_seconds=float(os.getenv("ARSITRAD_VISION_TIMEOUT_SECONDS", "45")),
+        max_tokens=int(os.getenv("ARSITRAD_VISION_MAX_TOKENS", "220")),
+    )
 
 
 @lru_cache(maxsize=1)
@@ -233,11 +312,41 @@ def build_visual_context(images: list[ImageAttachment]) -> str:
     return "\n".join(lines)
 
 
-def question_with_visual_context(question: str, images: list[ImageAttachment]) -> str:
+def analyze_visual_attachments(images: list[ImageAttachment]) -> str:
+    if not images:
+        return ""
+    try:
+        return get_visual_analyzer().analyze(images).strip()
+    except Exception:
+        return (
+            "Vision bridge unavailable. Treat uploaded images as user-provided context only; "
+            "ask the user to describe visible damage before making specific recommendations."
+        )
+
+
+def build_building_doctor_context(visual_analysis: str) -> str:
+    if not visual_analysis:
+        return ""
+    return "\n".join(
+        [
+            "Building Doctor mode:",
+            "Use the Gemma vision observations as preliminary visual triage, then answer as an architectural AI advisor.",
+            "Give: visible issue summary, urgent safety checks, likely repair direction, missing site data, and regulation/SNI/PUPR evidence to verify.",
+            "Be explicit that this is not a final structural diagnosis and do not claim structural certification from an image alone.",
+            "",
+            "Gemma vision observations:",
+            visual_analysis,
+        ]
+    )
+
+
+def question_with_visual_context(question: str, images: list[ImageAttachment], visual_analysis: str = "") -> str:
     visual_context = build_visual_context(images)
-    if not visual_context:
+    building_doctor_context = build_building_doctor_context(visual_analysis)
+    contexts = [context for context in [building_doctor_context, visual_context] if context]
+    if not contexts:
         return question
-    return f"{question}\n\n{visual_context}"
+    return f"{question}\n\n" + "\n\n".join(contexts)
 
 
 def run_api_call(operation: str, fn: Callable[[], T]) -> T:
@@ -257,15 +366,19 @@ def to_json_payload(payload: Any) -> dict[str, Any]:
 
 
 QUICK_PROMPTS = [
-    "Apa syarat PBG untuk rumah tinggal 2 lantai di Semarang?",
-    "Apa aturan bangunan gedung negara terkait SBKBG?",
-    "Apakah RDTR wajib dicek sebelum mengurus PBG?",
+    "Apa yang perlu dicek dari retak diagonal pada dinding rumah tinggal?",
+    "Upload foto bangunan rusak, lalu minta Arsitrad membuat triase awal dan checklist inspeksi.",
+    "Apa syarat PBG untuk renovasi rumah tinggal 2 lantai di Semarang?",
     "Apa yang harus dicek untuk bangunan di dekat sungai menurut tata ruang?",
 ]
 
 
 MODULES = [
-    {"id": "regulation", "title": "Regulation QA", "description": "Tanya regulasi, PBG, RDTR, RTRW, SBKBG, dan standar teknis."},
+    {
+        "id": "regulation",
+        "title": "AI Advisor",
+        "description": "Building Doctor: triase foto/keluhan bangunan lalu kaitkan saran ke regulasi, SNI, PUPR, PBG, RDTR, dan RTRW.",
+    },
     {"id": "permit", "title": "Permit Navigator", "description": "Hitung checklist dan alur pengurusan izin bangunan."},
     {"id": "cooling", "title": "Passive Cooling", "description": "Rancang strategi pendinginan pasif untuk iklim tropis."},
     {"id": "disaster", "title": "Disaster Reporter", "description": "Klasifikasi kerusakan dan estimasi langkah perbaikan."},
@@ -334,6 +447,8 @@ def create_app() -> FastAPI:
             sparse_index_exists=sparse_index_path.exists(),
             dense_enabled=bool(os.getenv("ARSITRAD_DATABASE_URL")),
             app_title=settings["app_title"],
+            vision_enabled=bool(os.getenv("ARSITRAD_VISION_BASE_URL", "").strip()),
+            vision_base_url=os.getenv("ARSITRAD_VISION_BASE_URL", "").strip().rstrip("/") or None,
         )
 
     @app.get("/api/bootstrap", response_model=BootstrapResponse)
@@ -350,16 +465,19 @@ def create_app() -> FastAPI:
     @app.post("/api/ask", response_model=AskResponse)
     def ask(payload: AskRequest) -> AskResponse:
         question = clean_question(payload.question)
-        engine_question = question_with_visual_context(question, payload.images)
+        visual_analysis = analyze_visual_attachments(payload.images)
+        engine_question = question_with_visual_context(question, payload.images, visual_analysis)
 
         result = run_api_call(
-            "Regulation QA",
+            "AI Advisor",
             lambda: get_answer_engine().answer(
                 engine_question,
                 history=[message.model_dump() for message in payload.history],
             ),
         )
-        return AskResponse(**serialize_result(result))
+        response_payload = serialize_result(result)
+        response_payload["visual_analysis"] = visual_analysis or None
+        return AskResponse(**response_payload)
 
     @app.post("/api/permit", response_model=ModuleResponse)
     def permit(payload: PermitRequest) -> ModuleResponse:

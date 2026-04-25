@@ -44,6 +44,15 @@ class FailingEngine:
         raise RuntimeError("model exploded with an ugly internal error")
 
 
+class DummyVisionAnalyzer:
+    def __init__(self):
+        self.calls = []
+
+    def analyze(self, images):
+        self.calls.append(images)
+        return "Visible observations: diagonal wall cracking, damp plaster, and possible deformation. Ask for crack width and structural location before final diagnosis."
+
+
 class DummyPermitNavigator:
     def navigate(self, *args, **kwargs):
         return {"building_type": args[0], "steps": 5, "estimated_total_cost_idr": 1234567}
@@ -184,7 +193,7 @@ def test_ask_endpoint_returns_clean_503_on_engine_failure(monkeypatch):
     response = client.post("/api/ask", json={"question": "Apa itu PBG?"})
 
     assert response.status_code == 503
-    assert response.json() == {"detail": "Regulation QA is temporarily unavailable"}
+    assert response.json() == {"detail": "AI Advisor is temporarily unavailable"}
 
 
 def test_permit_endpoint_returns_payload(monkeypatch):
@@ -299,3 +308,52 @@ def test_ask_endpoint_accepts_image_attachments_and_forwards_visual_context(monk
     assert "Visual attachments submitted" in forwarded_question
     assert "floor-plan.png" in forwarded_question
     assert "image/png" in forwarded_question
+
+
+def test_bootstrap_positions_chat_as_ai_advisor_not_duplicate_regulation_lookup(monkeypatch):
+    monkeypatch.setattr(server, "load_ui_settings", lambda config_path=server.DEFAULT_CONFIG_PATH: {
+        "app_title": "Arsitrad v2",
+        "disclaimer": "demo disclaimer",
+        "default_question": "Apa yang perlu dicek dari retak dinding rumah ini?",
+    })
+
+    client = TestClient(server.app)
+    response = client.get("/api/bootstrap")
+
+    assert response.status_code == 200
+    modules = {module["id"]: module for module in response.json()["modules"]}
+    assert modules["regulation"]["title"] == "AI Advisor"
+    assert "Building Doctor" in modules["regulation"]["description"]
+
+
+def test_ask_endpoint_runs_optional_vision_bridge_before_rag(monkeypatch):
+    engine = DummyEngine()
+    vision = DummyVisionAnalyzer()
+    monkeypatch.setattr(server, "get_answer_engine", lambda: engine)
+    monkeypatch.setattr(server, "get_visual_analyzer", lambda: vision)
+
+    client = TestClient(server.app)
+    response = client.post(
+        "/api/ask",
+        json={
+            "question": "Apa yang harus dilakukan untuk memperbaiki rumah ini?",
+            "images": [
+                {
+                    "name": "retak-dinding.jpg",
+                    "content_type": "image/jpeg",
+                    "size_bytes": 2048,
+                    "data_url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ==",
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["visual_analysis"].startswith("Visible observations")
+    assert len(vision.calls) == 1
+    forwarded_question = engine.calls[0]["question"]
+    assert "Building Doctor" in forwarded_question
+    assert "Gemma vision observations" in forwarded_question
+    assert "diagonal wall cracking" in forwarded_question
+    assert "do not claim structural certification" in forwarded_question

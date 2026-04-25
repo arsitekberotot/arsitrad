@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpenText, FileText, ShieldCheck, Sparkles } from "lucide-react";
+import { BookOpenText, Eye, FileText, ShieldCheck, Sparkles } from "lucide-react";
 
 import { CitationBrowser } from "@/components/citation-browser";
 import { Badge } from "@/components/ui/badge";
@@ -71,6 +71,22 @@ export function AnswerView({ response }: { response: AskResponse }) {
           </div>
         </CardContent>
       </Card>
+
+
+      {response.visual_analysis ? (
+        <Card className="border-sky-200 bg-sky-50/70">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2 text-slate-900">
+              <Eye className="size-4 text-sky-600" />
+              <CardTitle className="text-base">Visual triage</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.22em] text-sky-700">Gemma preliminary image observation</p>
+            <div className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{response.visual_analysis}</div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {sectionEntries.length > 0 ? (
         <div className="grid gap-4">
