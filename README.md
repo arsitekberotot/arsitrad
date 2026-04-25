@@ -98,16 +98,25 @@ NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000 npm run dev -- --hostname 127.0.0
 ```
 
 
-### Optional: enable Gemma vision bridge
+### Vision auto-start
 
-Image upload works without this setting, but true pixel-level triage is only enabled when Arsitrad can reach a llama.cpp/OpenAI-compatible vision server running Gemma 4 E4B IT with its `mmproj` file.
+`scripts/run_web_demo.sh` and `scripts/run_cloudflare_demo.sh` now try to keep the Gemma vision server on whenever Arsitrad is running. Image upload still works without it, but pixel-level triage needs a local llama.cpp `llama-server` plus the Gemma 4 E4B IT model GGUF and matching `mmproj` file.
 
 ```bash
+# defaults used by the demo scripts
+export ARSITRAD_VISION_AUTOSTART=1
+export ARSITRAD_VISION_MODEL_PATH=./models/gemma-4-E4B-it-Q4_K_M.gguf
+export ARSITRAD_VISION_MMPROJ_PATH=./models/mmproj-BF16.gguf
 export ARSITRAD_VISION_BASE_URL=http://127.0.0.1:8080
-export ARSITRAD_VISION_MODEL=gemma-4-E4B-it
-# optional
+
+# fail startup instead of silently falling back to metadata-only images
+export ARSITRAD_REQUIRE_VISION=1
+
+# optional tuning
+export ARSITRAD_LLAMA_SERVER_BIN=llama-server
 export ARSITRAD_VISION_MAX_TOKENS=220
 export ARSITRAD_VISION_TIMEOUT_SECONDS=45
+export ARSITRAD_VISION_N_GPU_LAYERS=999
 ```
 
 When this is enabled, the chat flow becomes:
