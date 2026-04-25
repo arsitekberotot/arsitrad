@@ -126,17 +126,17 @@ function ModuleTabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-2xl border p-4 text-left transition ${
+      className={`rounded-xl border px-3 py-2 text-left transition ${
         active
           ? "border-sky-300 bg-sky-100 shadow-lg shadow-sky-200/60"
           : "border-slate-200 bg-white/80 hover:border-sky-200 hover:bg-sky-50"
       }`}
     >
-      <div className="mb-2 flex items-center gap-2">
-        <span className="text-sm font-semibold text-slate-950">{title}</span>
-        {active ? <Badge className="border-sky-200 bg-sky-100 text-sky-700">Active</Badge> : null}
+      <div className="mb-1 flex items-center gap-1.5">
+        <span className="text-xs font-semibold text-slate-950">{title}</span>
+        {active ? <Badge className="px-2 py-0.5 text-[10px] border-sky-200 bg-sky-100 text-sky-700">Active</Badge> : null}
       </div>
-      <p className="text-sm text-slate-600">{description}</p>
+      <p className="line-clamp-2 text-xs leading-4 text-slate-600">{description}</p>
     </button>
   );
 }
@@ -169,14 +169,7 @@ export function ArsitradWorkbench() {
   const [bootstrapError, setBootstrapError] = useState<string | null>(null);
   const [statusOpen, setStatusOpen] = useState(false);
   const [question, setQuestion] = useState(FALLBACK_BOOTSTRAP.default_question);
-  const [conversation, setConversation] = useState<ConversationEntry[]>([
-    {
-      id: "welcome",
-      role: "assistant",
-      content:
-        "Tanyakan regulasi bangunan, SBKBG, PBG, RDTR, RTRW, atau buka module cards buat workflow yang lebih spesifik.",
-    },
-  ]);
+  const [conversation, setConversation] = useState<ConversationEntry[]>([]);
   const [chatError, setChatError] = useState<string | null>(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [attachedImages, setAttachedImages] = useState<ImageAttachment[]>([]);
@@ -192,6 +185,7 @@ export function ArsitradWorkbench() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const moduleList = bootstrap?.modules ?? FALLBACK_BOOTSTRAP.modules;
+  const conversationStarted = conversation.length > 0;
 
   useEffect(() => {
     let cancelled = false;
@@ -223,9 +217,7 @@ export function ArsitradWorkbench() {
   }, []);
 
   const historyForApi = useMemo<ChatMessageInput[]>(() => {
-    return conversation
-      .filter((entry) => entry.id !== "welcome")
-      .map((entry) => ({ role: entry.role, content: entry.content }));
+    return conversation.map((entry) => ({ role: entry.role, content: entry.content }));
   }, [conversation]);
 
   async function refreshHealth() {
@@ -368,13 +360,13 @@ export function ArsitradWorkbench() {
   return (
     <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden">
       <Card className="shrink-0 border-sky-200 bg-white/95 shadow-lg shadow-slate-200/60">
-        <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <CardContent className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-sky-200 bg-sky-100 text-lg font-black tracking-tight text-sky-700">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl border border-sky-200 bg-sky-100 text-lg font-black tracking-tight text-sky-700">
               A
             </div>
             <div className="min-w-0">
-              <h1 className="truncate text-xl font-semibold tracking-tight text-slate-950">Arsitrad</h1>
+              <h1 className="truncate text-lg font-semibold tracking-tight text-slate-950">Arsitrad</h1>
               <p className="truncate text-sm text-slate-600">Regulation QA + architecture helper workflows</p>
             </div>
           </div>
@@ -399,21 +391,19 @@ export function ArsitradWorkbench() {
       ) : null}
 
         <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
-          <CardHeader className="shrink-0">
+          <CardHeader className="shrink-0 py-3">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <CardTitle>Workspace</CardTitle>
-                <CardDescription>
-                  Choose a workflow. Regulation QA stays primary; helper modules handle focused architectural tasks.
-                </CardDescription>
+                <CardTitle className="text-base">Workspace</CardTitle>
+<CardDescription className="text-xs">Choose a workflow. Regulation QA stays primary.</CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={() => void refreshHealth()}>
                 <RefreshCcw className="size-4" /> Refresh status
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="flex min-h-0 flex-1 flex-col gap-6 overflow-hidden">
-            <div className="grid shrink-0 gap-3 lg:grid-cols-5">
+          <CardContent className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
+            <div data-testid="module-tabs" className="grid shrink-0 gap-2 lg:grid-cols-5">
               {moduleList.map((module) => (
                 <ModuleTabButton
                   key={module.id}
@@ -433,21 +423,29 @@ export function ArsitradWorkbench() {
 
             {activeModule === "regulation" ? (
               <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden">
-                <div className="shrink-0 flex flex-wrap gap-2">
-                  {(bootstrap?.quick_prompts ?? FALLBACK_BOOTSTRAP.quick_prompts).map((prompt) => (
-                    <Button
-                      key={prompt}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => void handleAsk(prompt)}
-                      disabled={chatLoading}
-                    >
-                      {prompt}
-                    </Button>
-                  ))}
-                </div>
+                {!conversationStarted && !chatLoading ? (
+                  <div className="shrink-0 flex flex-wrap gap-1.5">
+                    {(bootstrap?.quick_prompts ?? FALLBACK_BOOTSTRAP.quick_prompts).map((prompt) => (
+                      <Button
+                        key={prompt}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => void handleAsk(prompt)}
+                      >
+                        {prompt}
+                      </Button>
+                    ))}
+                  </div>
+                ) : null}
 
-                <div data-testid="chat-scroll-container" className="min-h-0 flex-1 space-y-4 overflow-y-auto rounded-3xl border border-slate-200 bg-slate-100/70 p-4">
+                <div data-testid="chat-scroll-container" className="min-h-0 flex-1 space-y-3 overflow-y-auto rounded-3xl border border-slate-200 bg-slate-100/70 p-4">
+                  {!conversationStarted ? (
+                    <Card className="border-dashed border-slate-300 bg-white/70">
+                      <CardContent className="p-4 text-sm leading-7 text-slate-600">
+                        Start with a regulation question, or attach a floor plan/site photo for visual context.
+                      </CardContent>
+                    </Card>
+                  ) : null}
                   {conversation.map((entry) => (
                     <div key={entry.id} className="space-y-4">
                       {entry.role === "user" ? (
@@ -474,21 +472,22 @@ export function ArsitradWorkbench() {
                   ) : null}
                 </div>
 
-                <div data-testid="chat-input-area" className="shrink-0 space-y-3 rounded-3xl border border-slate-200 bg-white/80 p-4">
+                <div data-testid="chat-input-area" className="shrink-0 space-y-2 rounded-2xl border border-slate-200 bg-white/90 p-3">
                   <Label htmlFor="reg-question">Pertanyaan</Label>
                   <Textarea
                     id="reg-question"
                     value={question}
                     onChange={(event) => setQuestion(event.target.value)}
                     placeholder={bootstrap?.default_question ?? FALLBACK_BOOTSTRAP.default_question}
-                    className="min-h-[130px]"
+                    rows={1}
+                    className="max-h-[120px] min-h-[48px] resize-none"
                   />
                   {attachedImages.length > 0 ? (
                     <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                       {attachedImages.map((image) => (
                         <div key={image.id} className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
                           {/* eslint-disable-next-line @next/next/no-img-element -- user-uploaded data URLs are local previews, not optimizable remote assets. */}
-                          <img src={image.data_url} alt={image.name} className="h-24 w-full object-cover" />
+                          <img src={image.data_url} alt={image.name} className="h-16 w-full object-cover" />
                           <button
                             type="button"
                             aria-label={`Remove ${image.name}`}

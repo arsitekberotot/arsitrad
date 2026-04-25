@@ -34,3 +34,15 @@ def test_chat_input_supports_image_attachments_and_sends_payload():
     assert "attachedImages" in workbench
     assert "images" in api
     assert "ImageAttachment" in types
+
+
+def test_chat_ui_prioritizes_conversation_after_first_message():
+    workbench = read("web/src/components/arsitrad-workbench.tsx")
+
+    assert "const conversationStarted = conversation.length > 0" in workbench
+    assert "!conversationStarted && !chatLoading" in workbench
+    assert "setConversation(bootstrapData" not in workbench
+    assert "min-h-[48px]" in workbench
+    assert "max-h-[120px]" in workbench
+    assert 'data-testid="module-tabs"' in workbench
+    assert "px-3 py-2" in workbench
