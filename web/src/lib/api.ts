@@ -2,6 +2,7 @@ import type {
   AskResponse,
   BootstrapData,
   ChatMessageInput,
+  ImageAttachment,
   CoolingFormData,
   DisasterFormData,
   HealthData,
@@ -49,10 +50,10 @@ export function fetchHealth() {
   return request<HealthData>("/health");
 }
 
-export function askQuestion(question: string, history: ChatMessageInput[]) {
+export function askQuestion(question: string, history: ChatMessageInput[], images: ImageAttachment[] = []) {
   return request<AskResponse>("/api/ask", {
     method: "POST",
-    body: JSON.stringify({ question, history }),
+    body: JSON.stringify({ question, history, images }),
   });
 }
 

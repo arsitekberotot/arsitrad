@@ -34,6 +34,14 @@ export interface ChatMessageInput {
   content: string;
 }
 
+export interface ImageAttachment {
+  id: string;
+  name: string;
+  content_type: string;
+  size_bytes: number;
+  data_url: string;
+}
+
 export interface Candidate {
   chunk_key: string;
   content: string;

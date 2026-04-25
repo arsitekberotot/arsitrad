@@ -36,9 +36,17 @@ class ChatMessage(ApiModel):
     content: str
 
 
+class ImageAttachment(ApiModel):
+    name: str = Field(min_length=1, max_length=160)
+    content_type: str = Field(pattern=r"^image/")
+    size_bytes: int = Field(ge=0, le=8_000_000)
+    data_url: str = Field(min_length=16)
+
+
 class AskRequest(ApiModel):
     question: str = Field(min_length=3)
     history: list[ChatMessage] = Field(default_factory=list)
+    images: list[ImageAttachment] = Field(default_factory=list, max_length=4)
 
 
 class PermitRequest(ApiModel):
@@ -208,6 +216,30 @@ def clean_question(question: str) -> str:
     return cleaned
 
 
+def build_visual_context(images: list[ImageAttachment]) -> str:
+    if not images:
+        return ""
+
+    lines = ["Visual attachments submitted:"]
+    for index, image in enumerate(images, start=1):
+        lines.append(
+            f"[{index}] {image.name} ({image.content_type}, {image.size_bytes} bytes) — "
+            "user-provided visual input such as a floor plan, site photo, or building reference."
+        )
+    lines.append(
+        "Use these visual attachment notes as context. If detailed visual inspection is required, "
+        "state what must be verified from the image and avoid inventing unseen details."
+    )
+    return "\n".join(lines)
+
+
+def question_with_visual_context(question: str, images: list[ImageAttachment]) -> str:
+    visual_context = build_visual_context(images)
+    if not visual_context:
+        return question
+    return f"{question}\n\n{visual_context}"
+
+
 def run_api_call(operation: str, fn: Callable[[], T]) -> T:
     try:
         return fn()
@@ -318,11 +350,12 @@ def create_app() -> FastAPI:
     @app.post("/api/ask", response_model=AskResponse)
     def ask(payload: AskRequest) -> AskResponse:
         question = clean_question(payload.question)
+        engine_question = question_with_visual_context(question, payload.images)
 
         result = run_api_call(
             "Regulation QA",
             lambda: get_answer_engine().answer(
-                question,
+                engine_question,
                 history=[message.model_dump() for message in payload.history],
             ),
         )

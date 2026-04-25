@@ -4,11 +4,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   Building2,
+  Image as ImageIcon,
   Flame,
   LoaderCircle,
   MapPinned,
   Menu,
+  Paperclip,
   RefreshCcw,
+  X,
   Wind,
 } from "lucide-react";
 
@@ -39,6 +42,7 @@ import type {
   CoolingFormData,
   DisasterFormData,
   HealthData,
+  ImageAttachment,
   ModuleId,
   ModuleResponse,
   PermitFormData,
@@ -50,6 +54,7 @@ type ConversationEntry = {
   id: string;
   role: "user" | "assistant";
   content: string;
+  images?: ImageAttachment[];
   response?: AskResponse;
 };
 
@@ -136,10 +141,24 @@ function ModuleTabButton({
   );
 }
 
-function QuestionBubble({ content }: { content: string }) {
+function QuestionBubble({ content, images = [] }: { content: string; images?: ImageAttachment[] }) {
   return (
     <div className="ml-auto max-w-3xl rounded-3xl border border-sky-200 bg-sky-100 p-4 text-sm leading-7 text-sky-950">
-      {content}
+      <p>{content}</p>
+      {images.length > 0 ? (
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          {images.map((image) => (
+            <div key={image.id} className="overflow-hidden rounded-2xl border border-sky-200 bg-white/80">
+              {/* eslint-disable-next-line @next/next/no-img-element -- user-uploaded data URLs are local previews, not optimizable remote assets. */}
+              <img src={image.data_url} alt={image.name} className="h-32 w-full object-cover" />
+              <div className="p-2 text-xs leading-5 text-slate-700">
+                <p className="truncate font-medium text-slate-900">{image.name}</p>
+                <p>{image.content_type} · {Math.ceil(image.size_bytes / 1024)} KB</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -160,6 +179,7 @@ export function ArsitradWorkbench() {
   ]);
   const [chatError, setChatError] = useState<string | null>(null);
   const [chatLoading, setChatLoading] = useState(false);
+  const [attachedImages, setAttachedImages] = useState<ImageAttachment[]>([]);
   const [activeModule, setActiveModule] = useState<ModuleId>("regulation");
   const [permitForm, setPermitForm] = useState<PermitFormData>(PERMIT_DEFAULTS);
   const [coolingForm, setCoolingForm] = useState<CoolingFormData>(COOLING_DEFAULTS);
@@ -169,6 +189,7 @@ export function ArsitradWorkbench() {
   const [moduleError, setModuleError] = useState<string | null>(null);
   const [moduleResults, setModuleResults] = useState<Partial<Record<ModuleId, ModuleResponse["payload"]>>>({});
   const idCounter = useRef(1);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const moduleList = bootstrap?.modules ?? FALLBACK_BOOTSTRAP.modules;
 
@@ -215,8 +236,57 @@ export function ArsitradWorkbench() {
     }
   }
 
+  function removeAttachedImage(id: string) {
+    setAttachedImages((prev) => prev.filter((image) => image.id !== id));
+  }
+
+  async function handleImageFiles(files: FileList | null) {
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    const selectedFiles = Array.from(files).filter((file) => file.type.startsWith("image/"));
+    if (selectedFiles.length === 0) {
+      setChatError("Upload gambar saja: denah, foto tapak, atau referensi visual bangunan.");
+      return;
+    }
+
+    const remainingSlots = Math.max(0, 4 - attachedImages.length);
+    const filesToRead = selectedFiles.slice(0, remainingSlots);
+    if (filesToRead.length === 0) {
+      setChatError("Maksimal 4 gambar per pesan.");
+      return;
+    }
+
+    const loadedImages = await Promise.all(
+      filesToRead.map(
+        (file) =>
+          new Promise<ImageAttachment>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve({
+                id: `${file.name}-${file.size}-${idCounter.current++}`,
+                name: file.name,
+                content_type: file.type || "image/unknown",
+                size_bytes: file.size,
+                data_url: String(reader.result),
+              });
+            };
+            reader.onerror = () => reject(reader.error ?? new Error("Failed to read image."));
+            reader.readAsDataURL(file);
+          }),
+      ),
+    );
+
+    setAttachedImages((prev) => [...prev, ...loadedImages]);
+    setChatError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
   async function handleAsk(prefilled?: string) {
-    const currentQuestion = (prefilled ?? question).trim();
+    const currentQuestion = (prefilled ?? question).trim() || (attachedImages.length > 0 ? "Analisis gambar terlampir untuk konteks regulasi dan arsitektur." : "");
     if (!currentQuestion) {
       return;
     }
@@ -230,17 +300,20 @@ export function ArsitradWorkbench() {
       return value;
     };
 
+    const imagesToSend = prefilled ? [] : attachedImages;
     const userEntry: ConversationEntry = {
       id: `user-${nextId()}`,
       role: "user",
       content: currentQuestion,
+      images: imagesToSend,
     };
 
     setConversation((prev) => [...prev, userEntry]);
     setQuestion("");
+    setAttachedImages([]);
 
     try {
-      const response = await askQuestion(currentQuestion, historyForApi);
+      const response = await askQuestion(currentQuestion, historyForApi, imagesToSend);
       setConversation((prev) => [
         ...prev,
         {
@@ -254,6 +327,7 @@ export function ArsitradWorkbench() {
     } catch (error) {
       setChatError(error instanceof Error ? error.message : "Request failed.");
       setQuestion(currentQuestion);
+      setAttachedImages(imagesToSend);
     } finally {
       setChatLoading(false);
     }
@@ -292,8 +366,8 @@ export function ArsitradWorkbench() {
   }
 
   return (
-    <div className="space-y-5">
-      <Card className="border-sky-200 bg-white/95 shadow-lg shadow-slate-200/60">
+    <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden">
+      <Card className="shrink-0 border-sky-200 bg-white/95 shadow-lg shadow-slate-200/60">
         <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-3">
             <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-sky-200 bg-sky-100 text-lg font-black tracking-tight text-sky-700">
@@ -318,10 +392,14 @@ export function ArsitradWorkbench() {
         </CardContent>
       </Card>
 
-      {statusOpen ? <StatusSidebar bootstrap={bootstrap} health={health} apiBaseUrl={API_BASE_URL} /> : null}
+      {statusOpen ? (
+        <div className="max-h-[42vh] shrink-0 overflow-y-auto pr-1">
+          <StatusSidebar bootstrap={bootstrap} health={health} apiBaseUrl={API_BASE_URL} />
+        </div>
+      ) : null}
 
-        <Card>
-          <CardHeader>
+        <Card className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <CardHeader className="shrink-0">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <CardTitle>Workspace</CardTitle>
@@ -334,8 +412,8 @@ export function ArsitradWorkbench() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-3 lg:grid-cols-5">
+          <CardContent className="flex min-h-0 flex-1 flex-col gap-6 overflow-hidden">
+            <div className="grid shrink-0 gap-3 lg:grid-cols-5">
               {moduleList.map((module) => (
                 <ModuleTabButton
                   key={module.id}
@@ -354,8 +432,8 @@ export function ArsitradWorkbench() {
             ) : null}
 
             {activeModule === "regulation" ? (
-              <div className="space-y-5">
-                <div className="flex flex-wrap gap-2">
+              <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden">
+                <div className="shrink-0 flex flex-wrap gap-2">
                   {(bootstrap?.quick_prompts ?? FALLBACK_BOOTSTRAP.quick_prompts).map((prompt) => (
                     <Button
                       key={prompt}
@@ -369,11 +447,11 @@ export function ArsitradWorkbench() {
                   ))}
                 </div>
 
-                <div className="space-y-4 rounded-3xl border border-slate-200 bg-slate-100/70 p-4">
+                <div data-testid="chat-scroll-container" className="min-h-0 flex-1 space-y-4 overflow-y-auto rounded-3xl border border-slate-200 bg-slate-100/70 p-4">
                   {conversation.map((entry) => (
                     <div key={entry.id} className="space-y-4">
                       {entry.role === "user" ? (
-                        <QuestionBubble content={entry.content} />
+                        <QuestionBubble content={entry.content} images={entry.images} />
                       ) : entry.response ? (
                         <AnswerView response={entry.response} />
                       ) : (
@@ -396,7 +474,7 @@ export function ArsitradWorkbench() {
                   ) : null}
                 </div>
 
-                <div className="space-y-3 rounded-3xl border border-slate-200 bg-white/80 p-4">
+                <div data-testid="chat-input-area" className="shrink-0 space-y-3 rounded-3xl border border-slate-200 bg-white/80 p-4">
                   <Label htmlFor="reg-question">Pertanyaan</Label>
                   <Textarea
                     id="reg-question"
@@ -405,18 +483,55 @@ export function ArsitradWorkbench() {
                     placeholder={bootstrap?.default_question ?? FALLBACK_BOOTSTRAP.default_question}
                     className="min-h-[130px]"
                   />
+                  {attachedImages.length > 0 ? (
+                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                      {attachedImages.map((image) => (
+                        <div key={image.id} className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+                          {/* eslint-disable-next-line @next/next/no-img-element -- user-uploaded data URLs are local previews, not optimizable remote assets. */}
+                          <img src={image.data_url} alt={image.name} className="h-24 w-full object-cover" />
+                          <button
+                            type="button"
+                            aria-label={`Remove ${image.name}`}
+                            className="absolute right-2 top-2 rounded-full bg-white/90 p-1 text-slate-700 shadow"
+                            onClick={() => removeAttachedImage(image.id)}
+                          >
+                            <X className="size-3" />
+                          </button>
+                          <div className="p-2 text-xs leading-5 text-slate-600">
+                            <p className="truncate font-medium text-slate-900">{image.name}</p>
+                            <p>{Math.ceil(image.size_bytes / 1024)} KB</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    {chatError ? <p className="text-sm text-rose-600">{chatError}</p> : <span className="text-sm text-slate-500">Ask a specific regulation question. Mention city/local context when relevant.</span>}
-                    <Button onClick={() => void handleAsk()} disabled={chatLoading}>
-                      {chatLoading ? <LoaderCircle className="size-4 animate-spin" /> : <ArrowRight className="size-4" />}
-                      Tanya Arsitrad
-                    </Button>
+                    {chatError ? <p className="text-sm text-rose-600">{chatError}</p> : <span className="text-sm text-slate-500">Ask a specific regulation question. Attach floor plans or site photos when visual context matters.</span>}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={(event) => void handleImageFiles(event.target.files)}
+                      />
+                      <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={chatLoading || attachedImages.length >= 4}>
+                        <Paperclip className="size-4" /> Attach images
+                      </Button>
+                      <Button onClick={() => void handleAsk()} disabled={chatLoading}>
+                        {chatLoading ? <LoaderCircle className="size-4 animate-spin" /> : attachedImages.length > 0 ? <ImageIcon className="size-4" /> : <ArrowRight className="size-4" />}
+                        Tanya Arsitrad
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
             ) : null}
 
             {activeModule === "permit" ? (
+              <div className="min-h-0 flex-1 overflow-y-auto pr-1">
               <div className="grid gap-6 2xl:grid-cols-[0.72fr_1.28fr]">
                 <Card>
                   <CardHeader>
@@ -467,9 +582,11 @@ export function ArsitradWorkbench() {
                 </Card>
                 <ModuleResult module="permit" title="Permit guidance" payload={moduleResults.permit ?? null} />
               </div>
+              </div>
             ) : null}
 
             {activeModule === "cooling" ? (
+              <div className="min-h-0 flex-1 overflow-y-auto pr-1">
               <div className="grid gap-6 2xl:grid-cols-[0.72fr_1.28fr]">
                 <Card>
                   <CardHeader>
@@ -532,9 +649,11 @@ export function ArsitradWorkbench() {
                 </Card>
                 <ModuleResult module="cooling" title="Cooling recommendations" payload={moduleResults.cooling ?? null} />
               </div>
+              </div>
             ) : null}
 
             {activeModule === "disaster" ? (
+              <div className="min-h-0 flex-1 overflow-y-auto pr-1">
               <div className="grid gap-6 2xl:grid-cols-[0.72fr_1.28fr]">
                 <Card>
                   <CardHeader>
@@ -579,9 +698,11 @@ export function ArsitradWorkbench() {
                 </Card>
                 <ModuleResult module="disaster" title="Disaster report" payload={moduleResults.disaster ?? null} />
               </div>
+              </div>
             ) : null}
 
             {activeModule === "settlement" ? (
+              <div className="min-h-0 flex-1 overflow-y-auto pr-1">
               <div className="grid gap-6 2xl:grid-cols-[0.72fr_1.28fr]">
                 <Card>
                   <CardHeader>
@@ -617,6 +738,7 @@ export function ArsitradWorkbench() {
                   </CardContent>
                 </Card>
                 <ModuleResult module="settlement" title="Settlement upgrading plan" payload={moduleResults.settlement ?? null} />
+              </div>
               </div>
             ) : null}
 

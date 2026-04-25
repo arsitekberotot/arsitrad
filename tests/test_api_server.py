@@ -271,3 +271,31 @@ def test_settlement_endpoint_returns_payload(monkeypatch):
     payload = response.json()["payload"]
     assert payload["priority"] == "sanitasi"
     assert payload["location"] == "Kampung Tambakrejo"
+
+
+def test_ask_endpoint_accepts_image_attachments_and_forwards_visual_context(monkeypatch):
+    engine = DummyEngine()
+    monkeypatch.setattr(server, "get_answer_engine", lambda: engine)
+
+    client = TestClient(server.app)
+    response = client.post(
+        "/api/ask",
+        json={
+            "question": "Analisis denah ini untuk PBG.",
+            "images": [
+                {
+                    "name": "floor-plan.png",
+                    "content_type": "image/png",
+                    "size_bytes": 12345,
+                    "data_url": "data:image/png;base64,iVBORw0KGgo=",
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    forwarded_question = engine.calls[0]["question"]
+    assert "Analisis denah ini untuk PBG." in forwarded_question
+    assert "Visual attachments submitted" in forwarded_question
+    assert "floor-plan.png" in forwarded_question
+    assert "image/png" in forwarded_question
