@@ -7,6 +7,7 @@ import {
   Flame,
   LoaderCircle,
   MapPinned,
+  Menu,
   RefreshCcw,
   Wind,
 } from "lucide-react";
@@ -147,6 +148,7 @@ export function ArsitradWorkbench() {
   const [bootstrap, setBootstrap] = useState<BootstrapData | null>(null);
   const [health, setHealth] = useState<HealthData | null>(null);
   const [bootstrapError, setBootstrapError] = useState<string | null>(null);
+  const [statusOpen, setStatusOpen] = useState(false);
   const [question, setQuestion] = useState(FALLBACK_BOOTSTRAP.default_question);
   const [conversation, setConversation] = useState<ConversationEntry[]>([
     {
@@ -290,37 +292,33 @@ export function ArsitradWorkbench() {
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.55fr_0.9fr]">
-      <div className="space-y-6">
-        <Card className="overflow-hidden border-sky-200 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.10),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.98),rgba(239,246,255,0.94))]">
-          <CardHeader className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge className="border-sky-200 bg-sky-100 text-sky-800">Next.js + shadcn-style</Badge>
-              <Badge className="bg-white/80 text-slate-700">Python API wrapper</Badge>
-              <Badge className="bg-white/80 text-slate-700">GGUF-backed</Badge>
+    <div className="space-y-5">
+      <Card className="border-sky-200 bg-white/95 shadow-lg shadow-slate-200/60">
+        <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-sky-200 bg-sky-100 text-lg font-black tracking-tight text-sky-700">
+              A
             </div>
-            <CardTitle className="text-3xl leading-tight sm:text-4xl">
-              Arsitrad Web Workbench
-            </CardTitle>
-            <CardDescription className="max-w-3xl text-base leading-7 text-slate-700">
-              A clean Next.js interface for Arsitrad regulation QA, citations, and architecture helper workflows. The Python retrieval engine stays unchanged behind a typed FastAPI bridge.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Core engine</p>
-              <p className="mt-2 text-sm font-medium text-slate-950">ArsitradAnswerEngine</p>
+            <div className="min-w-0">
+              <h1 className="truncate text-xl font-semibold tracking-tight text-slate-950">Arsitrad</h1>
+              <p className="truncate text-sm text-slate-600">Regulation QA + architecture helper workflows</p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Delivery</p>
-              <p className="mt-2 text-sm font-medium text-slate-950">Next.js app router + typed API client</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Migration scope</p>
-              <p className="mt-2 text-sm font-medium text-slate-950">Additive web UI with Streamlit fallback</p>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge className={health ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"}>
+              {health ? "API connected" : "API waiting"}
+            </Badge>
+            <Badge className={health?.model_exists ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"}>
+              {health?.model_exists ? "GGUF found" : "GGUF pending"}
+            </Badge>
+            <Button variant="outline" size="sm" onClick={() => setStatusOpen((value) => !value)} aria-expanded={statusOpen}>
+              <Menu className="size-4" /> {statusOpen ? "Hide status" : "Runtime"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {statusOpen ? <StatusSidebar bootstrap={bootstrap} health={health} apiBaseUrl={API_BASE_URL} /> : null}
 
         <Card>
           <CardHeader>
@@ -337,7 +335,7 @@ export function ArsitradWorkbench() {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid gap-3 xl:grid-cols-5">
+            <div className="grid gap-3 lg:grid-cols-5">
               {moduleList.map((module) => (
                 <ModuleTabButton
                   key={module.id}
@@ -419,7 +417,7 @@ export function ArsitradWorkbench() {
             ) : null}
 
             {activeModule === "permit" ? (
-              <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+              <div className="grid gap-6 2xl:grid-cols-[0.72fr_1.28fr]">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg"><Building2 className="size-5 text-sky-600" /> Permit Navigator</CardTitle>
@@ -472,7 +470,7 @@ export function ArsitradWorkbench() {
             ) : null}
 
             {activeModule === "cooling" ? (
-              <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+              <div className="grid gap-6 2xl:grid-cols-[0.72fr_1.28fr]">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg"><Wind className="size-5 text-sky-600" /> Passive Cooling</CardTitle>
@@ -537,7 +535,7 @@ export function ArsitradWorkbench() {
             ) : null}
 
             {activeModule === "disaster" ? (
-              <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+              <div className="grid gap-6 2xl:grid-cols-[0.72fr_1.28fr]">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg"><Flame className="size-5 text-sky-600" /> Disaster Reporter</CardTitle>
@@ -584,7 +582,7 @@ export function ArsitradWorkbench() {
             ) : null}
 
             {activeModule === "settlement" ? (
-              <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+              <div className="grid gap-6 2xl:grid-cols-[0.72fr_1.28fr]">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg"><MapPinned className="size-5 text-sky-600" /> Settlement Upgrading</CardTitle>
@@ -629,9 +627,6 @@ export function ArsitradWorkbench() {
             ) : null}
           </CardContent>
         </Card>
-      </div>
-
-      <StatusSidebar bootstrap={bootstrap} health={health} apiBaseUrl={API_BASE_URL} />
     </div>
   );
 }

@@ -97,51 +97,27 @@ function SourcePreviewModal({
   );
 }
 
-function CitationDrawer({
+function InlineCitationPanel({
   candidates,
   standaloneQuery,
-  onClose,
   onPreview,
 }: {
   candidates: Candidate[];
   standaloneQuery: string;
-  onClose: () => void;
   onPreview: (candidate: Candidate, index: number) => void;
 }) {
   return (
-    <div className="fixed inset-0 z-[60] bg-white/45 backdrop-blur-sm">
-      <button
-        type="button"
-        aria-label="Close citations drawer"
-        className="absolute inset-0"
-        onClick={onClose}
-      />
-      <aside className="absolute inset-y-0 right-0 z-[61] flex h-full w-full max-w-2xl flex-col border-l border-slate-200 bg-white shadow-2xl shadow-slate-200/40">
-        <div className="border-b border-slate-200 px-6 py-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-slate-950">
-                <FileText className="size-4 text-sky-600" />
-                <h3 className="text-lg font-semibold">Citations drawer</h3>
-              </div>
-              <p className="mt-3 text-sm leading-6 text-slate-700">
-                Arsitrad narik {candidates.length} kandidat sumber buat jawaban ini.
-              </p>
-            </div>
-            <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close citations drawer">
-              <X className="size-4" />
-            </Button>
+    <Card className="border-sky-200 bg-sky-50/70">
+      <CardContent className="space-y-4 p-5">
+        <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 text-sm text-slate-700">
+          <div className="flex items-center gap-2 text-slate-900">
+            <Search className="size-4 text-sky-600" />
+            <span className="font-medium">Standalone query</span>
           </div>
-          <div className="mt-4 rounded-2xl border border-slate-200 bg-white/80 p-4 text-sm text-slate-700">
-            <div className="flex items-center gap-2 text-slate-900">
-              <Search className="size-4 text-sky-600" />
-              <span className="font-medium">Standalone query</span>
-            </div>
-            <p className="mt-3 leading-6">{standaloneQuery}</p>
-          </div>
+          <p className="mt-3 leading-6">{standaloneQuery}</p>
         </div>
 
-        <div className="flex-1 space-y-3 overflow-y-auto px-6 py-5">
+        <div className="grid gap-3">
           {candidates.map((candidate, index) => {
             const name = sourceName(candidate, index);
             const region = sourceRegion(candidate);
@@ -149,33 +125,31 @@ function CitationDrawer({
             const kind = sourceChunkKind(candidate);
 
             return (
-              <Card key={`${candidate.chunk_key}-${index}`} className="border-slate-200 bg-white/80">
-                <CardContent className="space-y-4 p-5">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge className="border-sky-200 bg-sky-100 text-sky-800">[{index + 1}]</Badge>
-                        <p className="text-sm font-semibold text-slate-950">{name}</p>
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {kind ? <Badge className="bg-white/80 text-slate-700">{kind}</Badge> : null}
-                        {region ? <Badge className="bg-white/80 text-slate-700">{region}</Badge> : null}
-                        {page ? <Badge className="bg-white/80 text-slate-700">Hlm. {page}</Badge> : null}
-                        <Badge className="bg-white/80 text-slate-700">Score {candidate.score.toFixed(2)}</Badge>
-                      </div>
+              <div key={`${candidate.chunk_key}-${index}`} className="rounded-2xl border border-slate-200 bg-white p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge className="border-sky-200 bg-sky-100 text-sky-800">[{index + 1}]</Badge>
+                      <p className="break-words text-sm font-semibold text-slate-950">{name}</p>
                     </div>
-                    <Button variant="outline" size="sm" onClick={() => onPreview(candidate, index)}>
-                      <ExternalLink className="size-4" /> Preview source
-                    </Button>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {kind ? <Badge className="bg-white/80 text-slate-700">{kind}</Badge> : null}
+                      {region ? <Badge className="bg-white/80 text-slate-700">{region}</Badge> : null}
+                      {page ? <Badge className="bg-white/80 text-slate-700">Hlm. {page}</Badge> : null}
+                      <Badge className="bg-white/80 text-slate-700">Score {candidate.score.toFixed(2)}</Badge>
+                    </div>
                   </div>
-                  <p className="line-clamp-6 whitespace-pre-wrap text-sm leading-7 text-slate-700">{candidate.content}</p>
-                </CardContent>
-              </Card>
+                  <Button variant="outline" size="sm" onClick={() => onPreview(candidate, index)}>
+                    <ExternalLink className="size-4" /> Preview
+                  </Button>
+                </div>
+                <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-slate-700">{candidate.content.slice(0, 700)}{candidate.content.length > 700 ? "…" : ""}</p>
+              </div>
             );
           })}
         </div>
-      </aside>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -189,7 +163,7 @@ export function CitationBrowser({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
 
-  useBodyScrollLock(drawerOpen || previewIndex !== null);
+  useBodyScrollLock(previewIndex !== null);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -245,17 +219,16 @@ export function CitationBrowser({
               Open the drawer to audit the retrieved chunks and preview full source text without crowding the main answer.
             </p>
           </div>
-          <Button variant="outline" onClick={() => setDrawerOpen(true)}>
-            <FileText className="size-4" /> Open citations
+          <Button variant="outline" onClick={() => setDrawerOpen((value) => !value)}>
+            <FileText className="size-4" /> {drawerOpen ? "Hide citations" : "Open citations"}
           </Button>
         </CardContent>
       </Card>
 
       {drawerOpen ? (
-        <CitationDrawer
+        <InlineCitationPanel
           candidates={candidates}
           standaloneQuery={standaloneQuery}
-          onClose={() => setDrawerOpen(false)}
           onPreview={(_, index) => setPreviewIndex(index)}
         />
       ) : null}

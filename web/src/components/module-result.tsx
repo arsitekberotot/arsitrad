@@ -137,9 +137,9 @@ function replaceTokens(text: string, tokens: Record<string, string>) {
 
 function MetricCard({ label, value, caption }: Metric) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
+    <div className="min-w-0 rounded-2xl border border-slate-200 bg-white/80 p-4">
       <p className="text-xs uppercase tracking-[0.24em] text-slate-500">{label}</p>
-      <p className="mt-2 text-lg font-semibold text-slate-950">{value}</p>
+      <p className="mt-2 break-words text-base font-semibold leading-6 text-slate-950">{value}</p>
       {caption ? <p className="mt-2 text-sm leading-6 text-slate-600">{caption}</p> : null}
     </div>
   );
@@ -220,13 +220,13 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
             {metrics.map((metric) => (
               <MetricCard key={metric.label} {...metric} />
             ))}
           </div>
 
-          <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid gap-4 2xl:grid-cols-[1.15fr_0.85fr]">
             <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
               <div className="flex items-center gap-2 text-sm font-medium text-slate-900">
                 <ClipboardList className="size-4 text-sky-600" /> Ringkasan proyek
@@ -257,14 +257,14 @@ function PermitResult({ title, payload }: { title: string; payload: Record<strin
               </div>
               <div className="mt-4 space-y-3 text-sm text-slate-700">
                 <p>{toStringValue(retribution?.breakdown) ?? "Breakdown belum tersedia."}</p>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-3 2xl:grid-cols-2">
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Tarif / m²</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatIDR(toNumber(retribution?.rate_per_m2_idr) ?? undefined)}</p>
+                    <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{formatIDR(toNumber(retribution?.rate_per_m2_idr) ?? undefined)}</p>
                   </div>
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Total retribusi</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatIDR(toNumber(retribution?.total_retribution_idr) ?? undefined)}</p>
+                    <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{formatIDR(toNumber(retribution?.total_retribution_idr) ?? undefined)}</p>
                   </div>
                 </div>
               </div>
@@ -414,7 +414,7 @@ function CoolingResult({ title, payload }: { title: string; payload: Record<stri
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
             {metrics.map((metric) => (
               <MetricCard key={metric.label} {...metric} />
             ))}
@@ -428,19 +428,19 @@ function CoolingResult({ title, payload }: { title: string; payload: Record<stri
               <div className="mt-4 grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Volume</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-950">{formatCount(toNumber(thermalPerformance?.volume_m3), "m³")}</p>
+                  <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{formatCount(toNumber(thermalPerformance?.volume_m3), "m³")}</p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Luas dinding</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-950">{formatCount(toNumber(thermalPerformance?.wall_area_m2), "m²")}</p>
+                  <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{formatCount(toNumber(thermalPerformance?.wall_area_m2), "m²")}</p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Material dinding</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-950">{toStringValue(wallMaterial?.description) ?? formatLabel(toStringValue(payload.materials) ?? "-")}</p>
+                  <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{toStringValue(wallMaterial?.description) ?? formatLabel(toStringValue(payload.materials) ?? "-")}</p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Material atap</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-950">{toStringValue(roofMaterial?.description) ?? "-"}</p>
+                  <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{toStringValue(roofMaterial?.description) ?? "-"}</p>
                 </div>
               </div>
             </div>
@@ -451,14 +451,14 @@ function CoolingResult({ title, payload }: { title: string; payload: Record<stri
               </div>
               <div className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
                 <p>{toStringValue(thermalPerformance?.climate_description) ?? climateDescription}</p>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-3 2xl:grid-cols-2">
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Thermal mass dinding</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatLabel(toStringValue(wallMaterial?.thermal_mass) ?? "-")}</p>
+                    <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{formatLabel(toStringValue(wallMaterial?.thermal_mass) ?? "-")}</p>
                   </div>
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Thermal mass atap</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatLabel(toStringValue(roofMaterial?.thermal_mass) ?? "-")}</p>
+                    <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{formatLabel(toStringValue(roofMaterial?.thermal_mass) ?? "-")}</p>
                   </div>
                 </div>
               </div>
@@ -585,7 +585,7 @@ function DisasterResult({ title, payload }: { title: string; payload: Record<str
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
             {metrics.map((metric) => (
               <MetricCard key={metric.label} {...metric} />
             ))}
@@ -700,7 +700,7 @@ function SettlementResult({ title, payload }: { title: string; payload: Record<s
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
             {metrics.map((metric) => (
               <MetricCard key={metric.label} {...metric} />
             ))}
@@ -778,17 +778,17 @@ function SettlementResult({ title, payload }: { title: string; payload: Record<s
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
                     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                       <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Unit disarankan</p>
-                      <p className="mt-2 text-sm font-semibold text-slate-950">
+                      <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">
                         {formatCount(toNumber(intervention.recommended_units))} {toStringValue(intervention.unit) ?? "unit"}
                       </p>
                     </div>
                     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                       <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Biaya per unit</p>
-                      <p className="mt-2 text-sm font-semibold text-slate-950">{formatIDR(toNumber(intervention.cost_per_unit_idr) ?? undefined)}</p>
+                      <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{formatIDR(toNumber(intervention.cost_per_unit_idr) ?? undefined)}</p>
                     </div>
                     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                       <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Maks unit terjangkau</p>
-                      <p className="mt-2 text-sm font-semibold text-slate-950">{formatCount(toNumber(intervention.max_affordable_units))}</p>
+                      <p className="mt-2 break-words text-sm font-semibold leading-6 text-slate-950">{formatCount(toNumber(intervention.max_affordable_units))}</p>
                     </div>
                   </div>
                 </div>
