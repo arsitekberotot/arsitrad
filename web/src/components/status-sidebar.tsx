@@ -72,23 +72,11 @@ export function StatusSidebar({ bootstrap, health, apiBaseUrl }: StatusSidebarPr
               <div className="mb-2 flex items-center gap-2 font-medium">
                 <AlertTriangle className="size-4" /> Backend belum nyambung
               </div>
-              <p className="text-sm text-amber-50/80">
+              <p className="text-sm text-amber-800">
                 Jalankan <span className="font-mono">uvicorn api.server:app --reload --port 8000</span> dari root repo.
               </p>
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">What changed</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm text-slate-700">
-          <p>• Next.js App Router shell with client-side workbench</p>
-          <p>• shadcn-style card/button/input primitives</p>
-          <p>• dedicated Python API instead of Streamlit-only rendering</p>
-          <p>• same ArsitradAnswerEngine underneath, with a dedicated product UI on top</p>
         </CardContent>
       </Card>
     </div>
