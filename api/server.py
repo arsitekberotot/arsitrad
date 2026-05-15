@@ -317,7 +317,8 @@ def analyze_visual_attachments(images: list[ImageAttachment]) -> str:
         return ""
     try:
         return get_visual_analyzer().analyze(images).strip()
-    except Exception:
+    except Exception as exc:
+        print(f"Vision bridge analysis failed: {type(exc).__name__}: {exc}", flush=True)
         return (
             "Vision bridge unavailable. Treat uploaded images as user-provided context only; "
             "ask the user to describe visible damage before making specific recommendations."
